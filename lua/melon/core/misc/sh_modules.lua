@@ -66,7 +66,3 @@ function melon.LoadModule(fold)
     m:_call("loaded")
     melon.Log(3, "Loaded Module '{1}' successfully!", fold)
 end
-
-function melon.Test()
-
-end
