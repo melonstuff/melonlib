@@ -35,7 +35,7 @@ function melon.LoadModule(fold)
     incs = incs or {}
 
     if incs.recursive then
-        melon.LoadDirectory("melon/modules/" .. fold .. "/src")
+        melon.LoadDirectory("melon/modules/" .. fold .. "/src", fold)
         m:_call("loaded")
         melon.Log(3, "Loaded Module '{1}' successfully (recursive)!", fold)
         return
