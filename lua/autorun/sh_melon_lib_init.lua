@@ -1,4 +1,9 @@
 
+if melon then
+    print()
+    melon.Log(0, "Reloading")
+end
+
 melon = melon or {}
 
 function melon.LoadDirectory(dir)
