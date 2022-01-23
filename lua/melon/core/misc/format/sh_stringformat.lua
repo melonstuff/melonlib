@@ -12,8 +12,8 @@ function melon.string.Qualify(tbl, to, notstr)
     local val = tbl
 
     for k,v in ipairs(keys) do
-        if not istable(val) then
-            return "invalid key (" .. v .. ")"
+        if not istable(val) and not IsEntity(val) then
+            return "indexing non-table (" .. tostring(val) .. ")"
         end
 
         val = val[tonumber(v) or tostring(v)]
@@ -25,15 +25,17 @@ end
 -- Qualify with filters!
 function melon.string.QualifyFil(tbl, to)
     local t = string.Split(to, "|")
-    local val = nil
+    local val
 
     for k,v in ipairs(t) do
         v = string.Trim(v)
 
-        if v:sub(-2, -1) == "()" then -- Explicit Filter Call
-            val = melon.string.CallFil(v:sub(1, -3), val)
+        local call = v:match("%((.-)%)$")
+        if call then -- Explicit Filter Call
+            val = melon.string.CallFil(v:sub(1, -#call - 3), val, melon.string.ParseArgs(call, tbl))
         else
             val = melon.string.Qualify(tbl, v, true)
+            nonfunc = val
         end
     end
 
@@ -41,13 +43,13 @@ function melon.string.QualifyFil(tbl, to)
 end
 
 -- Call a filter
-function melon.string.CallFil(fil, arg)
+function melon.string.CallFil(fil, arg, args)
     if arg == nil then
         return "<Error: No argument provided to Filter '" .. tostring(fil) .. "'>"
     end
 
     if melon.string.filters[fil] then
-        return melon.string.filters[fil](arg)
+        return melon.string.filters[fil](arg, unpack(args))
     end
     return "<Error: Unknown Filter '" .. tostring(fil) .. "'>"
 end
@@ -63,11 +65,33 @@ function melon.string.Format(fmt, ...)
         if mtch[1] == "!" then
             return "{" .. mtch:sub(2, -1) .. "}"
         end
-        return melon.string.QualifyFil(varargs, mtch)
+        return tostring(melon.string.QualifyFil(varargs, mtch))
     end)
+end
+
+-- Parse Arguments
+function melon.string.ParseArgs(str, tbl)
+    local args = string.Split(str, ",")
+    local toret = {}
+
+    for k,v in pairs(args) do
+        v = v:Trim()
+        if isnumber(tonumber(v)) then
+            toret[k] = tonumber(v)
+        elseif v[1] == "$" then
+            toret[k] = melon.string.QualifyFil(tbl, v:sub(2, -1))
+        else
+            toret[k] = v
+        end
+    end
+
+    return toret
 end
 
 -- Format Print
 function melon.string.print(fmt, ...)
     print(({melon.string.Format(fmt, ...)})[1])
 end
+
+melon.clr()
+melon.string.print("{1.Nick|call($1)}", LocalPlayer())

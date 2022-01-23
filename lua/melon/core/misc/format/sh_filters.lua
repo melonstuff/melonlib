@@ -27,10 +27,10 @@ function f.isplural(num)
     return num == 1 and "" or "s"
 end
 
-function f.call(func)
+function f.call(func, ...)
     if not isfunction(func) then
         return "<Error: Attempted to call non-function '" .. tostring(func) .. "'>"
     end
 
-    return func()
+    return func(...)
 end
