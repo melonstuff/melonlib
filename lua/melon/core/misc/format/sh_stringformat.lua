@@ -92,6 +92,3 @@ end
 function melon.string.print(fmt, ...)
     print(({melon.string.Format(fmt, ...)})[1])
 end
-
-melon.clr()
-melon.string.print("{1.Nick|call($1)}", LocalPlayer())
