@@ -34,3 +34,11 @@ function f.call(func, ...)
 
     return func(...)
 end
+
+function f.round(num, places)
+    local t = tonumber(num)
+
+    if not t then return end
+
+    return math.Round(num, places)
+end
