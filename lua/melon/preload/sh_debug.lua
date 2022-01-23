@@ -21,6 +21,8 @@ function melon.DebugPanel(name, func)
     melon.__Debug__TestPanel.PerformLayout = function(s,w,h)
         s.close:SetSize(50, 30)
         s.close:SetPos(w - s.close:GetWide(), 0)
+        s.settings:SetSize(50, 30)
+        s.settings:SetPos(w - s.close:GetWide() - 10 - s.settings:GetWide(), 0)
     end
 
     local b = vgui.Create("DButton", melon.__Debug__TestPanel)
@@ -37,8 +39,83 @@ function melon.DebugPanel(name, func)
     b.DoClick = function() melon.__Debug__TestPanel:Remove() end
     melon.__Debug__TestPanel.close = b
 
+    local m = vgui.Create("DButton", melon.__Debug__TestPanel)
+    m:SetText("")
+    m.Paint = function(s,w,h)
+        draw.RoundedBoxEx(6, 0, 0, w, h, HSVToColor(s:IsHovered() and (CurTime() * 1000) or (CurTime() / 10), 0.9, 0.9), false, false, true, true)
+        draw.RoundedBoxEx(4, 2, 0, w - 4, h - 2, Color(22, 22, 22), false, false, true, true)
+
+        surface.SetMaterial(melon.Material("icon16/cog.png", "mips smooth"))
+        surface.SetDrawColor(255,255,255)
+        surface.DrawTexturedRectRotated(w / 2, h / 2 - 2, h / 2, h / 2, 0)
+    end
+    m.DoClick = function()
+        melon.__PanelTree(melon.__Debug__TestPanel)
+    end
+    melon.__Debug__TestPanel.settings = m
+
     local p = vgui.Create(name, melon.__Debug__TestPanel)
+    melon.__Debug__TestPanel.PanelBeingTested = p
     if func then
         func(p)
     end
 end
+
+melon.DebugPanel("DFrame", function(p) p:SetSize(500, 500) p:Center() end)
+
+local hl
+function melon.__PanelTree(p)
+    local peenl = p.PanelBeingTested
+
+    if IsValid(p.Tree) then
+        p.Tree:Remove()
+        hl = false
+        return
+    end
+
+    p.Tree = vgui.Create("DFrame", p)
+    p.Tree:SetSize(melon.Scale(300), melon.Scale(800))
+    p.Tree:SetPos(ScrW() - p.Tree:GetWide() - 20, 0)
+    p.Tree:CenterVertical()
+    p.Tree:SetTitle("Hierarchy")
+
+    p.Tree.OnRemove = function() hl = false end
+
+    local stored = {}
+    local t = vgui.Create("DTree", p.Tree)
+    t:Dock(FILL)
+    function t:OnNodeSelected(n)
+        if hl == n.panel then
+            hl = false
+            return
+        end
+        hl = n.panel
+    end
+
+    local function addPanel(pnl, node)
+        if not IsValid(pnl) then return end
+        if stored[pnl] then return end -- Stops infinite recursion
+        stored[pnl] = true
+
+        local n = node:AddNode(pnl:GetClassName())
+        n.panel = pnl
+
+        for k,v in ipairs(pnl:GetChildren()) do
+            addPanel(v, n)
+        end
+    end
+
+    addPanel(peenl, t)
+end
+
+hook.Add("PostRenderVGUI", "MelonLib:PanelTreeView", function()
+    if not IsValid(hl) then
+        return
+    end
+
+    local x,y = hl:LocalToScreen(0, 0)
+    local w,h = hl:GetSize()
+
+    surface.SetDrawColor(0, 183, 255, 143)
+    surface.DrawRect(x,y,w,h)
+end)
