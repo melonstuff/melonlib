@@ -28,6 +28,16 @@ function G:Get(x, y)
     return self.grid[x][y]
 end
 
+function G:Increment(x, y)
+    if not self.grid[x] then
+        return
+    end
+
+    if isnumber(self.grid[x][y]) or self.grid[x][y] == nil then
+        self.grid[x][y] = (self.grid[x][y] or 0) + 1
+    end
+end
+
 function G:Update()
     self.grid = {}
 
