@@ -30,6 +30,7 @@ function melon.LoadModule(fold)
     m:SetName(fold)
     melon.Modules[fold] = m
 
+    AddCSLuaFile("melon/modules/" .. fold .. "/__init__.lua")
     local incs = include("melon/modules/" .. fold .. "/__init__.lua")
 
     incs = incs or {}
