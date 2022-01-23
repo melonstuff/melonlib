@@ -60,26 +60,34 @@ melon.AddLoadHandler("cl", function(f)
     end
 end )
 
---[[ Preload all needed files ]]
-melon.LoadDirectory("melon/preload")
-hook.Run("Melon:DoneLoading:PreLoad")
-melon.Log(0, "Started Initialization")
+function melon.__load()
+    --[[ Preload all needed files ]]
+    melon.LoadDirectory("melon/preload")
+    hook.Run("Melon:DoneLoading:PreLoad")
+    melon.Log(0, "Started Initialization")
 
---[[ Load all core files ]]
-melon.LoadDirectory("melon/core")
-hook.Run("Melon:DoneLoading:Core")
-melon.Log(0, "Loaded Core")
+    --[[ Load all core files ]]
+    melon.LoadDirectory("melon/core")
+    hook.Run("Melon:DoneLoading:Core")
+    melon.Log(0, "Loaded Core")
 
---[[ Load all modules ]]
-local _,fol = file.Find("melon/modules/*", "LUA")
+    --[[ Load all modules ]]
+    local _,fol = file.Find("melon/modules/*", "LUA")
 
-for k,v in pairs(fol) do
-    melon.LoadModule(v)
+    for k,v in pairs(fol) do
+        melon.LoadModule(v)
+    end
+
+    hook.Run("Melon:DoneLoading:Modules")
+    melon.Log(0, "Loaded Modules")
+
+    --[[ All done! ]]
+    hook.Run("Melon:DoneLoading")
+    melon.Log(0, "Finished Initialization")
 end
 
-hook.Run("Melon:DoneLoading:Modules")
-melon.Log(0, "Loaded Modules")
+melon.__load()
 
---[[ All done! ]]
-hook.Run("Melon:DoneLoading")
-melon.Log(0, "Finished Initialization")
+concommand.Add("melon_raw_reload", function()
+    melon.__load()
+end)
