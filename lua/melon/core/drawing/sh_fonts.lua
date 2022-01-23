@@ -5,13 +5,13 @@ if SERVER then
 end
 
 local fonts = {}
-function melon.Font(size)
+function melon.Font(size, font)
     if fonts[size] then
         return fonts[size]
     end
 
     surface.CreateFont("melon_lib:" .. tostring(size), {
-        font = "Poppins",
+        font = font or "Poppins",
         size = melon.Scale(size)
     })
 
