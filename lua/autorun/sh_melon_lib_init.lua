@@ -5,6 +5,7 @@ if melon then
 end
 
 melon = melon or {}
+melon.version = 1.0
 melon.__loadhandlers = melon.__loadhandlers or {}
 
 function melon.AddLoadHandler(handler, func, module_specific)
@@ -64,7 +65,7 @@ function melon.__load()
     --[[ Preload all needed files ]]
     melon.LoadDirectory("melon/preload")
     hook.Run("Melon:DoneLoading:PreLoad")
-    melon.Log(0, "Started Initialization")
+    melon.Log(0, "Started Initialization of MelonLib v{1}", melon.version)
 
     --[[ Load all core files ]]
     melon.LoadDirectory("melon/core")
