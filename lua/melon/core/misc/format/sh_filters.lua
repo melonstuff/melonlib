@@ -38,7 +38,11 @@ end
 function f.round(num, places)
     local t = tonumber(num)
 
-    if not t then return end
+    if not t then return "<Error: Attempted to round non-number '" .. tostring(num) ..  "'>" end
 
     return math.Round(num, places)
+end
+
+function f.comma(num)
+    return string.Comma(num)
 end
