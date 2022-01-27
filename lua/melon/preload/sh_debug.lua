@@ -126,5 +126,3 @@ function melon.ReloadAll()
     melon.__load()
     melon.reloading = false
 end
-
-melon.ReloadAll()
