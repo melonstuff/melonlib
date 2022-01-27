@@ -61,8 +61,6 @@ function melon.DebugPanel(name, func)
     end
 end
 
-melon.DebugPanel("DFrame", function(p) p:SetSize(500, 500) p:Center() end)
-
 local hl
 function melon.__PanelTree(p)
     local peenl = p.PanelBeingTested
@@ -119,3 +117,14 @@ hook.Add("PostRenderVGUI", "MelonLib:PanelTreeView", function()
     surface.SetDrawColor(0, 183, 255, 143)
     surface.DrawRect(x,y,w,h)
 end)
+
+function melon.ReloadAll()
+    if melon.reloading then
+        return
+    end
+    melon.reloading = true
+    melon.__load()
+    melon.reloading = false
+end
+
+melon.ReloadAll()
