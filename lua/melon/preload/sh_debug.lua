@@ -119,6 +119,7 @@ hook.Add("PostRenderVGUI", "MelonLib:PanelTreeView", function()
 end)
 
 function melon.ReloadAll()
+    if not GAMEMODE then return end
     if melon.reloading then
         return
     end
