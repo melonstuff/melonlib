@@ -9,3 +9,5 @@ function melon.AccessorTable(tbl)
 
     return tbl
 end
+
+melon.AT = melon.AccessorTable
