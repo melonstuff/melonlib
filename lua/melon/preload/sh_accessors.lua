@@ -6,6 +6,15 @@ function melon.AccessorTable(tbl)
         AccessorFunc(s, "val_" .. name, name)
         s["val_" .. name] = default
     end
+    tbl.New = function(s, ...)
+        local m = setmetatable({}, s)
+
+        if m.Init then
+            m:Init(...)
+        end
+
+        return m
+    end
 
     return tbl
 end
