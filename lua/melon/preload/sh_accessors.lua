@@ -7,7 +7,11 @@ function melon.AccessorTable(tbl, metatable)
         s["val_" .. name] = default
     end
     tbl.New = function(s, ...)
-        local m = setmetatable({}, s)
+        local m = setmetatable({}, s.__metatable)
+
+        for k,v in pairs(s) do
+            m[k] = v
+        end
 
         if m.Init then
             m:Init(...)
@@ -16,7 +20,8 @@ function melon.AccessorTable(tbl, metatable)
         return m
     end
 
-    setmetatable(tbl, metatable or {})
+    tbl.__metatable = metatable or {}
+    setmetatable(tbl, tbl.__metatable)
     return tbl
 end
 
