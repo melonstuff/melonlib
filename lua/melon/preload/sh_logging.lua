@@ -1,5 +1,8 @@
 
 local cvar = CreateConVar("melon_logging_level", "2", nil, "Level of logs to show, 1-3, err-warns-messages", "0", "3")
+local cvar_val = cvar:GetInt()
+
+cvars.AddChangeCallback("melon_logging_level", function(_,_,n) cvar_val = n end)
 
 local logs = {}
 local logtypes = {}
@@ -26,7 +29,7 @@ function melon.Log(lvl, fmt, ...)
     }
     table.insert(logs, l)
 
-    if lvl > cvar:GetInt() then return end
+    if lvl > cvar_val then return end
     logtypes[lvl](l)
 end
 
