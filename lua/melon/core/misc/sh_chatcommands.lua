@@ -48,6 +48,6 @@ end
 hook.Add("PlayerSay", "MelonLib:ChatCommands", melon.__ChatHook)
 hook.Add("OnPlayerChat", "MelonLib:ChatCommands", melon.__ChatHook)
 
-melon.Debug(function()
-    PrintTable(parseArgs("this 0x01 'that and \" this' and or that"))
-end, true)
+-- melon.Debug(function()
+--     PrintTable(parseArgs("this 0x01 'that and \" this' and or that"))
+-- end, true)
