@@ -8,10 +8,12 @@ function melon.clr()
     print(string.rep("\n\n", 100))
 end
 
+local wassettingsopen
 function melon.DebugPanel(name, func)
     if not GAMEMODE then return end
     if SERVER then return end
     if IsValid(melon.__Debug__TestPanel) then
+        wassettingsopen = IsValid(melon.__Debug__TestPanel.Tree)
         melon.__Debug__TestPanel:Remove()
     end
 
@@ -59,6 +61,10 @@ function melon.DebugPanel(name, func)
     if func then
         func(p)
     end
+
+    if wassettingsopen then
+        melon.__PanelTree(melon.__Debug__TestPanel)
+    end
 end
 
 local hl
@@ -78,6 +84,16 @@ function melon.__PanelTree(p)
     p.Tree:SetTitle("Hierarchy")
 
     p.Tree.OnRemove = function() hl = false end
+
+    p.Controls = vgui.Create("DPanel", p.Tree)
+    p.Controls:Dock(TOP)
+    p.Controls:SetTall(35)
+    p.Controls.PerformLayout = function(s,w,h)
+        surface.SetFont("default")
+        for k,v in pairs(s:GetChildren()) do
+            v:SetWide(({surface.GetTextSize(v:GetText())})[1] + 25)
+        end
+    end
 
     local stored = {}
     local t = vgui.Create("DTree", p.Tree)
@@ -103,7 +119,22 @@ function melon.__PanelTree(p)
         end
     end
 
+    local function addControl(name, func)
+        local b = vgui.Create("DButton", p.Controls)
+        b:Dock(LEFT)
+        b:SetText(name)
+        b:SetFont("default")
+        b:DockMargin(5,5,0,5)
+        b.DoClick = function(s)
+            func(peenl)
+        end
+    end
+
     addPanel(peenl, t)
+
+    addControl("Refocus", function(pp)
+        pp:MakePopup()
+    end )
 end
 
 hook.Add("PostRenderVGUI", "MelonLib:PanelTreeView", function()
