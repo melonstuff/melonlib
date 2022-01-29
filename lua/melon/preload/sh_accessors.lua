@@ -1,5 +1,5 @@
 
-function melon.AccessorTable(tbl)
+function melon.AccessorTable(tbl, metatable)
     tbl = tbl or {}
     tbl.__index = tbl
     tbl.Accessor = function(s, name, default)
@@ -16,6 +16,7 @@ function melon.AccessorTable(tbl)
         return m
     end
 
+    setmetatable(tbl, metatable or {})
     return tbl
 end
 
