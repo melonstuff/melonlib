@@ -1,5 +1,6 @@
 
-function melon.Debug(f)
+function melon.Debug(f, clr)
+    if clr then melon.clr() end
     if GAMEMODE then f() end
 end
 
