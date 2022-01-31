@@ -35,11 +35,11 @@ end
 
 function melon.Assert(expr, fmt, ...)
     if expr == true then -- dont accept truey expressions as valid
-        return true
+        return false
     end
 
     melon.Log(1, fmt, ...)
-    return false
+    return true
 end
 
 concommand.Add("melon_dump_logs", function()
