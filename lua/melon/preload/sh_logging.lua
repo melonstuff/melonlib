@@ -15,7 +15,7 @@ function melon.Log(lvl, fmt, ...)
     local vg = {...}
 
     local logMessage
-    if melon.string.Format then
+    if melon.string and melon.string.Format then
         logMessage = melon.string.Format(fmt, vg)
     else
         logMessage = string.gsub(fmt, "{%d+}", function(x)
