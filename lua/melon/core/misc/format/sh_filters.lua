@@ -63,4 +63,6 @@ function f.prettycolor(col)
     if not melon.IsColor(col) then
         return err("Invalid Color '" .. tostring(col) .. "'")
     end
+
+    return "col(" .. col.r .. ", " .. col.g .. ", " .. col.b .. ")"
 end
