@@ -14,13 +14,20 @@ end
 function melon.Log(lvl, fmt, ...)
     local vg = {...}
 
+    local logMessage
+    if melon.string.Format then
+        logMessage = melon.string.Format(fmt, vg)
+    else
+        logMessage = string.gsub(fmt, "{%d+}", function(x)
+            return ((vg)[tonumber(x:sub(2, -2))]) or x
+        end )
+    end
+
     local time = os.time()
     local fmt_time = string.FormattedTime(CurTime(), math.floor(CurTime() / 3600) .. ":%02i:%02i:%02i")
 
     local l = {
-        message = string.gsub(fmt, "{%d+}", function(x)
-            return ((vg)[tonumber(x:sub(2, -2))]) or x
-        end ),
+        message = logMessage,
         trace = debug.getinfo(1),
         time = time,
         level = lvl,
