@@ -33,6 +33,15 @@ function melon.Log(lvl, fmt, ...)
     logtypes[lvl](l)
 end
 
+function melon.Assert(expr, fmt, ...)
+    if expr == true then -- dont accept truey expressions as valid
+        return true
+    end
+
+    melon.Log(1, fmt, ...)
+    return false
+end
+
 concommand.Add("melon_dump_logs", function()
     local str = ""
 
@@ -45,6 +54,8 @@ concommand.Add("melon_dump_logs", function()
     melon.Log(3, "Wrote logs to file!")
 end)
 
+
+-- Handler Definitions
 local colors = {
     white = color_white,
     light_blue = Color(38, 248, 255),
@@ -53,7 +64,6 @@ local colors = {
     green = Color(100, 255, 100)
 }
 
--- Handler Definitions
 -- Verbose Stuff, Basically useless nonsense
 melon.AddLogHandler(3, function(msg)
     MsgC(colors.light_blue, "[MelonLib (", msg.fmt_time , ")][Message] ", colors.white, msg.message, "\n")
