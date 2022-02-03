@@ -159,3 +159,15 @@ function melon.ReloadAll()
     melon.__load()
     melon.reloading = false
 end
+
+local prot = {}
+function melon.StackOverflowProtection(id)
+    prot[id] = (prot[id] or 0) + 1
+
+    if prot[id] >= 1000 then
+        prot[id] = 0
+        return true
+    end
+
+    return false
+end
