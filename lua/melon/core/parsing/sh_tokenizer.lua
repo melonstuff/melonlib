@@ -187,7 +187,7 @@ function melon.tokenizer.Tokenize(str, types, options)
 end
 
 melon.Debug(function()
-    _p(melon.tokenizer.Tokenize([[
+    PrintTable(melon.tokenizer.Tokenize([[
 valid;valid=123]], {
     symbolic = {
         ["="] = "eq"
