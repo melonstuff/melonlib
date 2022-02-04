@@ -15,3 +15,13 @@ function melon.KV2VK(tbl)
         return v, k
     end )
 end
+
+function melon.SubTable(tbl, from, to)
+    local new = {}
+
+    for i=from, to do
+        table.insert(new, tbl[i])
+    end
+
+    return new
+end
