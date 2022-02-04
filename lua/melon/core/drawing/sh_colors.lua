@@ -18,3 +18,25 @@ end
 function melon.colors.Rainbow()
     return HSVToColor(CurTime(), 0.9, 0.9)
 end
+
+function melon.colors.FromHex(hex)
+    local str = hex
+    if #str == 3 then
+        str = (hex[1] .. hex[1]) .. (hex[2] .. hex[2]) .. (hex[3] .. hex[3])
+    end
+
+    if #str == 6 then
+        str = str .. "FF" -- alpha
+    end
+
+    local r = tonumber("0x" .. str:sub(1, 2))
+    local g = tonumber("0x" .. str:sub(3, 4))
+    local b = tonumber("0x" .. str:sub(5, 6))
+    local a = tonumber("0x" .. str:sub(7, 8))
+
+    if r and g and b and a then
+        return Color(r, g, b, a)
+    end
+end
+
+print(melon.colors.FromHex("Ffaa02"))
