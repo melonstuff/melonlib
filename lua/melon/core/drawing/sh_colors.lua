@@ -38,5 +38,3 @@ function melon.colors.FromHex(hex)
         return Color(r, g, b, a)
     end
 end
-
-print(melon.colors.FromHex("Ffaa02"))
