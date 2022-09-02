@@ -1,7 +1,7 @@
 
 local blurMat = Material("pp/blurscreen")
 function melon.DrawBlur(panel, localX, localY, w, h, passes)
-    if blurPassesNum == 0 then return end
+    if passes == 0 then return end
     local x, y = panel:LocalToScreen(localX, localY)
     local scrw, scrh = ScrW(), ScrH()
 
