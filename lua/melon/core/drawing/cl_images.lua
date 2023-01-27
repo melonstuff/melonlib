@@ -54,9 +54,10 @@ function melon.DrawImage(url, x, y, w, h)
         surface.SetMaterial(mat)
         surface.SetDrawColor(255, 255, 255, 200 + math.sin(CurTime() * 2) * 30)
         surface.DrawTexturedRectRotated(x + w / 2, y + h / 2, size, size, CurTime() * 2)
-        return
+        return false
     end
 
     surface.SetMaterial(mat)
     surface.DrawTexturedRect(x, y, w, h)
+    return true
 end
