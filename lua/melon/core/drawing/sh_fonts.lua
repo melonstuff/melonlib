@@ -6,18 +6,23 @@ end
 
 local fonts = {}
 function melon.Font(size, font)
-    if fonts[size] then
-        return fonts[size]
+    font = font or "Poppins"
+    fonts[font] = fonts[font] or {}
+
+    if fonts[font][size] then
+        return fonts[font][size]
     end
 
-    surface.CreateFont("melon_lib:" .. tostring(size), {
-        font = font or "Poppins",
+    font = font or "Poppins"
+    local name = "melon_lib:" .. font .. ":" .. size
+    surface.CreateFont(name, {
+        font = font,
         size = melon.Scale(size)
     })
 
-    fonts[size] = "melon_lib:" .. tostring(size)
+    fonts[font][size] = name
 
-    return fonts[size]
+    return name
 end
 
 local specfonts = {}
@@ -39,5 +44,11 @@ end
 hook.Add("OnScreenSizeChanged", "Melon:FontReset", function()
     fonts = {}
     specsize = {}
-    melon.Log(3, "Refreshed Fonts", fold)
+    melon.Log(3, "Refreshed Fonts")
 end)
+
+concommand.Add("melon_reload_fonts", function()
+    fonts = {}
+    specsize = {}
+    melon.Log(3, "Refreshed Fonts")
+end )
