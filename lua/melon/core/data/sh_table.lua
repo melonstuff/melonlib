@@ -19,7 +19,7 @@ end
 function melon.SubTable(tbl, from, to)
     local new = {}
 
-    for i=from, to do
+    for i = from, to do
         table.insert(new, tbl[i])
     end
 
