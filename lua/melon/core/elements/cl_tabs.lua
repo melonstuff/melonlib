@@ -16,11 +16,11 @@ function PANEL:AddTab(name, pnl)
     pnl:SetVisible(false)
 
     if not self:GetActiveTab() then
-        self:SetTab(name, true)
+        self:SetTab(name)
     end
 end
 
-function PANEL:SetTab(name, noanim)
+function PANEL:SetTab(name)
     local old = self.tabs[self:GetActiveTab()]
     local new = self.tabs[name]
 
@@ -40,6 +40,16 @@ function PANEL:SetTab(name, noanim)
         old = old,
         new = new,
     }
+
+    if new.OnTabSelected then
+        new:OnTabSelected(old)
+    end
+
+    if old and old.OnTabDeselected then
+        old:OnTabDeselected(new)
+    end
+
+    self:OnTabChanged(new, old)
 end
 
 function PANEL:Think()
@@ -64,12 +74,16 @@ function PANEL:Paint()
 
     if self.anim.finished then
         if self.anim.old then
+            self:AnimDone(self.anim)
             self.anim.old:SetVisible(false)
         end
 
         self.anim = nil
     end
 end
+
+function PANEL:AnimDone() end
+function PANEL:OnTabChanged(new, old) end
 
 function PANEL:PerformLayout(w, h)
     if self:GetActiveTab() then
