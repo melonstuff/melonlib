@@ -1,5 +1,5 @@
 
-local PANEL = vgui.Register("Melon:Tabs", {}, "DPanel")
+local PANEL = vgui.Register("Melon:Tabs", {}, "EditablePanel")
 AccessorFunc(PANEL, "ActiveTab", "ActiveTab")
 AccessorFunc(PANEL, "AnimTime", "AnimTime", FORCE_NUMBER)
 
