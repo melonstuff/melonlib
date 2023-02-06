@@ -63,7 +63,6 @@ function melon.UnscaledFont(size, font)
 end
 
 local gen = {}
-gen.__index = gen
 
 function gen:Font(size)
     return melon.Font(size, self.font)
@@ -76,7 +75,10 @@ end
 function melon.FontGenerator(fontname)
     return setmetatable({
         font = fontname
-    }, gen)
+    }, {
+        __index = gen,
+        __call = function(s, f) return s:Font(f) end
+    })
 end
 
 hook.Add("OnScreenSizeChanged", "Melon:FontReset", function()
