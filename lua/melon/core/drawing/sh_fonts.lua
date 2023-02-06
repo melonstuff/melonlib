@@ -41,14 +41,50 @@ function melon.SpecialFont(size, options)
     return specfonts[ser]
 end
 
+local unscaled = {}
+function melon.UnscaledFont(size, font)
+    font = font or "Poppins"
+    unscaled[font] = unscaled[font] or {}
+
+    if unscaled[font][size] then
+        return unscaled[font][size]
+    end
+
+    font = font or "Poppins"
+    local name = "melon_lib:" .. font .. ":" .. size
+    surface.CreateFont(name, {
+        font = font,
+        size = size
+    })
+
+    unscaled[font][size] = name
+
+    return name
+end
+
+local gen = {}
+gen.__index = gen
+
+function gen:Font(size)
+    return melon.Font(size, self.font)
+end
+
+function gen:Unscaled(size)
+    return melon.UnscaledFont(size, self.font)
+end
+
+function melon.FontGenerator(fontname)
+    return setmetatable({
+        font = fontname
+    }, gen)
+end
+
 hook.Add("OnScreenSizeChanged", "Melon:FontReset", function()
     fonts = {}
-    specsize = {}
     melon.Log(3, "Refreshed Fonts")
 end)
 
 concommand.Add("melon_reload_fonts", function()
     fonts = {}
-    specsize = {}
     melon.Log(3, "Refreshed Fonts")
 end )
