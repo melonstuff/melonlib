@@ -50,6 +50,8 @@ function PANEL:SetTab(name)
     end
 
     self:OnTabChanged(new, old)
+
+    return new
 end
 
 function PANEL:Think()
