@@ -33,7 +33,7 @@ function melon.http.Generator(type)
     end
 end
 
-melon.http.Fetch = melon.http.Generator("fetch")
+melon.http.Post = melon.http.Generator("post")
 melon.http.Get = melon.http.Generator("get")
 melon.http.Head = melon.http.Generator("head")
 
