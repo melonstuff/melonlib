@@ -1,0 +1,9 @@
+{
+    "lint_maxScopeDepth": 0,
+    "lint_trailingWhitespace": false,
+    "lint_gotos": false,
+    "lint_goto_identifier": false,
+    "lint_doubleNegations": false,
+
+    "lint_profanity": false
+}

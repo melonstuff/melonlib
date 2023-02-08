@@ -5,7 +5,7 @@ if melon then
 end
 
 melon = melon or {}
-melon.version = 1.0
+melon.version = "1.0.0"
 melon.__loadhandlers = melon.__loadhandlers or {}
 
 function melon.AddLoadHandler(handler, func, module_specific)
