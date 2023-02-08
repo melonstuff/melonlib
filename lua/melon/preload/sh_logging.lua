@@ -1,14 +1,18 @@
 
-local cvar = CreateConVar("melon_logging_level", "2", nil, "Level of logs to show, 1-3, err-warns-messages", "0", "3")
-local cvar_val = cvar:GetInt()
-
-cvars.AddChangeCallback("melon_logging_level", function(_,_,n) cvar_val = n end)
-
+melon.LogTypes = melon.LogTypes or {}
 local logs = {}
-local logtypes = {}
+local logtypes = melon.LogTypes
 
 function melon.AddLogHandler(lvl, func)
     logtypes[lvl] = func
+end
+
+function melon.AddDynamicLogHandler(func)
+    local num = #logtypes + 1
+
+    logtypes[num] = func
+
+    return num
 end
 
 function melon.Log(lvl, fmt, ...)
@@ -36,7 +40,6 @@ function melon.Log(lvl, fmt, ...)
     }
     table.insert(logs, l)
 
-    if lvl > cvar_val then return end
     logtypes[lvl](l)
 end
 
@@ -60,6 +63,10 @@ concommand.Add("melon_dump_logs", function()
     file.Write("melon_lib_logs.txt", str)
     melon.Log(3, "Wrote logs to file!")
 end)
+
+hook.Add("ShutDown", "Melon:Logs:DumpingToFile", function()
+    RunConsoleCommand("melon_dump_logs")
+end )
 
 
 -- Handler Definitions
