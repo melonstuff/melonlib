@@ -2,7 +2,7 @@
 local BSHADOWS = {}
 
 melon.thirdparty = melon.thirdparty or {}
-melon.thirdparty.BSHADOWS = BSHADOWS
+melon.thirdparty.BSHADOWS_inner_shadow_version = BSHADOWS
 
 BSHADOWS.ShadowMaterial = CreateMaterial("bshadows","UnlitGeneric",{
     ["$translucent"] = 1,
