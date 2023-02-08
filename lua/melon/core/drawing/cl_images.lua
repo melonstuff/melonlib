@@ -19,7 +19,7 @@ function melon.Image(url, callback)
     end
 
     melon.Log(3, "Image Fetch made to {1}", "https://external-content.duckduckgo.com/iu/?u=" .. url)
-    http.Fetch("https://external-content.duckduckgo.com/iu/?u=" .. url, function(bod, size, headers, code)
+    melon.http.Get("https://external-content.duckduckgo.com/iu/?u=" .. url, function(bod, size, headers, code)
         file.Write("melon/images/" .. sans .. "." .. ext, bod)
         images[url] = Material("../data/melon/images/" .. sans .. "." .. ext, "mips smooth")
         melon.Log(3, "Image Download Success: '{1}' ({2})", url, code)
