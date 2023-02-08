@@ -37,10 +37,12 @@ melon.http.Post = melon.http.Generator("post")
 melon.http.Get = melon.http.Generator("get")
 melon.http.Head = melon.http.Generator("head")
 
-hook.Add("InitPostEntity", "Melon:HTTPReady", function()
+hook.Add("Think", "Melon:HTTPReady", function()
     for k,v in pairs(requests) do
         HTTP(v)
     end
 
     requests = false
+
+    hook.Remove("Think", "Melon:HTTPReady")
 end )
