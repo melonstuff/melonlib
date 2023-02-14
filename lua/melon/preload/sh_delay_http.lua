@@ -29,7 +29,7 @@ function melon.http.Generator(type)
             end
         }
     
-        HTTP(request)
+        melon.HTTP(request)
     end
 end
 
