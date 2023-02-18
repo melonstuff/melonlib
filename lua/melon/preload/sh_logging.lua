@@ -32,7 +32,7 @@ function melon.Log(lvl, fmt, ...)
 
     local l = {
         message = logMessage,
-        trace = debug.getinfo(1),
+        trace = debug.traceback("", 2),
         time = time,
         level = lvl,
         handler = logtypes[lvl],
@@ -57,10 +57,14 @@ concommand.Add("melon_dump_logs", function()
 
     for k,v in pairs(logs) do
         str = str ..
-        "[" .. v.time .. "](" .. v.level .. ") " .. v.message
+        "\n[" .. v.time .. "](" .. v.level .. ") " .. v.message
+        str = str ..
+        "\n[trace] " .. v.trace .. "\n"
     end
 
     file.Write("melon_lib_logs.txt", str)
+    print(str)
+
     melon.Log(3, "Wrote logs to file!")
 end)
 
