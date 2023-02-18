@@ -1,5 +1,5 @@
 
-local PANEL = vgui.Register("Melon:Draggable", {}, "DPanel")
+local PANEL = vgui.Register("Melon:Draggable", {}, "Panel")
 AccessorFunc(PANEL, "area", "AreaOf") -- takes Panel
 AccessorFunc(PANEL, "bbp", "Bounded") -- takes Panel or true for parent
 

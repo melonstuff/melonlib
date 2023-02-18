@@ -1,6 +1,6 @@
 
 
-local PANEL = vgui.Register("Melon:Resizable", {}, "DPanel")
+local PANEL = vgui.Register("Melon:Resizable", {}, "Panel")
 
 function PANEL:Init()
     self:SetDragSize(12, 4)
