@@ -22,7 +22,9 @@ end
 function melon.colors.FromHex(hex)
     local str = hex
     if #str == 3 then
-        str = (hex[1] .. hex[1]) .. (hex[2] .. hex[2]) .. (hex[3] .. hex[3])
+        str = (hex[1] .. hex[1]) .. (hex[2] .. hex[2]) .. (hex[3] .. hex[3]) 
+    elseif #str == 4 then
+        str = (hex[1] .. hex[1]) .. (hex[2] .. hex[2]) .. (hex[3] .. hex[3]) .. (hex[4] .. hex[4])
     end
 
     if #str == 6 then
