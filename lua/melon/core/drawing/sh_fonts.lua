@@ -35,8 +35,8 @@ function melon.SpecialFont(size, options)
 
     options.size = melon.Scale(size)
 
-    surface.CreateFont("melon_lib:" .. ser, options)
-    specfonts[ser] = "melon_lib:" .. ser
+    surface.CreateFont("melon_lib:spec:" .. ser, options)
+    specfonts[ser] = "melon_lib:spec:" .. ser
 
     return specfonts[ser]
 end
@@ -51,7 +51,7 @@ function melon.UnscaledFont(size, font)
     end
 
     font = font or "Poppins"
-    local name = "melon_lib:" .. font .. ":" .. size
+    local name = "melon_lib:unscaled:" .. font .. ":" .. size
     surface.CreateFont(name, {
         font = font,
         size = size
