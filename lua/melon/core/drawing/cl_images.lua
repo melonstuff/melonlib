@@ -62,6 +62,22 @@ function melon.DrawImage(url, x, y, w, h)
     return true
 end
 
+function melon.DrawImageRotated(url, x, y, w, h, rot)
+    local mat = melon.Image(url)
+
+    if mat == melon.InvalidImage then
+        local size = math.min(w, h)
+        surface.SetMaterial(mat)
+        surface.SetDrawColor(255, 255, 255, 200 + math.sin(CurTime() * 2) * 30)
+        surface.DrawTexturedRectRotated(x + w / 2, y + h / 2, size, size, CurTime() * 2)
+        return false
+    end
+
+    surface.SetMaterial(mat)
+    surface.DrawTexturedRectRotated(x, y, w, h, rot or 0)
+    return true
+end
+
 local avatars = {}
 function melon.GetPlayerAvatar(steamid)
     if avatars[steamid] then
