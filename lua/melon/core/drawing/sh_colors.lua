@@ -16,7 +16,7 @@ function melon.colors.IsLight(col)
 end
 
 function melon.colors.Rainbow()
-    return HSVToColor(CurTime(), 0.9, 0.9)
+    return HSVToColor(CurTime() * 20, 0.9, 0.9)
 end
 
 function melon.colors.FromHex(hex)
