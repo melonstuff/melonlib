@@ -89,14 +89,6 @@ function PANEL:PaintOver(w, h)
     melon.DrawImage("https://i.imgur.com/KRo8XD4.png", w - size - pad, h - size - pad, size, size)
 end
 
-function PANEL:StartDragging()
-    self:SetCursor("sizenwse")
-end
-
-function PANEL:EndDragging()
-    self:SetCursor("arrow")
-end
-
 melon.DebugPanel("Melon:Resizable", function(p)
     p:SetSize(400, 400)
     p:Center()
