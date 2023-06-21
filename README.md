@@ -1,4 +1,5 @@
-# MelonLib
+![logo](https://i.imgur.com/4tO48eh.png)
+
 MelonLib is a multipurpose Garry's Mod development library that includes a plethora of different utilities.
 
 # Includes
