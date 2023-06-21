@@ -97,6 +97,47 @@ end
 
 ----
 ---@internal
+---@name melon.docgen.NormalizeUsage
+----
+---- Normalizes code example strings to have consistent everything
+----
+---`
+---` local usage = melon.docgen.NormalizeUsage(tbl)
+---` 
+---` if not usage then
+---`     print("No usage for the given code")
+---` end
+---`
+function melon.docgen.NormalizeUsage(usage)
+    if #usage == 0 then return false end
+
+    usage = table.concat(usage, "\n")
+    usage = string.Trim(usage)
+    usage = string.Split(usage, "\n")
+
+    if #usage == 0 then return false end
+
+    local lhs = 0
+    for i = 1, #usage do
+        local ch = usage[i]
+
+        if ch == " " then
+            lhs = lhs + 1
+        else
+            break
+        end
+    end
+
+    local text = ""
+    for k,v in pairs(usage) do
+        text = text .. string.TrimRight(v:sub(lhs, #v)) .. "\n"
+    end
+
+    return string.Trim(text)
+end
+
+----
+---@internal
 ---@name melon.docgen.HandleDocBlock
 ----
 ---- Handles a docblock at the given location in code
@@ -104,6 +145,7 @@ end
 function melon.docgen.HandleDocBlock(lines, index)
     local params = {}
     local description = {}
+    local usage = {}
 
     while index < #lines do
         local line = string.Trim(lines[index])
@@ -125,6 +167,8 @@ function melon.docgen.HandleDocBlock(lines, index)
                     params[name] = value
                 end
             end
+        elseif cmd == "`" then
+            table.insert(usage, post)
         elseif cmd == "-" then
             if #post == 0 then
                 index = index + 1
@@ -160,6 +204,7 @@ function melon.docgen.HandleDocBlock(lines, index)
         end
     end
 
+    params.usage = melon.docgen.NormalizeUsage(usage)
     params.description = desc
 
     if params.todo then

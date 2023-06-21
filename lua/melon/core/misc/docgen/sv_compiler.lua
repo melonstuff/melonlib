@@ -44,7 +44,8 @@ function melon.docgen.CompileTo(docs, target)
             realm = doc.realm,
             internal = doc.internal,
             description = doc.description,
-            type = doc.typeof
+            type = doc.typeof,
+            example = doc.usage
         }
     end
 
