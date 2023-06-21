@@ -9,22 +9,6 @@ melon.docgen = melon.docgen or {}
 ----
 melon.docgen.ParamTypes = melon.docgen.ParamTypes or {}
 
-melon.docgen.ParamTypes["alias"] = function(param)
-    return "alias", param
-end
-
-melon.docgen.ParamTypes["name"] = function(param)
-    return "name", param
-end
-
-melon.docgen.ParamTypes["realm"] = function(param)
-    return "realm", param or "shared"
-end
-
-melon.docgen.ParamTypes["belongs"] = function(param)
-    return "belongs", param
-end
-
 melon.docgen.ParamTypes["arg"] = function(param)
     local name = ""
     local type = ""
@@ -82,7 +66,7 @@ function melon.docgen.HandleParam(post)
         return melon.docgen.ParamTypes[name](post:sub(#name + 1, #post):Trim())
     end
 
-    return name, true
+    return name, post:sub(#name + 1, #post):Trim()
 end
 
 melon.Debug(function()
