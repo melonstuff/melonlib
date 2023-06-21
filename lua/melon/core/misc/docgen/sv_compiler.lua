@@ -38,15 +38,7 @@ function melon.docgen.CompileTo(docs, target)
         end
 
         tbl[name] = tbl[name] or {}
-        tbl[name].__DocData__ = {
-            name = name,
-            fullname = doc.name,
-            realm = doc.realm,
-            internal = doc.internal,
-            description = doc.description,
-            type = doc.typeof,
-            example = doc.usage
-        }
+        tbl[name].__DocData__ = doc
     end
 
     local err = target(modules)
