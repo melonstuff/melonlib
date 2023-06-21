@@ -25,7 +25,6 @@ melon.docgen.ParamTypes["belongs"] = function(param)
     return "belongs", param
 end
 
-
 melon.docgen.ParamTypes["arg"] = function(param)
     local name = ""
     local type = ""
