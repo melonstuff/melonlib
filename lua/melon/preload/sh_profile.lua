@@ -1,4 +1,10 @@
 
+----
+---@deprecated
+---@name melon.Profile
+----
+---- Unsure how functional this actually is.
+----
 function melon.Profile(func, name, stop_profile)
     if stop_profile then
         return func

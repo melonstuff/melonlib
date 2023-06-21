@@ -1,4 +1,12 @@
 
+----
+---@deprecated
+---@module
+---@name melon.panels
+---@realm CLIENT
+----
+---- Old panel registering library, we are modern men now, dumb idea.
+----
 melon.panels = melon.panels or {}
 melon.panels.list = melon.panels.list or {}
 

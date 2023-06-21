@@ -1,6 +1,13 @@
 
 local behavior = {}
 
+----
+---@internal
+---@deprecated
+---@name melon.DefineNewBehavior
+----
+---- Weird experiment thats not really used, dont use.
+----
 function melon.DefineNewBehavior(key, fn)
     behavior[key] = fn
 end

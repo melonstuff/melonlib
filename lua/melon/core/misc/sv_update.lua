@@ -1,4 +1,12 @@
 
+----
+---@name melon.ParseVersion
+----
+---@arg    (text: string) A string of 3 parts separated by .
+---@return (vers: table ) Table that contains 3 members, major, minor and patch 
+----
+---- Parses a string in the format major.minor.patch, 1.0.0, 45.56.67 into the version itself
+----
 function melon.ParseVersion(text)
     if not text then return end
 

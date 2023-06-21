@@ -2,8 +2,24 @@
 file.CreateDir("melon")
 file.CreateDir("melon/images")
 
+----
+---@deprecated Replaced when [melon.DrawImage] was implemented
+---@name melon.InvalidImage
+----
+---- Material for loading images, currently the israeli flag
+----
 melon.InvalidImage = melon.InvalidImage or Material("flags16/il.png")
 local images = {}
+
+----
+---@name melon.Image
+----
+---@arg    (url: string   ) URL to the image to download
+---@return (callback: func) Function to be called when download finished/image retrieved, called with IMaterial
+----
+---- Remote image downloader and cache handler. Discord is unreliable, use imgur.
+----
+----
 function melon.Image(url, callback)
     if images[url] then
         if callback then callback(true, images[url]) end
@@ -46,6 +62,18 @@ hook.Add("InitPostEntity", "Melon:LoadLoadingImage", function()
     end )
 end )
 
+----
+---@name melon.DrawImage
+----
+---@arg    (url: string) URL to the image you want to draw
+---@arg    (x: number  ) X of the image to draw
+---@arg    (y: number  ) Y of the image to draw
+---@arg    (w: number  ) W of the image to draw
+---@arg    (h: number  ) H of the image to draw
+---@return (drawn: bool) If the image has been drawn or not, false if loading, true if drawn
+----
+---- Draw an image, handles loading and everything else for you, for use in a 2d rendering hook.
+----
 function melon.DrawImage(url, x, y, w, h)
     local mat = melon.Image(url)
 
@@ -62,6 +90,19 @@ function melon.DrawImage(url, x, y, w, h)
     return true
 end
 
+----
+---@name melon.DrawImageRotated
+----
+---@arg    (url: string) URL to the image you want to draw
+---@arg    (x: number  ) X of the image to draw
+---@arg    (y: number  ) Y of the image to draw
+---@arg    (w: number  ) W of the image to draw
+---@arg    (h: number  ) H of the image to draw
+---@arg    (rot: number) Rotation of the image to draw
+---@return (drawn: bool) If the image has been drawn or not, false if loading, true if drawn
+----
+---- Identical to [melon.DrawImage] except draws it rotated
+----
 function melon.DrawImageRotated(url, x, y, w, h, rot)
     local mat = melon.Image(url)
 
@@ -78,7 +119,17 @@ function melon.DrawImageRotated(url, x, y, w, h, rot)
     return true
 end
 
+
 local avatars = {}
+----
+---@internal
+---@name melon.GetPlayerAvatar
+----
+---@arg    (stid64: string   ) SteamID64 of the players avatar youd like to get
+---@return (avatar: IMaterial) Material of the players avatar, unreliable, will return nil if invalid
+----
+---- Gets a players avatar image from the cache if it exists and initiates downloading it if not, dont use.
+----
 function melon.GetPlayerAvatar(steamid)
     if avatars[steamid] then
         return avatars[steamid]
@@ -92,6 +143,18 @@ function melon.GetPlayerAvatar(steamid)
     return avatars[steamid]
 end
 
+----
+---@name melon.DrawAvatar
+----
+---@arg    (stid: string) SteamID64 of the player to draw the avatar of
+---@arg    (x: number   ) X of the image to draw
+---@arg    (y: number   ) Y of the image to draw
+---@arg    (w: number   ) W of the image to draw
+---@arg    (h: number   ) H of the image to draw
+---@return (drawn: bool ) If the image has been drawn or not, false if loading, true if drawn
+----
+---- Draws a players avatar image reliably.
+----
 function melon.DrawAvatar(steamid, x, y, w, h)
     local mat = melon.GetPlayerAvatar(steamid)
 

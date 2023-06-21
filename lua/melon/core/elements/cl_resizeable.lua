@@ -1,5 +1,10 @@
 
-
+----
+---@todo
+---@name Melon:Resizable
+----
+---- Resizable Panel object
+----
 local PANEL = vgui.Register("Melon:Resizable", {}, "Panel")
 
 function PANEL:Init()

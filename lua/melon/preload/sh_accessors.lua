@@ -1,4 +1,10 @@
 
+----
+---@deprecated
+---@name melon.AccessorTable
+----
+---- Dont use this
+----
 function melon.AccessorTable(tbl, metatable)
     tbl = tbl or {}
     tbl.__index = tbl
@@ -25,4 +31,8 @@ function melon.AccessorTable(tbl, metatable)
     return tbl
 end
 
+---- 
+---@name  melon.AT
+---@alias melon.AccessorTable
+---- 
 melon.AT = melon.AccessorTable

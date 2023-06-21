@@ -1,11 +1,19 @@
 
 melon.Modules = {}
 
+----
+---@deprecated
+---@name melon.MODULE
+----
+---@arg    (name: string) Module to get the object of
+---@return (mod: melon.ModuleObject) Module object of the name
+----
+---- Get the [melon.ModuleObject] of the given name if it exists.
+----
 function melon.MODULE(name)
     return melon.Modules[name]
 end
 
--- Module Object
 local M = {}
 M.__index = M
 AccessorFunc(M, "name", "Name", FORCE_STRING)
@@ -18,7 +26,13 @@ function M:_call(name, ...)
     end
 end
 
--- Load Modules
+----
+---@name melon.LoadModule
+----
+---@arg (folder: string) Module folder name to load
+----
+---- Loads a module from modules/ dynamically, reading __init__ and everything else.
+----
 function melon.LoadModule(fold)
     if not file.Exists("melon/modules/" .. fold .. "/__init__.lua", "LUA") then
         melon.Log(1, "Invalid Module '{1}', __init__.lua not found!", fold)

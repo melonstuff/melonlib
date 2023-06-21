@@ -1,15 +1,36 @@
 
+----
+---@name melon.Debug
+----
+---@arg (fun: func) Function to call on hot refresh
+---@arg (clr: bool) Clear the console before executing?
+----
+---- Executes a function only after the gamemodes loaded, used for hot refreshing and stuff
+----
 function melon.Debug(f, clr)
     if clr then melon.clr() end
     if GAMEMODE then f() end
 end
 
+----
+---@name melon.clr
+----
+---- "Clears" the console by spamming newlines, only functions post gamemode loaded
+----
 function melon.clr()
     if not GAMEMODE then return end
     print(string.rep("\n\n", 100))
 end
 
 local wassettingsopen
+----
+---@name melon.DebugPanel
+----
+---@arg (name: string) Panel name registered with [vgui.Register]
+---@arg (fun: func   ) Function thats called with the panel as its only argument
+----
+---- Creates a debug panel containing the given function, lay this out in fun()
+----
 function melon.DebugPanel(name, func)
     if not GAMEMODE then return end
     if SERVER then return end
@@ -150,6 +171,11 @@ hook.Add("PostRenderVGUI", "MelonLib:PanelTreeView", function()
     surface.DrawRect(x,y,w,h)
 end)
 
+----
+---@name melon.ReloadAll
+----
+---- Reloads melonlib, only functions post gamemode loaded
+----
 function melon.ReloadAll()
     if not GAMEMODE then return end
     if melon.reloading then
@@ -161,6 +187,14 @@ function melon.ReloadAll()
 end
 
 local prot = {}
+----
+---@name melon.StackOverflowProtection
+----
+---@arg    (id: any  ) Identifier used for tracking
+---@return (run: bool) Should the loop stop?
+----
+---- Tracks a loop with the given id to prevent stack overflows, nothing fancy.
+----
 function melon.StackOverflowProtection(id)
     prot[id] = (prot[id] or 0) + 1
 

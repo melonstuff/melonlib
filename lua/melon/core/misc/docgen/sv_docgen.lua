@@ -86,7 +86,9 @@ function melon.docgen.Compile(str)
             local i, block = melon.docgen.HandleDocBlock(lines, index)
             index = i
 
-            table.insert(blocks, block)
+            if block then
+                table.insert(blocks, block)
+            end
         end
     end
 
@@ -138,11 +140,15 @@ function melon.docgen.HandleDocBlock(lines, index)
     end
 
     if lines[index] then
-        params["typeof"] = params["typeof"]
-            or ((#lines[index] == 0) and "empty")
-            or (params.module and "module")
+        params["typeof"] = params["type"]
+            or ((#lines[index] == 0)    and "empty")
+            or (params.module           and "module")
+            or (params.concommand       and "concommand")
+            or (params.panel            and "panel")
+            or (params.method           and "method")
             or ((lines[index]:sub(1, #"function") == "function") and "function")
-            or "value"
+            or ((lines[index]:sub(1, #"local PANEL") == "local PANEL") and "panel")
+                or "value"
     end
 
     local desc = ""
@@ -155,6 +161,10 @@ function melon.docgen.HandleDocBlock(lines, index)
     end
 
     params.description = desc
+
+    if params.todo then
+        return index, false
+    end
 
     return index, params
 end
