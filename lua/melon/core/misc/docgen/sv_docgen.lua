@@ -143,6 +143,7 @@ end
 ---- Handles a docblock at the given location in code
 ----
 function melon.docgen.HandleDocBlock(lines, index)
+    local trackmultiple = {}
     local params = {}
     local description = {}
     local usage = {}
@@ -159,9 +160,10 @@ function melon.docgen.HandleDocBlock(lines, index)
         if cmd == "@" then 
             local name, value = melon.docgen.HandleParam(post)
             if name then
-                if istable(params[name]) then
-                    table.insert(params[name], value)
+                if trackmultiple[name] then
+                    table.insert(params[name], value)    
                 elseif params[name] then
+                    trackmultiple[name] = true
                     params[name] = {params[name], value}
                 else
                     params[name] = value
