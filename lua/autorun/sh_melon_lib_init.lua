@@ -4,10 +4,29 @@ if melon then
     melon.Log(0, "Reloading")
 end
 
+----
+---@module
+---@name melon
+---@realm SHARED
+----
+---- Main module table for the library
+----
 melon = melon or {}
+
+----
+---@name melon.version
+----
+---- Version in major.minor.patch format, see [melon.ParseVersion]
+----
 melon.version = "1.1.0"
 melon.__loadhandlers = melon.__loadhandlers or {}
 
+----
+---@internal
+---@name melon.AddLoadHandler
+----
+---- Adds a load handler for melonlib, sh_, cl_ and sv_ are all loadhandlers
+----
 function melon.AddLoadHandler(handler, func, module_specific)
     melon.__loadhandlers[handler] = {
         func,
@@ -15,6 +34,12 @@ function melon.AddLoadHandler(handler, func, module_specific)
     }
 end
 
+----
+---@internal
+---@name melon.LoadDirectory
+----
+---- Loads a directory recursively, for core use 
+----
 function melon.LoadDirectory(dir, m)
     local fil, fol = file.Find(dir .. "/*", "LUA")
 
@@ -61,6 +86,12 @@ melon.AddLoadHandler("cl", function(f)
     end
 end )
 
+----
+---@internal
+---@name melon.__load
+----
+---- Loads everything in the library
+----
 function melon.__load()
     --[[ Preload all needed files ]]
     melon.LoadDirectory("melon/preload")
@@ -89,6 +120,12 @@ end
 
 melon.__load()
 
+----
+---@concommand
+---@name melon.melon_raw_reload
+----
+---- Reloads melonlib
+----
 concommand.Add("melon_raw_reload", function()
     melon.__load()
 end)

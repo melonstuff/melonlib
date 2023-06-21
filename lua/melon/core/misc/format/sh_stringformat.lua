@@ -1,11 +1,31 @@
 
--- This is a string templating library
--- QualifyFil is extremely unsafe for user input
-
+----
+---@module
+---@name melon.string
+---@realm SHARED
+----
+---- String manipulation library, think a templating engine
+---- Syntax is simple
+----
+---`
+---` melon.string.Format("{1} {2} {3}", "first", "second", "third")
+---` melon.string.Format("{1.1}", {"value in a table"})
+---` melon.string.Format("{1.key}", {key = "by a key"})
+---` melon.string.Format("{1.key | uppercase}", {key = "by a key"})
+---`
 melon.string = melon.string or {}
+
+----
+---@name melon.string.filters
+----
+---- List of all string filters 
+----
 melon.string.filters = melon.string.filters or {}
 
--- Qualify a value in a table from a string
+----
+---@internal
+---@name melon.string.Qualify
+----
 function melon.string.Qualify(tbl, to, notstr)
     to = string.gsub(to, "%s", "")
     local keys = string.Explode("[%.%:]", to, true)
@@ -22,7 +42,12 @@ function melon.string.Qualify(tbl, to, notstr)
     return ((val == tbl) and "") or (notstr and val) or (tostring(val))
 end
 
--- Qualify with filters!
+----
+---@internal
+---@name melon.string.QualifyFil
+----
+---- Extremely unsafe for user input
+----
 function melon.string.QualifyFil(tbl, to)
     local t = string.Split(to, "|")
     local val
@@ -42,7 +67,10 @@ function melon.string.QualifyFil(tbl, to)
     return val
 end
 
--- Call a filter
+----
+---@internal
+---@name melon.string.CallFil
+----
 function melon.string.CallFil(fil, arg, args)
     if arg == nil then
         return "<Error: No argument provided to Filter '" .. tostring(fil) .. "'>"
@@ -54,7 +82,15 @@ function melon.string.CallFil(fil, arg, args)
     return "<Error: Unknown Filter '" .. tostring(fil) .. "'>"
 end
 
--- Formatting function
+----
+---@name melon.string.Format
+----
+---@arg    (fmt: string ) String format to use, see [melon.string] for a reference
+---@arg    (args: ...any) Any values to be passed to the formatter
+---@return (str: string ) Formatted string
+----
+---- Formats a string using the melonlib formatter
+----
 function melon.string.Format(fmt, ...)
     local varargs = {...}
     if (#varargs == 1) and istable(varargs[1]) then
@@ -69,7 +105,10 @@ function melon.string.Format(fmt, ...)
     end)
 end
 
--- Parse Arguments
+----
+---@internal
+---@name melon.string.ParseArgs
+----
 function melon.string.ParseArgs(str, tbl)
     local args = string.Split(str, ",")
     local toret = {}
@@ -88,7 +127,14 @@ function melon.string.ParseArgs(str, tbl)
     return toret
 end
 
--- Format Print
+----
+---@name melon.string.print
+----
+---@arg (fmt: string ) String to be formatted, see [melon.string] for reference
+---@arg (args: ...any) Arguments to be passed to the formatter
+----
+---- Formats and prints the given format, quick function
+----
 function melon.string.print(fmt, ...)
     print(({melon.string.Format(fmt, ...)})[1])
 end
