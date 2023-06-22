@@ -4,7 +4,7 @@ Main module table for the library
 # Modules
 - [net](melon.net.md)
 - [panels](melon.panels.md)
-- [Extensions](melon.Extensions.md)
+- [Extensions](melon.extensions.md)
 - [docgen](melon.docgen.md)
 - [colors](melon.colors.md)
 - [http](melon.http.md)

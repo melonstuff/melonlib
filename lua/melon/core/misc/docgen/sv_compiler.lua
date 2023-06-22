@@ -87,7 +87,7 @@ function melon.docgen.Targets.ghmd(module)
         text = text .. "# Modules\n"
 
         for k,v in pairs(children["module"]) do
-            text = text .. "- [" .. v.__DocData__.realname .. "](" .. v.__DocData__.name .. ".md)\n"
+            text = text .. "- [" .. v.__DocData__.realname .. "](" .. v.__DocData__.name:lower() .. ".md)\n"
 
             melon.docgen.Targets.ghmd(v)
         end
@@ -108,7 +108,7 @@ function melon.docgen.Targets.ghmd(module)
     end
 
     if module.__DocData__ then 
-        file.Write("melon/docs/ghmd/" .. module.__DocData__.name .. ".md.txt", text)
+        file.Write("melon/docs/ghmd/" .. module.__DocData__.name:lower() .. ".md.txt", text)
     end
 end
 
