@@ -1,13 +1,20 @@
 
+melon.elements = melon.elements or {}
+
 ----
----@todo
----@name Melon:Tabs
+---@panel Melon:Tabs
+---@name melon.elements.Tabs
 ----
----- Tabs handler panel
+---@accessor (ActiveTab: any  ) Active tab keyname
+---@accessor (AnimTime: number) Animation time to
+----
+---- Handles multiple tabs, think DPropertySheet without the visuals and builtin handling
 ----
 local PANEL = vgui.Register("Melon:Tabs", {}, "EditablePanel")
 AccessorFunc(PANEL, "ActiveTab", "ActiveTab")
 AccessorFunc(PANEL, "AnimTime", "AnimTime", FORCE_NUMBER)
+
+melon.elements.Tabs = PANEL
 
 function PANEL:Init()
     self.tabs = {}
@@ -15,6 +22,15 @@ function PANEL:Init()
     self:SetAnimTime(0.5)
 end
 
+----
+---@method
+---@name melon.elements.Tabs.AddTab
+----
+---@arg (name:  any  ) Keyname for the tab
+---@arg (panel: panel) Valid Panel to add to the tab handler
+----
+---- Adds the given panel as a tab with the name given to the handler
+----
 function PANEL:AddTab(name, pnl)
     pnl:SetParent(self)
     self.tabs[name] = pnl
@@ -26,6 +42,14 @@ function PANEL:AddTab(name, pnl)
     end
 end
 
+----
+---@method
+---@name melon.elements.Tabs.SetTab
+----
+---@arg (name: string) Name of the tab to set
+----
+---- Sets the current tab to the given tab, animates!
+----
 function PANEL:SetTab(name)
     local old = self.tabs[self:GetActiveTab()]
     local new = self.tabs[name]
@@ -60,6 +84,13 @@ function PANEL:SetTab(name)
     return new
 end
 
+----
+---@method
+---@internal
+---@name melon.elements.Tabs.Think
+----
+---- Handles animation progress stuff, dont touch, if you do touch replace it
+----
 function PANEL:Think()
     if self.anim then
         self.anim.progress = Lerp((CurTime() - self.anim.start) / self:GetAnimTime(), self.anim.progress or 0, 1)
@@ -72,6 +103,13 @@ function PANEL:Think()
     end
 end
 
+----
+---@method
+---@internal
+---@name melon.elements.Tabs.Paint
+----
+---- Handles applying animation progress, read the source before replacing the Paint of this, Paint the parent instead
+----
 function PANEL:Paint()
     if not self.anim then return end
     if self.anim.old then
@@ -90,7 +128,23 @@ function PANEL:Paint()
     end
 end
 
+----
+---@method
+---@name melon.elements.Resizable.AnimDone
+----
+---- Called when the animation is done, if you replace Paint you need to call this by hand
+----
 function PANEL:AnimDone() end
+
+----
+---@method
+---@name melon.elements.Resizable.OnTabChanged
+----
+---@arg (new: panel) New tab panel
+---@arg (old: panel) Old tab panel
+----
+---- Called when the tab is changed
+----
 function PANEL:OnTabChanged(new, old) end
 
 function PANEL:PerformLayout(w, h)

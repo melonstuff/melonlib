@@ -1,11 +1,23 @@
 
+melon.elements = melon.elements or {}
+
 ----
----@todo
----@name Melon:Resizable
+---@panel Melon:Resizable
+---@name melon.elements.Resizable
 ----
 ---- Resizable Panel object
 ----
+---`
+---` local p = vgui.Create("Melon:Resizable")
+---` p:SetSize(400, 400)
+---` p:Center()
+---` p:MakePopup()
+---`
+---` p:SetMaxSize(600, 600)
+---` p:SetMinSize(200, 200)
+---`
 local PANEL = vgui.Register("Melon:Resizable", {}, "Panel")
+melon.elements.Resizable = PANEL
 
 function PANEL:Init()
     self:SetDragSize(12, 4)
@@ -13,19 +25,57 @@ function PANEL:Init()
     self.dragging = false
 end
 
+----
+---@method
+---@name melon.elements.Resizable.SetMaxSize
+----
+---@arg (w: number) Width of the max size
+---@arg (h: number) Height of the max size
+----
+---- Sets the maximum size for the panel to be resizable to
+----
 function PANEL:SetMaxSize(w, h)
     self.maxw, self.maxh = w, h
 end
 
+----
+---@method
+---@name melon.elements.Resizable.SetMinSize
+----
+---@arg (w: number) Width of the min size
+---@arg (h: number) Height of the min size
+----
+---- Sets the minimum size for the panel to be resizable to
+----
 function PANEL:SetMinSize(w, h)
     self.minw, self.minh = w, h
 end
 
+----
+---@method
+---@name melon.elements.Resizable.SetDragSize
+----
+---@arg (size: number) Size of the draggable area
+---@arg (pad: number ) Padding from the edge of the draggable area
+----
+---- Sets the draggable corner size and padding
+----
 function PANEL:SetDragSize(size, pad)
     self.dragsize = size
     self.dragpad = pad or size / 6
 end
 
+----
+---@method
+---@internal
+---@name melon.elements.Resizable.WithinDragRegion
+----
+---@arg    (x: number ) X to check
+---@arg    (y: number ) Y to check
+---@return (is: bool  ) Is it within the draggable region?
+----
+---- Check if a coord is within the drag region
+----
 function PANEL:WithinDragRegion(x, y)
     local w, h = self:GetSize()
     local s = self.dragsize + self.dragpad
@@ -80,10 +130,22 @@ function PANEL:Think()
     )
 end
 
+----
+---@method
+---@name melon.elements.Resizable.StartDragging
+----
+---- Called when the panel starts being resized, remember to [SetCursor]
+----
 function PANEL:StartDragging()
     self:SetCursor("sizenwse")
 end
 
+----
+---@method
+---@name melon.elements.Resizable.EndDragging
+----
+---- Called when the panel stops being resized, remember to [SetCursor]
+----
 function PANEL:EndDragging()
     self:SetCursor("arrow")
 end

@@ -1,13 +1,38 @@
 
 ----
----@todo
----@name Melon:Draggable
+---@module
+---@name melon.elements
+---@realm CLIENT
+----
+---- Contains all PANEL objects added by the library
+----
+melon.elements = melon.elements or {}
+
+----
+---@panel Melon:Draggable
+---@name melon.elements.Draggable
+----
+---@accessor (AreaOf: panel ) Panel to drag when dragging this panel, think a topbar of a frame
+---@accessor (Bounded: panel) Panel to limit the draggable area to, you can also pass true for the parent or false to disable
 ----
 ---- Draggable Panel object
 ----
+---`
+---` local p = vgui.Create("DPanel")
+---` p:SetSize(400, 400)
+---` p:Center()
+---` p:MakePopup()
+---` 
+---` p.drag = vgui.Create("Melon:Draggable", p)
+---` p.drag:SetSize(200, 200)
+---` p.drag:Center()
+---` p.drag:SetAreaOf(p)
+---`
 local PANEL = vgui.Register("Melon:Draggable", {}, "Panel")
 AccessorFunc(PANEL, "area", "AreaOf") -- takes Panel
 AccessorFunc(PANEL, "bbp", "Bounded") -- takes Panel or true for parent
+
+melon.elements.Draggable = PANEL
 
 function PANEL:Init()
     self:SetBounded(true)
@@ -68,10 +93,22 @@ function PANEL:Think()
     self:GetAreaOf():SetPos(x, y)
 end
 
+----
+---@method
+---@name melon.elements.Draggable.StartDragging
+----
+---- Called when the panel starts being dragged, remember to [SetCursor]
+----
 function PANEL:StartDragging()
     self:SetCursor("sizeall")
 end
 
+----
+---@method
+---@name melon.elements.Draggable.EndDragging
+----
+---- Called when the panel stops being dragged, remember to [SetCursor]
+----
 function PANEL:EndDragging()
     self:SetCursor("arrow")
 end
