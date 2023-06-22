@@ -109,24 +109,23 @@ end
 ---` end
 ---`
 function melon.docgen.NormalizeUsage(usage)
-    if #usage == 0 then return false end
+    if not usage then return false end
 
     usage = table.concat(usage, "\n")
-    usage = string.Trim(usage)
-    usage = string.Split(usage, "\n")
-
-    if #usage == 0 then return false end
-
+    
     local lhs = 0
     for i = 1, #usage do
         local ch = usage[i]
 
-        if ch == " " then
+        if ch == " " or ch == "\n" then
             lhs = lhs + 1
         else
             break
         end
     end
+
+    if #usage == 0 then return end 
+    usage = string.Split(usage, "\n")
 
     local text = ""
     for k,v in pairs(usage) do
@@ -170,7 +169,7 @@ function melon.docgen.HandleDocBlock(lines, index)
                 end
             end
         elseif cmd == "`" then
-            table.insert(usage, post)
+            table.insert(usage, string.sub(line, 5, #line))
         elseif cmd == "-" then
             if #post == 0 then
                 index = index + 1
@@ -236,5 +235,5 @@ concommand.Add("melon_generate_docs", function(ply, cmd, args)
 end )
 
 melon.Debug(function()
-    RunConsoleCommand("melon_generate_docs")
+    RunConsoleCommand("melon_generate_docs", "ghmd")
 end )
