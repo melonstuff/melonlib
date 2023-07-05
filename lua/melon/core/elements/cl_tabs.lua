@@ -6,7 +6,7 @@ melon.elements = melon.elements or {}
 ---@name melon.elements.Tabs
 ----
 ---@accessor (ActiveTab: any  ) Active tab keyname
----@accessor (AnimTime: number) Animation time to
+---@accessor (AnimTime: number) Animation time
 ----
 ---- Handles multiple tabs, think DPropertySheet without the visuals and builtin handling
 ----
