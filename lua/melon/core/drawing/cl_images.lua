@@ -19,7 +19,6 @@ local images = {}
 ----
 ---- Remote image downloader and cache handler. Discord is unreliable, use imgur.
 ----
-----
 function melon.Image(url, callback)
     if images[url] then
         if callback then callback(true, images[url]) end
