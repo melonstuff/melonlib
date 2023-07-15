@@ -25,10 +25,19 @@ function melon.panels.DebugPaint(pnl, w, h)
 
     draw.Text({
         text = pnl.ClassName or "anonPanel",
+        pos = {w / 2 + 2, h / 2 + 2},
+        xalign = 1,
+        yalign = 1,
+        font = melon.Font(40),
+        color = Color(22, 22, 22)
+    })
+
+    draw.Text({
+        text = pnl.ClassName or "anonPanel",
         pos = {w / 2, h / 2},
         xalign = 1,
         yalign = 1,
-        font = melon.Font(40)
+        font = melon.Font(40),
     })
 end
 
