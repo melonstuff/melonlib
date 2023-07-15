@@ -17,11 +17,6 @@ function melon.panels.DebugPaint(pnl, w, h)
 
     surface.SetDrawColor(melon.colors.Rainbow())
     surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
-    surface.DrawLine(1, 1, w - 2, h - 2)
-
-    surface.SetDrawColor(22, 22, 22)
-    surface.DrawLine(2, 3, w - 3, h - 2)
-    surface.DrawLine(3, 2, w - 2, h - 3)
 
     draw.Text({
         text = pnl.ClassName or "anonPanel",
