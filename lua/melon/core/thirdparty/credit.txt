@@ -55,3 +55,8 @@ ui3d2d by TomDotBat, can be found at https://github.com/TomDotBat/ui3d2d
 
 blues_shadows by CodeBlue, can be found at https://gist.githubusercontent.com/MysteryPancake/a31637af9fd531079236a2577145a754/raw/c21965aed15b4ddddec7b6c40ce32e0a89d425db/bluesshadows.lua
 RIP
+
+------------------------------------------------------------------------------
+
+Melons Rounded Boxes by MustBeLeaving/Melon... me! can be found at https://gist.github.com/garryspins/cbe49806f1f593a69a7f13becd60bfa0
+
