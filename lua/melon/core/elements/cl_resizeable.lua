@@ -153,6 +153,7 @@ end
 function PANEL:PaintOver(w, h)
     local size = self.dragsize
     local pad = self.dragpad
+    surface.SetDrawColor(255, 255, 255, 255)
     melon.DrawImage("https://i.imgur.com/KRo8XD4.png", w - size - pad, h - size - pad, size, size)
 end
 
