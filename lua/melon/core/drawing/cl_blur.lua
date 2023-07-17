@@ -4,12 +4,12 @@ local blurMat = Material("pp/blurscreen")
 ----
 ---@name melon.DrawBlur
 ----
----@arg    (panel: panel) Panel to draw the blur on
----@arg    (localX: type) X relative to 0 of the panel
----@arg    (localY: type) Y relative to 0 of the panel
----@arg    (w:      type) W of the blur
----@arg    (h:      type) H of the blur
----@arg    (passes: type) How many passes to run, basically the strength of the blur
+---@arg (panel: panel) Panel to draw the blur on
+---@arg (localX: type) X relative to 0 of the panel
+---@arg (localY: type) Y relative to 0 of the panel
+---@arg (w:      type) W of the blur
+---@arg (h:      type) H of the blur
+---@arg (passes: type) How many passes to run, basically the strength of the blur
 ----
 ---- Draws blur!
 ----
@@ -27,4 +27,18 @@ function melon.DrawBlur(panel, localX, localY, w, h, passes)
     end
     render.UpdateScreenEffectTexture()
     surface.DrawTexturedRect(x * -1, y * -1, scrw, scrh)
+end
+
+----
+---@name melon.DrawPanelBlur
+----
+---@arg (panel: panel) Panel to draw the blur on
+---@arg (passes: type) How many passes to run, basically the strength of the blur
+----
+---- Draws blur based on a given panels dimensions
+----
+function melon.DrawPanelBlur(panel, passes)
+    local x,y = panel:LocalToScreen(0, 0)
+    local w,h = panel:GetSize()
+    return melon.DrawBlur(panel, x, y, w, h, passes)
 end
