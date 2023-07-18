@@ -49,6 +49,14 @@ function melon.LoadModule(fold)
 
     incs = incs or {}
 
+    if incs.extras then
+        for k,v in pairs(incs.extras) do
+            melon.LoadDirectory("melon/modules/" .. fold .. "/" .. v, v)
+            m:_call("loaded_" .. v)
+            melon.Log(3, "Loaded module extra '{1}' successfully!", v)
+        end
+    end
+
     if incs.recursive then
         melon.LoadDirectory("melon/modules/" .. fold .. "/src", fold)
         m:_call("loaded")
