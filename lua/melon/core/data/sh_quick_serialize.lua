@@ -7,7 +7,7 @@
 ----
 ---- Serializes a table very simply, only allows string keys and values
 ----
----- format is key::value;key2::value2;
+---- format is key::'value;key2::'value2;
 ----
 function melon.QuickSerialize(tbl)
     local s = ""
