@@ -219,6 +219,7 @@ end
 function melon.DebugHook(en, h, fn)
     melon.Debug(function()
         if not en then
+            if not melon.DebugHookSet then return end
             hook.Remove(melon.DebugHookSet, "MelonDebug__")
             return
         end
