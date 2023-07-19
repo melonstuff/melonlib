@@ -188,6 +188,7 @@ end
 
 local prot = {}
 ----
+---@deprecated
 ---@name melon.StackOverflowProtection
 ----
 ---@arg    (id: any  ) Identifier used for tracking
