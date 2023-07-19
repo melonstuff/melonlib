@@ -49,6 +49,10 @@ function melon.LoadModule(fold)
 
     incs = incs or {}
 
+    if incs.global then
+        _G[incs.global] = m
+    end
+
     if incs.extras then
         for k,v in pairs(incs.extras) do
             melon.LoadDirectory("melon/modules/" .. fold .. "/" .. v, v)
