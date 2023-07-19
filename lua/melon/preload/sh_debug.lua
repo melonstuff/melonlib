@@ -206,3 +206,30 @@ function melon.StackOverflowProtection(id)
 
     return false
 end
+
+----
+---@name melon.DebugHook
+----
+---@arg (enabled: bool) Is this enabled?
+---@arg (hook: string) Hook to hook onto
+---@arg (fn: function) Function to set the hook to
+----
+---- Sets a debug hook
+----
+function melon.DebugHook(en, h, fn)
+    melon.Debug(function()
+        if not en then
+            hook.Remove(melon.DebugHookSet, "MelonDebug__")
+            return
+        end
+
+        if melon.DebugHookSet then
+            hook.Remove(melon.DebugHookSet, "MelonDebug__")
+        end
+    
+        hook.Add(h, "MelonDebug__", fn)
+    
+        melon.DebugHookSet = h
+    end)
+end
+
