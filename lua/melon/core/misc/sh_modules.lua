@@ -2,7 +2,6 @@
 melon.Modules = {}
 
 ----
----@deprecated
 ---@name melon.MODULE
 ----
 ---@arg    (name: string) Module to get the object of
