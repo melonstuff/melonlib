@@ -9,12 +9,47 @@
 melon.colors = melon.colors or {}
 
 ----
+---@name melon.colors.Copy
+----
+---@arg    (original: Color) To color
+---@return (new:      Color) New color object
+----
+---- Returns a new [Color] thats a copy of the original given
+----
+function melon.colors.Copy(original)
+    return Color(
+        original.r,
+        original.g,
+        original.b,
+        original.a
+    )
+end
+
+----
+---@name melon.colors.CopyShallow
+----
+---@arg    (original: Color) To color
+---@return (new:      table) New color
+----
+---- Returns a new table thats a copy of the original given,
+---- same as [melon.colors.Copy] but without the metatable
+----
+function melon.colors.CopyShallow(original)
+    return {
+        r = original.r,
+        g = original.g,
+        b = original.b,
+        a = original.a
+    }
+end
+
+----
 ---@name melon.colors.Lerp
 ----
 ---@arg    (amt: number) Amount to interpolate by
----@arg    (from: color) From color
----@arg    (to: color  ) To color
----@return (new: color ) New color object
+---@arg    (from: Color) From color
+---@arg    (to:   Color) To color
+---@return (new:  Color) New color object
 ----
 ---- Returns a new [Color] thats interpolated by from/to
 ----
@@ -27,11 +62,27 @@ function melon.colors.Lerp(amt, from, to)
     )
 end
 
+----
+---@name melon.colors.LerpMod
+----
+---@arg (amt: number) Amount to interpolate by
+---@arg (mod:  Color) Color to modify
+---@arg (to:   Color) To color
+----
+---- Modifies the given color for optimization reasons, be careful.
+----
+function melon.colors.LerpMod(amt, mod, to)
+    mod.r = Lerp(amt, mod.r, to.r)
+    mod.g = Lerp(amt, mod.g, to.g)
+    mod.b = Lerp(amt, mod.b, to.b)
+    mod.a = Lerp(amt, mod.a, to.a)
+end
+
 -- Credit: Billy (bvgui_v2.lua:242)
 ----
 ---@name melon.colors.IsLight
 ----
----@arg    (col: color) Color to check
+---@arg    (col: Color) Color to check
 ---@return (dark: bool) Is the color light or dark
 ----
 ---- Get if a color is dark or light, primarily for dynamic text colors
@@ -55,7 +106,7 @@ end
 ---@name melon.colors.FromHex
 ----
 ---@arg    (hex: string) Hex color
----@return (col: color ) New color object
+---@return (col:  Color) New color object
 ----
 ---- Converts a hex color of 3, 4, 6 or 8 characters into a [Color] object
 ----
