@@ -116,6 +116,8 @@ function melon.__load()
     --[[ All done! ]]
     hook.Run("Melon:DoneLoading")
     melon.Log(0, "Finished Initialization")
+
+    melon.FinishedLoading = true
 end
 
 melon.__load()
