@@ -63,6 +63,18 @@ function melon.stencil.Cut()
     render.SetStencilReferenceValue(1)
 end
 
+----
+---@name melon.stencil.Deny
+----
+---- Tells the stencil to start cutting but flip it, deny everything thats drawn!
+----
+function melon.stencil.Deny()
+    render.SetStencilFailOperation(STENCILOPERATION_REPLACE)
+    render.SetStencilPassOperation(STENCILOPERATION_ZERO)
+    render.SetStencilZFailOperation(STENCILOPERATION_REPLACE)
+    render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_EQUAL)
+    render.SetStencilReferenceValue(0)
+end
 
 ----
 ---@name melon.stencil.End
@@ -94,7 +106,7 @@ melon.DebugPanel("DPanel", function(p)
         melon.stencil.Start()
             surface.SetDrawColor(255, 255, 255)
             surface.DrawTexturedRectRotated(w / 2, h / 2, w, 50, CurTime() * 10)
-        melon.stencil.Cut()
+        melon.stencil.Deny()
             draw.Text({
                 text = TestText,
                 pos = {w / 2, h / 2},
