@@ -21,11 +21,11 @@ function melon.PostLoad(fn)
 end
 
 hook.Add("Melon:DoneLoading", "melon.PostLoad", function()
-    if not runPostLoad then return end
+    if not istable(runPostLoad) then return end
 
     for _, fn in pairs(runPostLoad) do
         fn()
     end
 
-    runPostLoad = false
+    runPostLoad = nil
 end )
