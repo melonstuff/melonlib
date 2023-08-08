@@ -54,6 +54,10 @@ function melon.AF(t, name, default)
             return s["v_" .. name]
         end
 
+        if t.__on_dirty then
+            t:__on_dirty(name, v)
+        end
+
         s["v_" .. name] = v
         return s
     end
