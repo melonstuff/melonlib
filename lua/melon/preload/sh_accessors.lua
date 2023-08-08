@@ -59,6 +59,6 @@ function melon.AF(t, name, default)
     end
 
     return function(...)
-        melon.AF(t, ...)
+        return melon.AF(t, ...)
     end
 end
