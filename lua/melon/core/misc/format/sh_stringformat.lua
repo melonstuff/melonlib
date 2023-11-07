@@ -12,6 +12,8 @@
 ---` melon.string.Format("{1.1}", {"value in a table"})
 ---` melon.string.Format("{1.key}", {key = "by a key"})
 ---` melon.string.Format("{1.key | uppercase}", {key = "by a key"})
+---` melon.string.Format("{uppercase($1)}", "make this uppercase")
+---` melon.string.Format("the following is escaped: {!uppercase($1)}")
 ---`
 melon.string = melon.string or {}
 
@@ -57,10 +59,10 @@ function melon.string.QualifyFil(tbl, to)
 
         local call = v:match("%((.-)%)$")
         if call then -- Explicit Filter Call
-            val = melon.string.CallFil(v:sub(1, -#call - 3), val, melon.string.ParseArgs(call, tbl))
+            local args = melon.string.ParseArgs(call, tbl)
+            val = melon.string.CallFil(v:sub(1, -#call - 3), val or table.remove(args, 1), args)
         else
             val = melon.string.Qualify(tbl, v, true)
-            nonfunc = val
         end
     end
 
