@@ -2,14 +2,43 @@
 ----
 ---@name melon.Debug
 ----
----@arg (fun: func) Function to call on hot refresh
----@arg (clr: bool) Clear the console before executing?
+---@arg    (f:   func) Function to call on hot refresh
+---@arg    (clr: bool) Clear the console before executing?
+---@arg    (args: ...) Arguments to pass to the given function
+---@return (did: bool) Are debug functions allowed to be ran?
 ----
 ---- Executes a function only after the gamemodes loaded, used for hot refreshing and stuff
 ----
-function melon.Debug(f, clr)
-    if clr then melon.clr() end
-    if GAMEMODE then f() end
+function melon.Debug(f, clr, ...)
+    if not GAMEMODE then return end
+    if clr then
+        melon.clr()
+    end
+
+    hook.Run("Melon:Debug", os.time())
+    if f then
+        xpcall(f, function(err)
+            melon.Log(1, "Error recovered from Debug:\n\t{1}\n", err)
+        end, ... )
+    end
+
+    return true
+end
+
+----
+---@name melon.DebugWrap
+----
+---@arg    (fn: func) Function to wrap Debug around
+---@return (fn: func) Wrapped function
+----
+---- Wraps a function in Debug, equal to doing:
+---`
+---` local x = function(...) melon.Debug(f, _, ...) end
+---`
+function melon.DebugWrap(fn)
+    return function(...)
+        melon.Debug(fn, _, ...)
+    end
 end
 
 ----
@@ -32,7 +61,7 @@ local wassettingsopen
 ---- Creates a debug panel containing the given function, lay this out in fun()
 ----
 function melon.DebugPanel(name, func)
-    if not GAMEMODE then return end
+    if not melon.Debug() then return end
     if SERVER then return end
     if IsValid(melon.__Debug__TestPanel) then
         wassettingsopen = IsValid(melon.__Debug__TestPanel.Tree)
@@ -234,3 +263,68 @@ function melon.DebugHook(en, h, fn)
     end)
 end
 
+----
+---@name melon.DebugRun
+----
+---@arg    (id:   string) Hook to run
+---@arg    (name: string) Hook name to run
+---@arg    (args: any...) Any values to give to the hook
+---@return (ret:  any...) Any return values
+----
+---- Runs a Hook debug
+----
+function melon.DebugRun(id, name, ...)
+    return melon.Debug(function(...)
+        return hook.GetTable()[id][name](...)
+    end, false, ... )
+end
+
+----
+---@name melon.DebugKeybind
+----
+---@arg (key:    KEY_) KEY_ enum to hook
+---@arg (fn: function) Function to call on press
+----
+---- Adds a debug keybind, this is overriden on file save so you can only have one
+----
+function melon.Debugkeybind(key, fn)
+    melon.Debug(function()
+        local press
+        hook.Add("Think", "MelonDebugKeybind", function()
+            if input.IsKeyDown(key) then
+                if press then return end
+                press = true
+    
+                fn()
+            else
+                press = false
+            end
+        end )
+    end)
+end
+
+----
+---@name melon.DebugPlayer
+----
+---@arg    (bots:     bool) If true, include bots in the search
+---@return (player: Player) The first player on the server thats superadmin
+----
+---- Gets a player for debug use
+----
+function melon.DebugPlayer(bots)
+    if CLIENT then
+        return LocalPlayer()
+    end
+
+    local p
+
+    for k,v in pairs(bots and player.GetAll() or player.GetHumans()) do
+        if v:GetUserGroup() == "superadmin" then
+            return v
+        end
+
+        p = p or v
+    end
+
+    return p
+end
