@@ -54,12 +54,12 @@ end
 ---- Returns a new [Color] thats interpolated by from/to
 ----
 function melon.colors.Lerp(amt, from, to)
-    return Color(
-        Lerp(amt, from.r, to.r),
-        Lerp(amt, from.g, to.g),
-        Lerp(amt, from.b, to.b),
-        Lerp(amt, from.a, to.a)
-    )
+    return {
+        r = Lerp(amt, from.r, to.r),
+        g = Lerp(amt, from.g, to.g),
+        b = Lerp(amt, from.b, to.b),
+        a = Lerp(amt, from.a, to.a)
+    }
 end
 
 ----
@@ -130,4 +130,31 @@ function melon.colors.FromHex(hex)
     if r and g and b and a then
         return Color(r, g, b, a)
     end
+end
+
+----
+---@name melon.colors.ToHex
+----
+---@arg    (color: Color) Real Color
+---@return (hex:  string) Hex Color Output
+----
+---- Converts a Color to a hex color of 3, 4, 6 or 8 chars
+----
+function melon.colors.ToHex(color)
+    local function isd(t)
+        return t[1] == t[2]
+    end
+    
+    local r = bit.tohex(color.r, 2)
+    local g = bit.tohex(color.g, 2)
+    local b = bit.tohex(color.b, 2)
+    local a = bit.tohex(color.a, 2)
+
+    if isd(r) and isd(g) and isd(b) and isd(a) then
+        r,g,b,a = r[1], g[1], b[1], a[1]
+    end
+
+    if color.a == 255 then a = "" end
+
+    return r .. g .. b .. a
 end
