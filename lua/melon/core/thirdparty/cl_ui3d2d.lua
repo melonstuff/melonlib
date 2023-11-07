@@ -78,7 +78,7 @@ do --Rendering context creation and mouse position getters
         local isRendering
 
         function ui3d2d.startDraw(pos, angles, scale, ignoredEntity) --Starts a new 3d2d ui rendering context
-            if isRendering then print("[ui3d2d] Attempted to draw a new 3d2d ui without ending the previous one.") return end
+            if isRendering then error("[ui3d2d] Attempted to draw a new 3d2d ui without ending the previous one.") return end
 
             local eyePos = localPlayer:EyePos()
             local eyePosToUi = pos - eyePos
@@ -124,10 +124,12 @@ do --Rendering context creation and mouse position getters
         local end3d2d = cam.End3D2D
 
         function ui3d2d.endDraw() --Safely ends the 3d2d ui rendering context
-            if not isRendering then print("[ui3d2d] Attempted to end a non-existant 3d2d ui rendering context.") return end
+            if not isRendering then error("[ui3d2d] Attempted to end a non-existant 3d2d ui rendering context.") return end
             isRendering = false
             end3d2d()
         end
+
+        concommand.Add("ui3d2dreset", ui3d2d.endDraw)
     end
 
     function ui3d2d.getCursorPos() --Returns the current 3d2d cursor position
