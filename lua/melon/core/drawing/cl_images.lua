@@ -28,7 +28,7 @@ function melon.Image(url, callback)
     local sans = melon.SanitizeURL(url)
     local ext = melon.URLExtension(url)
     if file.Exists("melon/images/" .. sans .. "." .. ext , "DATA") then
-        images[url] = Material("../data/melon/images/" .. sans .. "." .. ext, "mips smooth")
+        images[url] = Material("../data/melon/images/" .. sans .. "." .. ext, "mips smooth noclamp")
         if callback then callback(true, images[url]) end
         return images[url]
     end
@@ -36,7 +36,7 @@ function melon.Image(url, callback)
     melon.Log(3, "Image Fetch made to {1}", "https://external-content.duckduckgo.com/iu/?u=" .. url)
     melon.http.Get("https://external-content.duckduckgo.com/iu/?u=" .. url, function(bod, size, headers, code)
         file.Write("melon/images/" .. sans .. "." .. ext, bod)
-        images[url] = Material("../data/melon/images/" .. sans .. "." .. ext, "mips smooth")
+        images[url] = Material("../data/melon/images/" .. sans .. "." .. ext, "mips smooth noclamp")
         melon.Log(3, "Image Download Success: '{1}' ({2})", url, code)
 
         if callback then callback(true, images[url]) end
@@ -109,7 +109,7 @@ function melon.DrawImageRotated(url, x, y, w, h, rot)
         local size = math.min(w, h)
         surface.SetMaterial(mat)
         surface.SetDrawColor(255, 255, 255, 200 + math.sin(CurTime() * 2) * 30)
-        surface.DrawTexturedRectRotated(x + w / 2, y + h / 2, size, size, CurTime() * 2)
+        surface.DrawTexturedRectRotated(x, y, size, size, CurTime() * 2)
         return false
     end
 
