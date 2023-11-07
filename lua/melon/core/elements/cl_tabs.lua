@@ -5,14 +5,16 @@ melon.elements = melon.elements or {}
 ---@panel Melon:Tabs
 ---@name melon.elements.Tabs
 ----
----@accessor (ActiveTab: any  ) Active tab keyname
+---@accessor (ActiveTab:   any) Active tab keyname
 ---@accessor (AnimTime: number) Animation time
+---@accessor (InitialTab:  any) First tab keyname
 ----
 ---- Handles multiple tabs, think DPropertySheet without the visuals and builtin handling
 ----
 local PANEL = vgui.Register("Melon:Tabs", {}, "EditablePanel")
 AccessorFunc(PANEL, "ActiveTab", "ActiveTab")
 AccessorFunc(PANEL, "AnimTime", "AnimTime", FORCE_NUMBER)
+AccessorFunc(PANEL, "InitialTab", "InitialTab")
 
 melon.elements.Tabs = PANEL
 
@@ -38,6 +40,7 @@ function PANEL:AddTab(name, pnl)
     pnl:SetVisible(false)
 
     if not self:GetActiveTab() then
+        self:SetInitialTab(name)
         self:SetTab(name)
     end
 end
