@@ -14,6 +14,7 @@ melon.elements.Button = PANEL
 
 function PANEL:Init()
     self.pressing = {}
+    self.pressing_count = 0
     self.clicked = {}
     self:SetCursor("hand")
 end
@@ -21,14 +22,17 @@ end
 function PANEL:OnMousePressed(m)
     if self.pressing[m] then
         self.pressing[m] = nil
+        self.pressing_count = self.pressing_count - 1
         self:Click(m, true)
+
         return
     end
 
+    self.pressing_count = self.pressing_count + 1
     self.pressing[m] = CurTime() + self.DoubleClickTime
 end
 
-function PANEL:Think()
+function PANEL:ButtonThink()
     local ct = CurTime()
     for k,v in pairs(self.pressing) do
         if ct < v then continue end
@@ -36,12 +40,31 @@ function PANEL:Think()
         if not input.IsMouseDown(k) then
             self.pressing[k] = nil
             self:Click(k, false)
+            self.pressing_count = self.pressing_count - 1
         end
     end
 end
 
+function PANEL:Think()
+    self:ButtonThink()
+end
+
 function PANEL:Paint(w, h)
     melon.panels.DebugPaint(self, w, h)
+end
+
+----
+---@method
+---@name melon.elements.Button:CanClick
+----
+---@arg    (enum:    MOUSE_) What was the MOUSE_ enum of the click
+---@arg    (double:    bool) Was this click a double click?
+---@return (can_click: bool) Should we fire the click event?
+---- 
+---- Override this to determine whether or not to fire click events
+----
+function PANEL:CanClick(m, double)
+    return true
 end
 
 ----
@@ -54,6 +77,8 @@ end
 ---- Called on any click, dont override this unless you have to
 ----
 function PANEL:Click(m, double)
+    if not self:CanClick(m, double) then return end
+
     if m == MOUSE_LEFT then
         self:LeftClick(double)
         return
