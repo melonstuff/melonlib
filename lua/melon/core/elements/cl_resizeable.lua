@@ -16,7 +16,7 @@ melon.elements = melon.elements or {}
 ---` p:SetMaxSize(600, 600)
 ---` p:SetMinSize(200, 200)
 ---`
-local PANEL = vgui.Register("Melon:Resizable", {}, "Panel")
+local PANEL = vgui.Register("Melon:Resizable", {}, "EditablePanel")
 melon.elements.Resizable = PANEL
 
 function PANEL:Init()
