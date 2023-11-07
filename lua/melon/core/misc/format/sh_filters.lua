@@ -66,3 +66,11 @@ function f.prettycolor(col)
 
     return "col(" .. col.r .. ", " .. col.g .. ", " .. col.b .. ")"
 end
+
+function f.realcolor(col)
+    if not melon.IsColor(col) then
+        return err("Invalid Color '" .. tostring(col) .. "'")
+    end
+
+    return "Color(" .. col.r .. ", " .. col.g .. ", " .. col.b .. ", " .. (col.a or 255) .. ")"
+end
