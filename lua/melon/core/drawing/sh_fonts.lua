@@ -1,6 +1,6 @@
 
 if SERVER then
-    resource.AddSingleFile("resource/fonts/poppins_melon_lib.ttf")
+    resource.AddWorkshop("2631771632")
     return
 end
 
