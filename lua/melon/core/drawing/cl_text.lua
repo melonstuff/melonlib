@@ -40,6 +40,8 @@ end
 ---- VERY SLOW, cache this result.
 ----
 function melon.text.Wrap(text, font, w, x, notrim)
+    x = x or 0
+
     local line = ""
     local last_delim = false
     local lines = {}
@@ -51,7 +53,7 @@ function melon.text.Wrap(text, font, w, x, notrim)
         local char = text[index]
         local tw = surface.GetTextSize(line .. char)
 
-        if tw >= w then
+        if tw >= (w - x) then
             if last_delim then
                 table.insert(lines, last_delim[1])
                 index = last_delim[2]
@@ -61,6 +63,8 @@ function melon.text.Wrap(text, font, w, x, notrim)
                 table.insert(lines, line)
                 line = char
             end
+
+            x = 0
             continue
         elseif char == "\n" then
             table.insert(lines, line)
