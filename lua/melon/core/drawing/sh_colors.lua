@@ -94,12 +94,13 @@ end
 ----
 ---@name melon.colors.Rainbow
 ----
+---@arg    (mul:  number) Number to multiply time by, optional
 ---@return (color: Color) Rainbow color
 ----
 ---- Generates a consistent rainbow color
 ----
-function melon.colors.Rainbow()
-    return HSVToColor(CurTime() * 20, 0.9, 0.9)
+function melon.colors.Rainbow(mul)
+    return HSVToColor(CurTime() * (mul or 20), 0.9, 0.9)
 end
 
 ----
