@@ -29,7 +29,7 @@ function M:CommitHash()
     if SERVER then
         file.AsyncRead("addons/" .. self.ident .. "/.git/refs/heads/main", "GAME", function(_, _, _, data)
             if data then
-                SetGlobal2String("melon_commit_hash:" .. self.ident, hash:Trim())
+                SetGlobal2String("melon_commit_hash:" .. self.ident, data:Trim())
             end
         end)
     end
