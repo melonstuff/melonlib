@@ -8,33 +8,35 @@ end
 ---@type function
 ---@name melon.Font
 ----
----@arg    (size: number) Font size to be scaled
----@arg    (font: string) Optional, font to base the new font off of
----@return (name: string) Font identifier
+---@arg    (size:   number) Font size to be scaled
+---@arg    (font:   string) Optional, font to base the new font off of
+---@arg    (weight: number) Optional, font weight
+---@return (name:   string) Font identifier
 ----
 ---- For use in 2d rendering hooks, create a font if it doesnt exist with the given size/fontname.
 ----
 local fonts = {}
-function melon.Font(size, font)
+function melon.Font(size, font, weight)
     font = font or "Poppins"
     fonts[font] = fonts[font] or {}
 
-    if fonts[font][size] then
-        return fonts[font][size]
+    local id = size .. (weight or "normal")
+    if fonts[font][id] then
+        return fonts[font][id]
     end
 
     font = font or "Poppins"
-    local name = "melon_lib:" .. font .. ":" .. size
+    local name = "melon_lib:" .. font .. ":" .. id
     surface.CreateFont(name, {
         font = font,
-        size = melon.Scale(size)
+        size = melon.Scale(size),
+        weight = weight
     })
 
-    fonts[font][size] = name
+    fonts[font][id] = name
 
     return name
 end
-
 
 ----
 ---@type function
@@ -75,22 +77,23 @@ end
 ---- Same as [melon.Font] except the size is unscale.
 ----
 local unscaled = {}
-function melon.UnscaledFont(size, font)
+function melon.UnscaledFont(size, font, weight)
     font = font or "Poppins"
     unscaled[font] = unscaled[font] or {}
 
-    if unscaled[font][size] then
-        return unscaled[font][size]
+    local id = size .. (weight or "normal")
+    if unscaled[font][id] then
+        return unscaled[font][id]
     end
 
     font = font or "Poppins"
-    local name = "melon_lib:unscaled:" .. font .. ":" .. size
+    local name = "melon_lib:unscaled:" .. font .. ":" .. id
     surface.CreateFont(name, {
         font = font,
         size = size
     })
 
-    unscaled[font][size] = name
+    unscaled[font][id] = name
 
     return name
 end
@@ -112,7 +115,7 @@ function melon.FontGenerator(fontname)
         font = fontname
     }, {
         __index = gen,
-        __call = function(s, f) return s:Font(f) end
+        __call = function(s, ...) return s:Font(...) end
     })
 end
 
@@ -120,26 +123,46 @@ end
 ---@type method
 ---@name melon.FontGeneratorObject.Font
 ----
----@arg    (size: number) Font size to be scaled
----@return (font: string) Font identifier
+---@arg    (size:   number) Font size to be scaled
+---@arg    (weight: number) Font weight
+---@return (font:   string) Font identifier
 ----
 ---- Creates a new font with the given size and font from the object
 ----
-function gen:Font(size)
-    return melon.Font(size, self.font)
+function gen:Font(size, weight)
+    return melon.Font(self:Preprocess(size, self.font, weight))
 end
 
 ----
 ---@type method
 ---@name melon.FontGeneratorObject.Unscaled
 ----
----@arg    (size: number) Font size
----@return (font: string) Font identifier
+---@arg    (size:   number) Font size
+---@arg    (weight: number) Font weight
+---@return (font:   string) Font identifier
 ----
 ---- Identical to [melon.FontGeneratorObject.Font] except unscaled
 ----
-function gen:Unscaled(size)
-    return melon.UnscaledFont(size, self.font)
+function gen:Unscaled(size, weight)
+    return melon.UnscaledFont(self:Preprocess(size, self.font, weight))
+end
+
+----
+---@method
+---@name melon.FontGeneratorObject.Preprocess
+----
+---@arg    (size:   number) Size of the wanted font
+---@arg    (font:   string) Font of the wanted font
+---@arg    (weight: number) Weight of the wanted font
+---@return (size:   number) New size of the wanted font
+---@return (weight: number) New font of the wanted font
+---@return (font:   string) New weight of the wanted font
+----
+---- Called every time a font is wanted  
+---- This is to be used to adjust font sizes globally, or whatever else you need
+----
+function gen:Preprocess(size, font, weight)
+    return size, font, weight
 end
 
 ----
