@@ -12,7 +12,6 @@ function melon.Scale(v)
 end
 
 ----
----@deprecated
 ---@name melon.ScaleN
 ----
 ---@arg    (nums: ...number) Vararg numbers to scale
@@ -20,12 +19,16 @@ end
 ----
 ---- Scales multiple numbers, dont use, unpack is stupid.
 ----
-function melon.ScaleN(...)
-    local t = {...}
-
-    for k,v in pairs(t) do
-        t[k] = melon.Scale(v)
-    end
-
-    return unpack(t)
+function melon.ScaleN(a,b,c,d,e,f)
+    return
+        a and melon.Scale(a),
+        b and melon.Scale(b),
+        c and melon.Scale(c),
+        d and melon.Scale(d),
+        e and melon.Scale(e),
+        f and melon.Scale(f)
 end
+
+melon.Debug(function()
+    cprint(melon.ScaleN(1, 2, 3))
+end )
