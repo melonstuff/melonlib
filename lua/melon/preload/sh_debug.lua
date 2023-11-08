@@ -11,6 +11,7 @@
 ----
 function melon.Debug(f, clr, ...)
     if not GAMEMODE then return end
+    if not melon.FinishedLoading then return end
     if clr then
         melon.clr()
     end
