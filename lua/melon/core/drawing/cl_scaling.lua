@@ -17,7 +17,7 @@ end
 ---@arg    (nums: ...number) Vararg numbers to scale
 ---@return (nums: ...number) Unpacked scaled numbers
 ----
----- Scales multiple numbers, dont use, unpack is stupid.
+---- Scales multiple numbers
 ----
 function melon.ScaleN(a,b,c,d,e,f)
     return
