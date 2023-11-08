@@ -128,10 +128,9 @@ melon.__load()
 ----
 ---- Reloads melonlib
 ----
-concommand.Add("melon_raw_reload", function()
-    if CLIENT then
-        return
-    end
+concommand.Add("melon_raw_reload", function(ply)
+    if IsValid(ply) then return end
+    if CLIENT then return end
 
     melon.__load()
 end)
