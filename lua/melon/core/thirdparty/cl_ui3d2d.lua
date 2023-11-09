@@ -1,7 +1,7 @@
 
-local ui3d2d = {}
 melon.thirdparty = melon.thirdparty or {}
-melon.thirdparty.ui3d2d = ui3d2d
+melon.thirdparty.ui3d2d = {}
+local ui3d2d = melon.thirdparty.ui3d2d
 
 do --Input handling
     local useBind = input.LookupBinding("+use", true)
@@ -35,11 +35,11 @@ do --Input handling
             isPressed = not wasPressing and isPressing
         end)
 
-        function ui3d2d.isPressing() --Returns true if an input is being held
+        function melon.thirdparty.ui3d2d.isPressing() --Returns true if an input is being held
             return inputEnabled and isPressing
         end
 
-        function ui3d2d.isPressed() --Returns true if an input was pressed this frame
+        function melon.thirdparty.ui3d2d.isPressed() --Returns true if an input was pressed this frame
             return inputEnabled and isPressed
         end
     end
@@ -77,7 +77,7 @@ do --Rendering context creation and mouse position getters
 
         local isRendering
 
-        function ui3d2d.startDraw(pos, angles, scale, ignoredEntity) --Starts a new 3d2d ui rendering context
+        function melon.thirdparty.ui3d2d.startDraw(pos, angles, scale, ignoredEntity) --Starts a new 3d2d ui rendering context
             if isRendering then error("[ui3d2d] Attempted to draw a new 3d2d ui without ending the previous one.") return end
 
             local eyePos = localPlayer:EyePos()
@@ -123,7 +123,7 @@ do --Rendering context creation and mouse position getters
 
         local end3d2d = cam.End3D2D
 
-        function ui3d2d.endDraw() --Safely ends the 3d2d ui rendering context
+        function melon.thirdparty.ui3d2d.endDraw() --Safely ends the 3d2d ui rendering context
             if not isRendering then error("[ui3d2d] Attempted to end a non-existant 3d2d ui rendering context.") return end
             isRendering = false
             end3d2d()
@@ -132,11 +132,11 @@ do --Rendering context creation and mouse position getters
         concommand.Add("ui3d2dreset", ui3d2d.endDraw)
     end
 
-    function ui3d2d.getCursorPos() --Returns the current 3d2d cursor position
+    function melon.thirdparty.ui3d2d.getCursorPos() --Returns the current 3d2d cursor position
         return mouseX, mouseY
     end
 
-    function ui3d2d.isHovering(x, y, w, h) --Returns whether the cursor is within a specified area
+    function melon.thirdparty.ui3d2d.isHovering(x, y, w, h) --Returns whether the cursor is within a specified area
         local mx, my = mouseX, mouseY
         return mx and my and mx >= x and mx <= (x + w) and my >= y and my <= (y + h)
     end
@@ -235,7 +235,7 @@ do --3d2d VGUI Drawing
 
     local oldMouseX, oldMouseY = gui.MouseX, gui.MouseY
 
-    function ui3d2d.drawVgui(panel, pos, angles, scale, ignoredEntity)
+    function melon.thirdparty.ui3d2d.drawVgui(panel, pos, angles, scale, ignoredEntity)
         if not (IsValid(panel) and ui3d2d.startDraw(pos, angles, scale, ignoredEntity)) then return end
 
         do
