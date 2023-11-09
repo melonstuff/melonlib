@@ -10,11 +10,12 @@
 melon.panels = melon.panels or {}
 
 function melon.panels.DebugPaint(pnl, w, h)
-    melon.DrawBlur(pnl, 0, 0, w, h, 5)
-
     surface.SetDrawColor(22, 22, 22)
     surface.DrawOutlinedRect(0, 0, w, h, 3)
 
+    surface.SetDrawColor(22, 22, 22, 100)
+    surface.DrawRect(0,0,w,h)
+    
     surface.SetDrawColor(melon.colors.Rainbow())
     surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
 
