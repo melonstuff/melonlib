@@ -135,7 +135,6 @@ function PANEL:SuiteReady()
 
     pnl:SetSize(500, 500)
     pnl:Center()
-    pnl:SetPos(ScrW() - 500, pnl:GetY())
     
     if self:GetSuiteFunction() then
         self:GetSuiteFunction()(pnl)
