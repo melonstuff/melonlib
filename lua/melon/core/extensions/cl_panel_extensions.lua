@@ -2,6 +2,7 @@
 local applied = {}
 
 ----
+---@deprecated
 ---@module
 ---@name melon.Extensions
 ---@realm SHARED
