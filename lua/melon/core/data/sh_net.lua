@@ -1,4 +1,8 @@
 
+if SERVER then
+    util.AddNetworkString("melon")
+end
+
 ----
 ---@module
 ---@name melon.net
@@ -44,7 +48,9 @@ function melon.net.Watch(msg, name, callback)
 
         net.Receive(msg, function(len, ply)
             for _, v in pairs(melon.net.Listeners[msg]) do
-                v(len, ply)
+                if v(len, ply) == true then
+                    break
+                end
             end
         end )
     end
