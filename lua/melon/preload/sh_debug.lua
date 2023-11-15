@@ -250,6 +250,7 @@ function melon.DebugHook(en, h, fn)
     melon.Debug(function()
         if not en then
             if not melon.DebugHookSet then return end
+            if melon.DebugHookSet != h then return end
             hook.Remove(melon.DebugHookSet, "MelonDebug__")
             return
         end
@@ -328,4 +329,32 @@ function melon.DebugPlayer(bots)
     end
 
     return p
+end
+
+----
+---@name melon.DebugID
+----
+---@arg (id: string) The string to make unique
+----
+---- Makes an identifier unique only after debugging
+---- This is useful for RenderTarget or Material names where you want to create a new one every refresh
+----
+function melon.DebugID(id)
+    if melon.Debug() then
+        return id .. SysTime()
+    end
+
+    return id
+end
+
+----
+---@name melon.DebugDeprecated
+----
+---- Warn that the function being called is deprecated
+----
+function melon.DebugDeprecated()
+    local used_at = debug.getinfo(3, "Sl")
+    local parent  = debug.getinfo(2, "ln")
+    
+    melon.Log(2, "Use of deprecated function {1.name} at {2.short_src}:{2.currentline} ", parent, used_at)
 end
