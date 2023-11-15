@@ -394,6 +394,7 @@ end
 ---@arg (y:        number) The Y coord to render it at
 ---@arg (colors:    table) A sequential table of {step:number, color:Color}
 ---@arg (local_to:  Panel) Position this gradient local to this panel, will also clip to it
+---@arg (rotation: number) Rotation of the gradient, optional
 ----
 ---- Renders a piece of gradient text
 ----
@@ -410,12 +411,16 @@ end
 ---`     melon.TextGradient("Some Text", melon.Font(30), 10, 10, c)
 ---` end )
 ---`
-function melon.TextGradient(text, font, x, y, colors, local_to)
+function melon.TextGradient(text, font, x, y, colors, local_to, rotation)
     surface.SetFont(font)
     local tw, th = surface.GetTextSize(text)
+    local b = melon.GradientBuilder(nil, colors):Material()
 
+    local size = math.max(tw, th)
     melon.masks.Start()
-        melon.GradientBuilder(nil, colors):Render(x, y, tw, th)
+        surface.SetDrawColor(255, 255, 255)
+        surface.SetMaterial(b)
+        surface.DrawTexturedRectRotated(x + tw / 2, y + th / 2, size, size, rotation or 0)
     melon.masks.Source()
         draw.Text({
             text = text,
@@ -452,7 +457,6 @@ melon.DebugPanel("Panel", function(p)
             draw.RoundedBox(16, w / 2 - tw / 2, v:GetY() + (v:GetTall() / 2) - (th / 2), tw, th, {r = 255, g = 255, b = 255, a = 255})
 
             melon.TextGradient(v.Text, melon.Font(34), w / 2 - realtw / 2, v:GetY() + (v:GetTall() / 2) - (realth / 2) + 2, melon.GradientTestColors, self)
-            melon.TextGradient(v.Text, melon.Font(34), -realtw / 2, v:GetY() + (v:GetTall() / 2) - (realth / 2) + 2, melon.GradientTestColors, self)
 
             if v.SubText then
                 draw.Text({
@@ -507,4 +511,8 @@ melon.DebugPanel("Panel", function(p)
         self:Center()
         self:SetSize(500, self.render:GetTall() * #self:GetChildren() + pad + pad)
     end
+end )
+
+melon.DebugHook(false, "HUDPaint", function()
+    melon.TextGradient("some text", melon.Font(300), 10, 10, melon.GradientTestColors, nil, 50)
 end )
