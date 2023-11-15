@@ -573,7 +573,6 @@ melon.branding.AddBit("gradients", function(cx, cy, time, panel, st)
     })
 
     melon.TextGradient(dtext, font, cx - tw / 2, cy - th / 2, c2)
-    melon.ResetTextGradients()
 
     return scaled_w, scaled_h
 end, {"demo_background"}, 60)

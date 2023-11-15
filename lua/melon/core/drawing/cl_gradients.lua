@@ -14,11 +14,17 @@ melon.GradientBuilderObj = gradbuilder
 ---@method
 ---@name gradbuilder.Init
 ----
-function gradbuilder:Init()
+function gradbuilder:Init(steps)
     self.steps = {}
 
     self.colormod = {}
     self.alpha = {}
+
+    if steps then
+        for k,v in pairs(steps) do
+            self:Step(v[1], v[2])
+        end
+    end
     return self
 end
 
@@ -91,6 +97,21 @@ function gradbuilder:Step(perc, color)
         u = perc / 100,
         color = color
     })
+
+    return self
+end
+
+----
+---@method
+---@name gradbuilder.Reset
+----
+---@return (self: self) The gradbuilder
+----
+---- Resets all steps, if you dont do this and you add steps every frame you will cause a crash
+----
+function gradbuilder:Reset()
+    self.steps = {}
+    self:Invalidate()
 
     return self
 end
@@ -221,10 +242,11 @@ end
 ----
 function gradbuilder:Build(x, y, w, h)
     --- these assertions are important, the game crashes if you make a bad IMesh
-    assert(isnumber(x), "Expected Number for argument 'x', got '" .. type(x) .. "'")
-    assert(isnumber(y), "Expected Number for argument 'y', got '" .. type(y) .. "'")
-    assert(isnumber(w), "Expected Number for argument 'w', got '" .. type(w) .. "'")
-    assert(isnumber(h), "Expected Number for argument 'h', got '" .. type(h) .. "'")
+    if melon.Assert(isnumber(x), "Expected Number for argument 'x', got '{1}'", type(x)) then return end
+    if melon.Assert(isnumber(y), "Expected Number for argument 'y', got '{1}'", type(y)) then return end
+    if melon.Assert(isnumber(w), "Expected Number for argument 'w', got '{1}'", type(w)) then return end
+    if melon.Assert(isnumber(h), "Expected Number for argument 'h', got '{1}'", type(h)) then return end
+    if melon.Assert(#self.steps < 100, "Please reset your gradient before adding new steps!!! (found {1} steps which is totally unacceptable)", #self.steps) then return end
 
     if IsValid(self.mesh) then
         self.mesh:Destroy()
@@ -303,6 +325,7 @@ local gradients = {}
 ---@name melon.GradientBuilder
 ----
 ---@arg    (id:              any) The identifier for the builder
+---@arg    (colors:        table) A sequential table of {step:number, color:Color}, optional
 ---@return (builder: gradbuilder) The gradient builder object
 ----
 ---- Creates a [gradbuilder] object
@@ -319,203 +342,21 @@ local gradients = {}
 ---`     g:Render(10, 10, 150, 150)
 ---` end )
 
-function melon.GradientBuilder(id)
+function melon.GradientBuilder(id, colors)
     if not id then
-        return setmetatable({}, gradbuilder):Init()
+        return setmetatable({}, gradbuilder):Init(colors)
     end
 
     if gradients[id] then
         return gradients[id]
     end
 
-    gradients[id] = setmetatable({}, gradbuilder):Init()
+    gradients[id] = setmetatable({}, gradbuilder):Init(colors)
 
     return gradients[id]
 end
 
-
-do --- Text gradients
-
-    local gw, gh = ScrW(), ScrH()
-    local gx, gy = 0, 0
-    local lh = 0
-    
-    local RT  = GetRenderTargetEx(
-        "MelonTextGradientMap", gw, gh,
-        RT_SIZE_NO_CHANGE,
-        MATERIAL_RT_DEPTH_SEPARATE,
-        bit.bor(1, 256),
-        0,
-        IMAGE_FORMAT_BGRA8888
-    )
-    local MAT = CreateMaterial("MelonTextGradientMap", "UnlitGeneric", {
-        ["$basetexture"]  = RT:GetName(),
-        ["$translucent"] = "1",
-        ["$vertexalpha"] = "1"
-    })
-    
-    local grads
-    ----
-    ---@name melon.TextGradient
-    ----
-    ---@arg (text:     string) The text to render
-    ---@arg (font:     string) The font of the text
-    ---@arg (x:        number) The X coord to render it at
-    ---@arg (y:        number) The Y coord to render it at
-    ---@arg (colors:    table) A sequential table of {step:number, color:Color}
-    ---@arg (extra_id: string) An extra identifier incase youre running into collision issues with caching
-    ----
-    ---- Renders a piece of gradient text
-    ----
-    ---`
-    ---` local c = {
-    ---`     {0,   Color(84, 158, 200)},
-    ---`     {35,  Color(101, 58, 192)},
-    ---`     {70,  Color(143, 0, 255)},
-    ---`     {90,  Color(152, 43, 138)},
-    ---`     {100, Color(156, 62, 84)},
-    ---` }
-    ---` 
-    ---` hook.Add("HUDPaint", "TextGradientRender", function()
-    ---`     melon.TextGradient("Some Text", melon.Font(30), 10, 10, c)
-    ---` end )
-    ---`
-    function melon.TextGradient(text, font, x, y, colors, extra_id)
-        local name = text .. ":" .. font .. ":" .. #colors .. (extra_id or "noExtraID")
-    
-        if not grads then
-            melon.ResetTextGradients()
-        end
-    
-        if grads[name] then
-            local t = grads[name]
-    
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(MAT)
-            surface.DrawTexturedRectUV(x, y, t.tw, t.th, t.u, t.v, (t.x + t.tw) / gw, (t.y + t.th) / gh)
-    
-            return t
-        end
-    
-        local oa = surface.GetAlphaMultiplier()
-        surface.SetDrawColor(255, 255, 255)
-        surface.SetAlphaMultiplier(1)
-        draw.NoTexture()
-        surface.SetFont(font)
-        local tw, th = surface.GetTextSize(text)
-    
-        lh = math.max(lh, th)
-        if gx + tw >= gw then
-            gx = 0
-            gy = gy + lh
-            lh = 0
-        end
-    
-        render.PushRenderTarget(RT)
-        render.PushFilterMag(TEXFILTER.POINT)
-        render.PushFilterMin(TEXFILTER.POINT)
-        cam.Start2D()
-    
-        local slices = tw
-        local steps = {}
-    
-        for k, v in pairs(colors) do
-            local next = colors[k + 1]
-            if not next then continue end
-    
-            local perc = v[1] / 100
-            local nperc = next[1] / 100
-    
-            table.insert(steps, {
-                from = perc,
-                to = nperc,
-    
-                left = v[2],
-                right = next[2],
-                region = slices * (nperc - perc)
-            })
-        end
-    
-        local per_slice = tw / slices
-        local step = 1
-        local incr = 0
-        for i = 0, slices do
-            local xx = per_slice * i
-            local this = steps[step]
-            if not this then continue end
-    
-            local t = (xx / tw)
-            local rt = incr / this.region
-            if t >= this.to then
-                step = step + 1
-                incr = 0
-            end
-    
-            incr = incr + 1
-    
-            render.SetScissorRect(gx + xx, gy, gx + xx + per_slice, gy + th, true)
-    
-            local c = melon.colors.Lerp(rt, this.left, this.right)
-            draw.Text({
-                text = text,
-                pos = {gx, gy},
-                font = font,
-                color = c,
-            })
-    
-            render.SetScissorRect(0, 0, 0, 0, false)
-        end
-    
-        cam.End2D()
-        render.PopFilterMag()
-        render.PopFilterMin()
-        render.PopRenderTarget()
-    
-        grads[name] = {
-            x = gx,
-            y = gy,
-            u = gx / gw,
-            v = gy / gh,
-    
-            colors = colors,
-            frame = 1,
-            tw = tw,
-            th = th,
-            font = font,
-        }
-    
-        gx = gx + tw
-    
-        surface.SetAlphaMultiplier(oa)
-        melon.TextGradient(text, font, x, y, colors)
-    
-        return grads[name]
-    end
-    
-    ----
-    ---@name melon.ResetTextGradients
-    ----
-    ---- Resets the Text Gradient cache 
-    ----
-    function melon.ResetTextGradients()
-        grads = {}
-        gw, gh = ScrW(), ScrH()
-        gx, gy = 0, 0
-        lh = 0
-        render.PushRenderTarget(RT)
-        render.OverrideAlphaWriteEnable(false, true)
-            render.Clear(0, 0, 0, 0, true, true)
-        render.OverrideAlphaWriteEnable(false, true)
-        render.PopRenderTarget()
-    end
-end
-
-if 1 then return end
-if not melon.Debug() then return end
-
-melon.ResetTextGradients()
-
-local c = {
+melon.GradientTestColors = {
     {0,   Color(84, 158, 200)},
     {35,  Color(101, 58, 192)},
     {70,  Color(143, 0, 255)},
@@ -523,22 +364,78 @@ local c = {
     {100, Color(156, 62, 84)},
 }
 
+----
+---@name melon.TestGradient
+----
+---@return (builder: gradbuilder) The test gradient
+----
+---- Creates a standardized test gradient
+----
+function melon.TestGradient()
+    return melon.GradientBuilder("test_gradient_internal HAIIII WHOEVERS READING THIS!!! :3:3:3")
+        :Reset()
+        :Step(melon.GradientTestColors[1][1], melon.GradientTestColors[1][2])
+        :Step(melon.GradientTestColors[2][1], melon.GradientTestColors[2][2])
+        :Step(melon.GradientTestColors[3][1], melon.GradientTestColors[3][2])
+        :Step(melon.GradientTestColors[4][1], melon.GradientTestColors[4][2])
+        :Step(melon.GradientTestColors[5][1], melon.GradientTestColors[5][2])
+        :LocalTo(nil)
+        :Vertical(false)
+        :ColorMod(nil, nil, nil, nil)
+        :Alpha(nil, nil, nil, nil)
+end
+
+----
+---@name melon.TextGradient
+----
+---@arg (text:     string) The text to render
+---@arg (font:     string) The font of the text
+---@arg (x:        number) The X coord to render it at
+---@arg (y:        number) The Y coord to render it at
+---@arg (colors:    table) A sequential table of {step:number, color:Color}
+---@arg (local_to:  Panel) Position this gradient local to this panel, will also clip to it
+----
+---- Renders a piece of gradient text
+----
+---`
+---` local c = {
+---`     {0,   Color(84, 158, 200)},
+---`     {35,  Color(101, 58, 192)},
+---`     {70,  Color(143, 0, 255)},
+---`     {90,  Color(152, 43, 138)},
+---`     {100, Color(156, 62, 84)},
+---` }
+---` 
+---` hook.Add("HUDPaint", "TextGradientRender", function()
+---`     melon.TextGradient("Some Text", melon.Font(30), 10, 10, c)
+---` end )
+---`
+function melon.TextGradient(text, font, x, y, colors, local_to)
+    surface.SetFont(font)
+    local tw, th = surface.GetTextSize(text)
+
+    melon.masks.Start()
+        melon.GradientBuilder(nil, colors):Render(x, y, tw, th)
+    melon.masks.Source()
+        draw.Text({
+            text = text,
+            font = font,
+            pos = {x, y},
+            color = color_black
+        })
+    melon.masks.End(melon.masks.KIND_CUT)
+end
+
+if not melon.Debug() then return end
+
 melon.DebugPanel("Panel", function(p)
     p.render = vgui.Create("Panel", p)
     p.material = vgui.Create("Panel", p)
     p.html = vgui.Create("DHTML", p)
 
-    local g = melon.GradientBuilder(p)
-
-    for k,v in ipairs(c) do
-        g:Step(v[1], v[2])
-    end
-    
-    g:LocalTo(p.render)
-
     p.html:SetHTML(melon.string.Format([[
         <html style='background:-webkit-{1}; background:{1}; width:100%; height:100%'></html>
-    ]], g:ToCSS()))
+    ]], melon.TestGradient():ToCSS()))
 
     function p:Paint(w, h)
         surface.SetDrawColor(22, 22, 22)
@@ -554,15 +451,8 @@ melon.DebugPanel("Panel", function(p)
 
             draw.RoundedBox(16, w / 2 - tw / 2, v:GetY() + (v:GetTall() / 2) - (th / 2), tw, th, {r = 255, g = 255, b = 255, a = 255})
 
-            -- draw.Text({
-                -- text = v.Text,
-                -- pos = {w / 2, v:GetY() + v:GetTall() / 2 + 2},
-                -- xalign = 1,
-                -- yalign = 1,
-                -- font = melon.Font(34)
-            -- })
-
-            melon.TextGradient(v.Text, melon.Font(34), w / 2 - realtw / 2, v:GetY() + (v:GetTall() / 2) - (realth / 2) + 2, c)
+            melon.TextGradient(v.Text, melon.Font(34), w / 2 - realtw / 2, v:GetY() + (v:GetTall() / 2) - (realth / 2) + 2, melon.GradientTestColors, self)
+            melon.TextGradient(v.Text, melon.Font(34), -realtw / 2, v:GetY() + (v:GetTall() / 2) - (realth / 2) + 2, melon.GradientTestColors, self)
 
             if v.SubText then
                 draw.Text({
@@ -589,12 +479,12 @@ melon.DebugPanel("Panel", function(p)
 
     p.render.Text = "Render"
     function p.render:Paint(w, h)
-        g:Render(0, 0, w, h)
+        melon.TestGradient():LocalTo(self):Render(0, 0, w, h)
     end
 
     p.material.Text = "Material"
     function p.material:Paint(w, h)
-        surface.SetMaterial(g:Material())
+        surface.SetMaterial(melon.TestGradient():Material())
         surface.SetDrawColor(255, 255, 255)
         surface.DrawTexturedRect(0, 0, w, h)
     end
