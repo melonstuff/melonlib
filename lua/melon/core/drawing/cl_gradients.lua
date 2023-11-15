@@ -195,6 +195,18 @@ function gradbuilder:Material()
 end
 
 ----
+---@method
+---@name gradbuilder.Invalidate
+----
+---- Invalidates the current mesh, causing it to rebuild
+----
+function gradbuilder:Invalidate()
+    if IsValid(self.mesh) then
+        self.mesh:Destroy()
+    end
+end
+
+----
 ---@internal
 ---@method
 ---@name gradbuilder.Build
@@ -385,6 +397,10 @@ do --- Text gradients
             return t
         end
     
+        local oa = surface.GetAlphaMultiplier()
+        surface.SetDrawColor(255, 255, 255)
+        surface.SetAlphaMultiplier(1)
+        draw.NoTexture()
         surface.SetFont(font)
         local tw, th = surface.GetTextSize(text)
     
@@ -470,6 +486,7 @@ do --- Text gradients
     
         gx = gx + tw
     
+        surface.SetAlphaMultiplier(oa)
         melon.TextGradient(text, font, x, y, colors)
     
         return grads[name]
@@ -482,7 +499,9 @@ do --- Text gradients
     ----
     function melon.ResetTextGradients()
         grads = {}
-    
+        gw, gh = ScrW(), ScrH()
+        gx, gy = 0, 0
+        lh = 0
         render.PushRenderTarget(RT)
         render.OverrideAlphaWriteEnable(false, true)
             render.Clear(0, 0, 0, 0, true, true)
@@ -491,6 +510,7 @@ do --- Text gradients
     end
 end
 
+if 1 then return end
 if not melon.Debug() then return end
 
 melon.ResetTextGradients()
