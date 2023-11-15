@@ -1,16 +1,35 @@
 
 ----
----@todo
+---@name melon.LogTypes
 ----
-
+---- List of all log types 
+----
 melon.LogTypes = melon.LogTypes or {}
+
 local logs = {}
 local logtypes = melon.LogTypes
 
+----
+---@name melon.AddLogHandler
+----
+---@arg (level:      number) Number, log level
+---@arg (log:  func(table)) Function to call when logging, called with logdata
+----
+---- Adds a log handler
+----
 function melon.AddLogHandler(lvl, func)
     logtypes[lvl] = func
 end
 
+
+----
+---@name melon.AddDynamicLogHandler
+----
+---@arg    (log:   func(table)) Function to call when logging, called with logdata
+---@return (type:       number) Log Level
+----
+---- Adds a log handler which just appends to the previous logtypes, returns the level of this handler
+----
 function melon.AddDynamicLogHandler(func)
     local num = #logtypes + 1
 
@@ -19,6 +38,15 @@ function melon.AddDynamicLogHandler(func)
     return num
 end
 
+----
+---@name melon.Log
+----
+---@arg    (level:   number) The log level
+---@arg    (fmt:     string) String format to log
+---@arg    (fmtargs: ...any) Arguments for the formatter
+----
+---- Formats and logs a message, also calls the hook `Melon:Log` with the logdata
+----
 function melon.Log(lvl, fmt, ...)
     local vg = {...}
 
@@ -45,8 +73,18 @@ function melon.Log(lvl, fmt, ...)
     table.insert(logs, l)
 
     logtypes[lvl](l)
+    hook.Run("Melon:Log", l)
 end
 
+----
+---@name melon.Assert
+----
+---@arg (expr:   bool) Did this expression pass? Must be true to pass
+---@arg (fmt:  string) Format string error if we failed
+---@arg (args: ...any) Arguments for the formatted
+----
+---- Asserts the expression, returns true if you should return
+----
 function melon.Assert(expr, fmt, ...)
     if expr == true then -- dont accept truey expressions as valid
         return false
@@ -76,7 +114,6 @@ hook.Add("ShutDown", "Melon:Logs:DumpingToFile", function()
     RunConsoleCommand("melon_dump_logs")
 end )
 
-
 -- Handler Definitions
 local colors = {
     white = color_white,
@@ -98,6 +135,11 @@ end)
 
 -- Errors
 melon.AddLogHandler(1, function(msg)
+    if CLIENT then
+        ErrorNoHaltWithStack("[MelonLib (", msg.fmt_time , ")][Error] " .. msg.message)
+        return
+    end
+
     MsgC(colors.red, "[MelonLib (", msg.fmt_time , ")][Error] ", colors.white, msg.message, "\n")
 end)
 
