@@ -14,9 +14,10 @@ local active = Color(94, 92, 230)
 ----
 ---- Renders MelonLib branding dynamically ingame
 ---- Feel free to look at this but I dont recommend modifying it lol
+---- Always export gifs with 30ms between frames
 ----
 melon.branding = melon.branding or {}
-melon.branding.bits = melon.branding.bits or {}
+melon.branding.bits = {}
 melon.branding.play_state = {
     playing = true,
     frame = 0,
@@ -201,7 +202,7 @@ function melon.branding.Open()
         }
     end
 
-    for k,v in SortedPairs(melon.branding.bits) do
+    for k,v in SortedPairsByMemberValue(melon.branding.bits, "order") do
         local btn = vgui.Create("Melon:Button", melon.branding.UI.Sidebar)
         AccessorFunc(btn, "Active", "Active") -- cursed af i know
 
@@ -259,15 +260,17 @@ function melon.branding.Open()
             end
 
             local pad = 4
+            surface.SetDrawColor(255, 255, 255, 20)
+            surface.DrawLine(pad, pad, w / 2 - rw / 2 - pad, h / 2 - rh / 2 - pad)
+            surface.DrawLine(w - pad, pad, w / 2 + rw / 2 + pad, h / 2 - rh / 2 - pad)
+            surface.DrawLine(w - pad, h - pad, w / 2 + rw / 2 + pad, h / 2 + rh / 2 + pad)
+            surface.DrawLine(pad, h - pad, w / 2 - rw / 2 - pad, h / 2 + rh / 2 + pad)
+
             surface.SetDrawColor(255, 255, 255)
-            surface.DrawLine(0, 0, w / 2 - rw / 2 - pad, h / 2 - rh / 2 - pad)
-            surface.DrawLine(w, 0, w / 2 + rw / 2 + pad, h / 2 - rh / 2 - pad)
-            surface.DrawLine(w, h, w / 2 + rw / 2 + pad, h / 2 + rh / 2 + pad)
-            surface.DrawLine(0, h, w / 2 - rw / 2 - pad, h / 2 + rh / 2 + pad)
-            surface.DrawLine(w / 2 - rw / 2 - pad, h / 2 - rh / 2 - pad, w / 2 - rw / 2 - pad, h / 2 + rh / 2 + pad)
-            surface.DrawLine(w / 2 - rw / 2 - pad, h / 2 + rh / 2 + pad, w / 2 + rw / 2 + pad, h / 2 + rh / 2 + pad)
-            surface.DrawLine(w / 2 + rw / 2 + pad, h / 2 + rh / 2 + pad, w / 2 + rw / 2 + pad, h / 2 - rh / 2 - pad)
-            surface.DrawLine(w / 2 - rw / 2 - pad, h / 2 - rh / 2 - pad, w / 2 + rw / 2 + pad, h / 2 - rh / 2 - pad)
+            surface.DrawLine(w / 2 - rw / 2, h / 2 - rh / 2, w / 2 - rw / 2, h / 2 + rh / 2)
+            surface.DrawLine(w / 2 - rw / 2, h / 2 + rh / 2, w / 2 + rw / 2, h / 2 + rh / 2)
+            surface.DrawLine(w / 2 + rw / 2, h / 2 + rh / 2, w / 2 + rw / 2, h / 2 - rh / 2)
+            surface.DrawLine(w / 2 - rw / 2, h / 2 - rh / 2, w / 2 + rw / 2, h / 2 - rh / 2)
         end
     end
 
@@ -329,6 +332,7 @@ hook.Add("PostRender", "MelonBrandingRender", function()
     render_queued = false
 end )
 
+local order = 0
 ----
 ---@name melon.branding.AddBit
 ----
@@ -341,6 +345,7 @@ end )
 ----
 function melon.branding.AddBit(name, func, pre, frames, w, h)
     melon.branding.bits[name] = {
+        order = order,
         func = function(...)
             for k, v in ipairs(pre or {}) do
                 if melon.branding.bits[v] then
@@ -352,11 +357,12 @@ function melon.branding.AddBit(name, func, pre, frames, w, h)
         end,
         frames = frames or melon.branding.fps
     }
+    order = order + 1
 end
 
-local isize = 512
+local brandingsize = ScrW()
 melon.branding.AddBit("background", function(cx, cy, time, panel, st)
-    local w,h = isize, isize
+    local w,h = brandingsize, brandingsize
     local x,y = cx - w / 2, cy - h / 2
     local dist = 45
     local lines = math.ceil(math.max(w, h) / dist)
@@ -377,8 +383,36 @@ melon.branding.AddBit("background", function(cx, cy, time, panel, st)
     end
 
     return w, h
-end, nil)
+end, {})
 
+local scale = .75
+local scaled_w, scaled_h = ScrW() * scale, ScrH() * scale
+melon.branding.AddBit("demo_background", function(cx, cy, time, panel, st)
+    local x, y = cx - (scaled_w / 2), cy - (scaled_h / 2)
+    local melonsize = scaled_w * 0.04
+
+    surface.SetDrawColor(255, 255, 255, 20)
+    local tw = draw.Text({
+        text = "MelonLib",
+        pos = {x + 10, y + (melonsize - 10)},
+        font = melon.Font(scaled_w * 0.03),
+        color = surface.GetDrawColor()
+    })
+
+    melon.DrawImage("https://i.imgur.com/rUpDQFy.png", x + 10 + tw / 2 - (melonsize / 2), y, melonsize, melonsize)
+
+    draw.Text({
+        text = "rendered ingame",
+        pos = {x + 14, y + scaled_h - 10},
+        yalign = 4,
+        font = melon.Font(scaled_w * 0.02),
+        color = {r = 255, g = 255, b = 255, a = 20}
+    })
+
+    return scaled_w, scaled_h
+end, {"background"})
+
+local isize = 512
 melon.branding.AddBit("melonlib", function(cx, cy, time, panel, st)
     local font = melon.Font(isize * .24)
     local mln_size = isize * .4
@@ -420,6 +454,15 @@ melon.branding.AddBit("melonlib", function(cx, cy, time, panel, st)
         pos = {cx - (isize / 2 - 10), cy + (isize / 2 - 10)},
         xalign = 0,
         yalign = 4,
+        font = smallerfont,
+        color = {r = 255, g = 255, b = 255, a = 20}
+    })
+
+    draw.Text({
+        text = "if you dont see the model, hot-refresh on this tab",
+        pos = {cx, cy + isize / 2 + 10},
+        xalign = 1,
+        yalign = 3,
         font = smallerfont,
         color = {r = 255, g = 255, b = 255, a = 20}
     })
@@ -470,7 +513,6 @@ melon.branding.AddBit("melonlib", function(cx, cy, time, panel, st)
             cam.End3D()
 
             self.LastPaint = RealTime()
-        
         end
     end
 
@@ -480,5 +522,65 @@ melon.branding.AddBit("melonlib", function(cx, cy, time, panel, st)
     return isize, isize
 end, {"background"}, 25)
 
+--- this is meant to be pretty, not optimized
+--- do NOT copy from this istg
+melon.branding.AddBit("gradients", function(cx, cy, time, panel, st)
+    local c = {
+        {0,   HSVToColor((time * 360) + 0,   0.9, 0.9)},
+        {35,  HSVToColor((time * 360) + 25,  0.9, 0.9)},
+        {70,  HSVToColor((time * 360) + 50,  0.9, 0.9)},
+        {90,  HSVToColor((time * 360) + 75,  0.9, 0.9)},
+        {100, HSVToColor((time * 360) + 100, 0.9, 0.9)},
+    }
+
+    local c2 = {
+        {0,   c[5][2]},
+        {35,  c[4][2]},
+        {70,  c[3][2]},
+        {90,  c[2][2]},
+        {100, c[1][2]},
+    }
+
+    local g = melon.GradientBuilder()
+    
+    for k,v in pairs(c) do
+        g:Step(v[1], v[2])
+    end
+
+    g:LocalTo(panel)
+
+    local size = 300
+    g:Render(cx - size / 2, cy - size / 2, size, size)
+
+    surface.SetDrawColor(22, 22, 22, 100)
+    surface.DrawOutlinedRect(cx - size / 2, cy - size / 2, size, size, 2)
+
+    local dtext = "this is real"
+    local font = melon.Font(40)
+    surface.SetFont(font)
+    local tw, th = surface.GetTextSize(dtext)
+    
+    draw.NoTexture()
+    surface.DrawTexturedRectRotated(cx, cy, size - 4, th + 20, 0)
+
+    draw.Text({
+        text = dtext,
+        pos = {cx + 1, cy + 1},
+        xalign = 1,
+        yalign = 1,
+        font = font,
+        color = surface.GetDrawColor()
+    })
+
+    melon.TextGradient(dtext, font, cx - tw / 2, cy - th / 2, c2)
+    melon.ResetTextGradients()
+
+    return scaled_w, scaled_h
+end, {"demo_background"}, 60)
+
+melon.branding.AddBit("asdasd", function(cx, cy, time, panel, st)
+
+    return scaled_w, scaled_h
+end, {"demo_background"}, 60)
 
 melon.Debug(melon.branding.Open)
