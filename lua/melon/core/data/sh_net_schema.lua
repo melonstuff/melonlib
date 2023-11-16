@@ -208,7 +208,8 @@ end
 ----
 ---@name melon.net.SchemaObj.RecvOn
 ----
----@arg (on: melon.net.RECV_ON_) Where to allow recieving from
+---@arg    (on: melon.net.RECV_ON_) Where to allow recieving from
+---@return (self:             self) The SchemaObj
 ----
 ---- This is set to recv on CLIENT by default, you need to switch this in order to be
 ---- able to recieve on server.
@@ -217,6 +218,7 @@ end
 ----
 function melon.net.SchemaObj:RecvOn(on)
     self.ReceiveOn = on
+    return self
 end
 
 ----
