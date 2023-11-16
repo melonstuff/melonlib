@@ -136,7 +136,7 @@ end)
 -- Errors
 melon.AddLogHandler(1, function(msg)
     if CLIENT then
-        ErrorNoHaltWithStack("[MelonLib (", msg.fmt_time , ")][Error] " .. msg.message)
+        ErrorNoHaltWithStack("[MelonLib][Error] " .. msg.message)
         return
     end
 
