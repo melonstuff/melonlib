@@ -28,16 +28,38 @@ end
 ---@method
 ---@name melon.elements.Tabs.AddTab
 ----
----@arg (name:  any  ) Keyname for the tab
----@arg (panel: panel) Valid Panel to add to the tab handler
+---@arg (name:       any) Keyname for the tab
+---@arg (panel:    Panel) Valid Panel to add to the tab handler
+---@return (added: Panel) Panel that was added
 ----
 ---- Adds the given panel as a tab with the name given to the handler
 ----
 function PANEL:AddTab(name, pnl)
-    pnl:SetParent(self)
     self.tabs[name] = pnl
+    pnl:SetParent(self)
 
     pnl:SetVisible(false)
+    pnl:Dock(FILL)
+
+    if not self:GetActiveTab() then
+        self:SetInitialTab(name)
+        self:SetTab(name)
+    end
+    
+    return pnl
+end
+
+----
+---@method
+---@name melon.elements.Tabs.AddFutureTab
+----
+---@arg (name:             any) Identifier for the tab
+---@arg (fn: func(self) -> tab) Function to run to generate the tab
+----
+---- Adds a tab that will be generated when the tab gets switched to
+----
+function PANEL:AddFutureTab(name, fn)
+    self.tabs[name] = fn
 
     if not self:GetActiveTab() then
         self:SetInitialTab(name)
@@ -56,6 +78,10 @@ end
 function PANEL:SetTab(name)
     local old = self.tabs[self:GetActiveTab()]
     local new = self.tabs[name]
+
+    if isfunction(new) then
+        new = self:AddTab(name, new(self))
+    end
 
     if not new then return end
 
@@ -182,6 +208,22 @@ melon.DebugPanel("Melon:Tabs", function(p)
 
         btn.DoClick = function()
             p:SetTab(i)
+        end
+    end
+
+    for i = 1, 10 do
+        p:AddFutureTab("future" .. i, function(s)
+            local v = vgui.Create("DButton", s)
+            v:SetText("Generated @" .. CurTime())
+            return v
+        end )
+
+        local btn = vgui.Create("DButton", f.scroll)
+        btn:Dock(TOP)
+        btn:SetText("future" .. i)
+
+        btn.DoClick = function()
+            p:SetTab("future" .. i)
         end
     end
 end )
