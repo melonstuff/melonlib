@@ -26,8 +26,11 @@ melon.net.Watch("melon", "ProcessSchemas", function(_, ply)
     local data = s:Read()
     if not data then return end
 
-    hook.Run("Melon:NetSchema:Recv:" .. identifier, data, ply)
-    s.Recv(data, ply)
+    if hook.Run("Melon:NetSchema:Recv:" .. identifier, data, ply) then
+        return true
+    end
+
+    s.Recv(data, ply, s)
 
     return true
 end )
@@ -200,12 +203,13 @@ melon.net.SchemaObj.ArrayTypes = {
 ----
 ---@arg (data:    table) The data recieved
 ---@arg (sender: Player) If on the server then this is the player that sent the message
+---@arg (obj: SchemaObj) The SchemaObj
 ----
 ---- Function to call when recieving data
 ---- You should treat this like a method even though it isnt really one, as seen in the example
 ----
-function melon.net.SchemaObj:Recv(player)
-    melon.Log(1, "Unhandled NetSchema message for '{1}'", self:GetIdentifier())
+function melon.net.SchemaObj:Recv(player, obj)
+    melon.Log(1, "Unhandled NetSchema message for '{1}'", obj:GetIdentifier())
 end
 
 ----
