@@ -137,8 +137,9 @@ melon.net.RECV_ON_SHARED = 3
 ---@name melon.net.TYPE
 ----
 ---@enum (STRING)  String
----@enum (INTEGER) I32, signed
+---@enum (INTEGER) I32
 ---@enum (FLOAT)   Double
+---@enum (ENUM)    U8
 ---@enum (BOOL)    Boolean
 ---@enum (ANGLE)   Angle
 ---@enum (VECTOR)  Vector
@@ -150,6 +151,7 @@ melon.net.RECV_ON_SHARED = 3
 melon.net.TYPE_STRING   = "STRING"
 melon.net.TYPE_INTEGER  = "INTEGER"
 melon.net.TYPE_FLOAT    = "FLOAT"
+melon.net.TYPE_ENUM     = "ENUM"
 melon.net.TYPE_BOOL     = "BOOL"
 melon.net.TYPE_ANGLE    = "ANGLE"
 melon.net.TYPE_VECTOR   = "VECTOR"
@@ -185,6 +187,7 @@ melon.net.SchemaObj.ArrayTypes = {
     [melon.net.TYPE_STRING]  = true,
     [melon.net.TYPE_INTEGER] = true,
     [melon.net.TYPE_FLOAT]   = true,
+    [melon.net.TYPE_ENUM]    = true,
     [melon.net.TYPE_BOOL]    = true,
     [melon.net.TYPE_ANGLE]   = true,
     [melon.net.TYPE_VECTOR]  = true,
@@ -364,6 +367,10 @@ function melon.net.SchemaObj:ValidateValue(v, value)
         return isnumber(value)
     end
 
+    if t == melon.net.TYPE_ENUM then
+        return isnumber(value) and (math.floor(value) == value) and (value <= 255)
+    end
+
     if t == melon.net.TYPE_BOOL then
         return (value == true) or (value == false)
     end
@@ -485,6 +492,10 @@ function melon.net.SchemaObj:WriteValue(t, value, v)
         return net.WriteDouble(value)
     end
 
+    if t == melon.net.TYPE_ENUM then
+        return net.WriteUInt(value, 8)
+    end
+
     if t == melon.net.TYPE_BOOL then
         return net.WriteBool(value)
     end
@@ -560,6 +571,10 @@ function melon.net.SchemaObj:ReadValue(v, ty)
 
     if t == melon.net.TYPE_FLOAT then
         return net.ReadDouble()
+    end
+
+    if t == melon.net.TYPE_ENUM then
+        return net.ReadUInt(8)
     end
 
     if t == melon.net.TYPE_BOOL then
