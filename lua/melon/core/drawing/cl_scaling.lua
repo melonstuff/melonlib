@@ -2,8 +2,8 @@
 ----
 ---@name melon.ScaleBy
 ----
----@arg    (by:   number) Number to scale by
----@return (func: func(num) -> num) Function that scales by the given factor
+---@arg    (by:                   number) Number to scale by
+---@return (func: func(number) -> number) Function that scales by the given factor
 ----
 ---- Creates a function to scale a number by
 ----
