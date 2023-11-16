@@ -113,7 +113,7 @@ end
 ---- Converts a hex color of 3, 4, 6 or 8 characters into a [Color] object
 ----
 function melon.colors.FromHex(hex)
-    local str = hex
+    local str = hex:gsub("#", "")
     if #str == 3 then
         str = (hex[1] .. hex[1]) .. (hex[2] .. hex[2]) .. (hex[3] .. hex[3]) 
     elseif #str == 4 then
