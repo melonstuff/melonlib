@@ -1,21 +1,36 @@
 
 ----
+---@name melon.ScaleBy
+----
+---@arg    (by:   number) Number to scale by
+---@return (func: func(num) -> num) Function that scales by the given factor
+----
+---- Creates a function to scale a number by
+----
+function melon.ScaleBy(by)
+    return function(v)
+        return v * by
+    end
+end
+
+----
 ---@name melon.Scale
 ----
----@arg    (num: number) Number to scale
----@return (num: number) Scaled number
+---@arg    (numin:  number) Number to scale
+---@return (numout: number) Scaled number
 ----
 ---- Scales a number based on [ScrH] / 1080
 ----
-function melon.Scale(v)
-    return v * (ScrH() / 1080)
-end
+melon.Scale = melon.ScaleBy(ScrH() / 1080)
+hook.Add("OnScreenSizeChanged", "Melon:ResetScale", function()
+    melon.Scale = melon.ScaleBy(ScrH() / 1080)
+end )
 
 ----
 ---@name melon.ScaleN
 ----
----@arg    (nums: ...number) Vararg numbers to scale
----@return (nums: ...number) Unpacked scaled numbers
+---@arg    (numin:  ...number) Vararg numbers to scale
+---@return (numout: ...number) Unpacked scaled numbers
 ----
 ---- Scales multiple numbers
 ----
