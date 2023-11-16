@@ -67,15 +67,16 @@ end
 ---@enumeration
 ---@name melon.net.TYPE
 ----
----@enum (STRING) String
+---@enum (STRING)  String
 ---@enum (INTEGER) I32, signed
----@enum (FLOAT) Double
----@enum (BOOL) Boolean
----@enum (ANGLE) Angle
----@enum (VECTOR) Vector
----@enum (ENTITY) Entity
----@enum (PLAYER) Player (sent via UserID)
----@enum (SCHEMA) Another NetSchema
+---@enum (FLOAT)   Double
+---@enum (BOOL)    Boolean
+---@enum (ANGLE)   Angle
+---@enum (VECTOR)  Vector
+---@enum (ENTITY)  Entity
+---@enum (PLAYER)  Player (sent via UserID)
+---@enum (SCHEMA)  Another NetSchema
+---@enum (ARRAY)   An array of primitives
 ----
 melon.net.TYPE_STRING   = "STRING"
 melon.net.TYPE_INTEGER  = "INTEGER"
@@ -86,6 +87,7 @@ melon.net.TYPE_VECTOR   = "VECTOR"
 melon.net.TYPE_ENTITY   = "ENTITY"
 melon.net.TYPE_PLAYER   = "PLAYER"
 melon.net.TYPE_SCHEMA   = "SCHEMA"
+melon.net.TYPE_ARRAY    = "ARRAY"
 
 ----
 ---@class NETSCHEMA
@@ -100,6 +102,17 @@ NETSCHEMA.__index = NETSCHEMA
 melon.net.SchemaObj = NETSCHEMA
 
 AccessorFunc(NETSCHEMA, "Identifier", "Identifier", FORCE_STRING)
+
+melon.net.SchemaObj.ArrayTypes = {
+    [melon.net.TYPE_STRING]  = true,
+    [melon.net.TYPE_INTEGER] = true,
+    [melon.net.TYPE_FLOAT]   = true,
+    [melon.net.TYPE_BOOL]    = true,
+    [melon.net.TYPE_ANGLE]   = true,
+    [melon.net.TYPE_VECTOR]  = true,
+    [melon.net.TYPE_ENTITY]  = true,
+    [melon.net.TYPE_PLAYER]  = true,
+}
 
 ----
 ---@name melon.net.SchemaObj.Recv
@@ -168,6 +181,29 @@ function melon.net.SchemaObj:Schema(name, identifier, optional)
     end
 
     table.insert(self.keys, {name, melon.net.TYPE_SCHEMA, optional, identifier})
+
+    return self
+end
+
+----
+---@method
+---@name melon.net.SchemaObj.Array
+----
+---@arg    (name:          string) Keyname of the array
+---@arg    (type: melon.net.TYPE_) Type enum of the data being sent
+---@arg    (optional:        bool) Is this array optional?
+---@return (self:            self) The SchemaObj
+----
+---- Adds an array to the schema, which sends a sequental table of allowed types
+---- Tables are always scrubbed for server safety
+----
+function melon.net.SchemaObj:Array(name, type, optional)
+    if not self.ArrayTypes[type] then
+        melon.Log(1, "Attempting to add an array to schema '{1}' with an invalid type of '{2}' ({3})", self:GetIdentifier(), type, name)
+        return self
+    end
+
+    table.insert(self.keys, {name, melon.net.TYPE_ARRAY, optional, type})
 
     return self
 end
@@ -248,6 +284,22 @@ function melon.net.SchemaObj:ValidateValue(v, value)
         return valid, dk, dv or ns:GetIdentifier()
     end
 
+    if t == melon.net.TYPE_ARRAY and v[4] then
+        if not istable(value) then return false end
+
+        for k, val in ipairs(value) do
+            if val == value then return false end
+            
+            if self:ValidateValue({
+                nil, v[4], false, false
+            }, val) then continue end
+
+            return false
+        end
+
+        return true
+    end
+
     return false
 end
 
@@ -257,7 +309,7 @@ end
 ----
 ---@arg    (tbl:       table) Table to write 
 ---@arg    (to: Player|table) A table of players or a player, accepts what net.Send does, doesn't matter on the client since it uses net.SendToServer.
----@return (success:    bool) desc
+---@return (success:    bool) Was the write successful?
 ----
 ---- Starts the `melon` net message and sends the schema
 ---- Writes the actual net.Write* calls to the netbuffer
@@ -266,7 +318,8 @@ function melon.net.SchemaObj:Send(tbl, to)
     local valid, badk, badi = self:Validate(tbl)
 
     if not valid then
-        return error("Failed to write schema object key '" .. badk .. "' for '" .. badi .. "'")
+        melon.Log(1, "Failed to write schema object key '{1}' for '{2}'", badk, badi)
+        return false
     end
 
     local started_this
@@ -302,6 +355,8 @@ function melon.net.SchemaObj:Send(tbl, to)
 
         melon.net.started = false
     end
+
+    return true
 end
 
 ----
@@ -345,6 +400,16 @@ function melon.net.SchemaObj:WriteValue(t, value, v)
     if t == melon.net.TYPE_SCHEMA then
         return melon.net.schemas[v[4]]:Send(value)
     end
+    
+    if t == melon.net.TYPE_ARRAY then
+        net.WriteUInt(#value, 16)
+
+        for k, val in ipairs(value) do
+            self:WriteValue(v[4], val, val)
+        end
+
+        return
+    end
 end
 
 ----
@@ -374,8 +439,8 @@ end
 ---@method
 ---@name melon.net.SchemaObj.ReadValue
 ----
-function melon.net.SchemaObj:ReadValue(v)
-    local t = v[2]
+function melon.net.SchemaObj:ReadValue(v, ty)
+    local t = ty or v[2]
 
     if t == melon.net.TYPE_STRING then
         return net.ReadString()
@@ -412,6 +477,17 @@ function melon.net.SchemaObj:ReadValue(v)
     if t == melon.net.TYPE_SCHEMA then
         return melon.net.schemas[v[4]]:Read()
     end
+
+    if t == melon.net.TYPE_ARRAY then
+        local array = {}
+        local to = net.ReadUInt(16)
+
+        for i = 1, to do
+            array[i] = self:ReadValue(nil, v[4])
+        end
+
+        return array
+    end
 end
 
 melon.Debug(function()
@@ -425,6 +501,7 @@ melon.Debug(function()
         :Value ("TestEntity",  melon.net.TYPE_ENTITY)
         :Value ("TestPlayer",  melon.net.TYPE_PLAYER)
         :Schema("TestSchema", "inner_test")
+        :Array ("TestArray",  melon.net.TYPE_STRING)
 
     function t:Recv(sender)
         _p(self, sender)
@@ -460,6 +537,10 @@ melon.Debug(function()
                 InnerTestSchema = {
                     InnerInnerTestString = "Test String"
                 }
+            },
+            TestArray = {
+                "ass",
+                "asddasdsd"
             }
         }, melon.DebugPlayer())
     end )
