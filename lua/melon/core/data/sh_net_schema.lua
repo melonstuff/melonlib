@@ -64,6 +64,48 @@ function melon.net.Schema(name)
 end
 
 ----
+---@name melon.net.SchemaFromTable
+----
+---@arg    (name:             string) Name of the schema to be registered as
+---@arg    (tbl:               table) Table to make a schema out of
+---@arg    (done:              table) Table of already created schemas to avoid infinite recursion
+---@return (obj: melon.net.SchemaObj) The schema object
+----
+---- Makes a schema from the given table with the types of values given
+---- Generates nested schemas for you, but not arrays
+---- Due to this features immediate use case, every value is optional by default
+----
+function melon.net.SchemaFromTable(name, tbl, done)
+    done = done or {}
+
+    if done[tbl] then
+        return done[tbl]
+    end
+
+    local schema = melon.net.Schema(name)
+    done[tbl] = schema
+
+    for k,v in pairs(tbl) do
+        if not isstring(k) then continue end
+        
+        local t = melon.net.TypeConversions[TypeID(v)]
+
+        if t then
+            schema:Value(k, t, true)
+            continue
+        end
+
+        if istable(v) and not table.IsSequential(v) then
+            melon.net.SchemaFromTable(name .. ":" .. k, v, done)
+
+            schema:Schema(k, name .. ":" .. k, true)
+        end
+    end
+
+    return schema
+end
+
+----
 ---@enumeration
 ---@name melon.net.TYPE
 ----
@@ -88,6 +130,15 @@ melon.net.TYPE_ENTITY   = "ENTITY"
 melon.net.TYPE_PLAYER   = "PLAYER"
 melon.net.TYPE_SCHEMA   = "SCHEMA"
 melon.net.TYPE_ARRAY    = "ARRAY"
+
+melon.net.TypeConversions = {
+    [TYPE_STRING] = melon.net.TYPE_STRING,
+    [TYPE_NUMBER] = melon.net.TYPE_FLOAT,
+    [TYPE_BOOL]   = melon.net.TYPE_BOOL,
+    [TYPE_ANGLE]  = melon.net.TYPE_ANGLE,
+    [TYPE_VECTOR] = melon.net.TYPE_VECTOR,
+    [TYPE_ENTITY] = melon.net.TYPE_ENTITY,
+}
 
 ----
 ---@class NETSCHEMA
@@ -141,10 +192,22 @@ function melon.net.SchemaObj:Init(name)
     ---
     self.keys = {}
 
+    self.ordered_keys = {}
+
     self:SetIdentifier(name)
     melon.net.schemas[name] = self
 
     return self
+end
+
+----
+---@internal
+---@method
+---@name melon.net.SchemaObj.Add
+----
+function melon.net.SchemaObj:Add(name, t)
+    self.ordered_keys[name] = (self.ordered_keys[name] or #self.keys) + 1
+    table.insert(self.keys, self.ordered_keys[name], t)
 end
 
 ----
@@ -159,8 +222,8 @@ end
 ---- Adds a value row to the schema
 ----
 function melon.net.SchemaObj:Value(name, type, optional)
-    table.insert(self.keys, {name, type, optional})
-    
+    self:Add(name, {name, type, optional})
+
     return self
 end
 
@@ -180,7 +243,7 @@ function melon.net.SchemaObj:Schema(name, identifier, optional)
         return self
     end
 
-    table.insert(self.keys, {name, melon.net.TYPE_SCHEMA, optional, identifier})
+    self:Add(name, {name, melon.net.TYPE_SCHEMA, optional, identifier})
 
     return self
 end
@@ -203,7 +266,7 @@ function melon.net.SchemaObj:Array(name, type, optional)
         return self
     end
 
-    table.insert(self.keys, {name, melon.net.TYPE_ARRAY, optional, type})
+    self:Add(name, {name, melon.net.TYPE_ARRAY, optional, type})
 
     return self
 end
