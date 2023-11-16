@@ -2,17 +2,31 @@
 melon.net = melon.net or {}
 melon.net.schemas = melon.net.schemas or {}
 
-melon.net.Watch("melon", "ProcessSchemas", function()
+melon.net.Watch("melon", "ProcessSchemas", function(_, ply)
     local identifier = net.ReadString()
     if not identifier then return end
     
     local s = melon.net.schemas[identifier]
     if not s then return melon.Log(1, "Invalid NetSchema Identifier Sent! {1}", identifier) end
 
+
+    local recv = s.ReceiveOn
+    if recv != melon.net.RECV_ON_SHARED then
+        if (recv == melon.net.RECV_ON_SERVER) and CLIENT then
+            melon.Log(1, "RECV_ON_SERVER being sent to client ({1})", identifier)
+            return false
+        end
+
+        if (recv == melon.net.RECV_ON_CLIENT) and SERVER then
+            melon.Log(1, "RECV_ON_CLIENT being sent to server ({1}) by ({2}), THIS PROBABLY MEANS THIS USER IS EXPLOITING!!!!!", identifier, ply)
+            return false
+        end
+    end
+
     local data = s:Read()
     if not data then return end
 
-    s.Recv(data, pl)
+    s.Recv(data, ply)
 
     return true
 end )
@@ -107,6 +121,18 @@ end
 
 ----
 ---@enumeration
+---@name melon.net.RECV_ON
+----
+---@enum (CLIENT) Recieve on the client
+---@enum (SERVER) Recieve on the server
+---@enum (SHARED) Recieve from both
+----
+melon.net.RECV_ON_CLIENT = 1
+melon.net.RECV_ON_SERVER = 2
+melon.net.RECV_ON_SHARED = 3
+
+----
+---@enumeration
 ---@name melon.net.TYPE
 ----
 ---@enum (STRING)  String
@@ -179,6 +205,20 @@ function melon.net.SchemaObj:Recv(player)
 end
 
 ----
+---@name melon.net.SchemaObj.RecvOn
+----
+---@arg (on: melon.net.RECV_ON_) Where to allow recieving from
+----
+---- This is set to recv on CLIENT by default, you need to switch this in order to be
+---- able to recieve on server.
+---- This is here to prevent abuse where the client can send large schemas over the network
+---- and the server has to sit there and take it, just to reject it later
+----
+function melon.net.SchemaObj:RecvOn(on)
+    self.ReceiveOn = on
+end
+
+----
 ---@internal
 ---@method
 ---@name melon.net.SchemaObj.Init
@@ -196,6 +236,8 @@ function melon.net.SchemaObj:Init(name)
 
     self:SetIdentifier(name)
     melon.net.schemas[name] = self
+
+    self:RecvOn(melon.net.RECV_ON_CLIENT)
 
     return self
 end
