@@ -26,6 +26,7 @@ melon.net.Watch("melon", "ProcessSchemas", function(_, ply)
     local data = s:Read()
     if not data then return end
 
+    hook.Run("Melon:NetSchema:Recv:" .. identifier, data, ply)
     s.Recv(data, ply)
 
     return true
