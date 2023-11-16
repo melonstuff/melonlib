@@ -43,7 +43,7 @@ end
 ---@name melon.SpecialFont
 ----
 ---@arg    (size: number) Font size
----@arg    (opts: table ) Options to give the font
+---@arg    (opts:  table) Options to give the font
 ---@return (name: string) Font identifier
 ----
 ---- Same as [melon.Font] except creates it with a [FontData] table instead of a font name.

@@ -42,7 +42,7 @@ end
 ----
 ---@name melon.docgen.GenerateMany
 ----
----@arg    (all: table ) Table of folders and files to compile together
+---@arg    (all:  table) Table of folders and files to compile together
 ---@return (docs: table) Table of all documentation 
 ----
 ---- Compiles everything in all given folders and files into one table

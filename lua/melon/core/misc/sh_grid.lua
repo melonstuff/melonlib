@@ -35,7 +35,7 @@ end
 ----
 ---@arg (x: number) X to set
 ---@arg (y: number) Y to set
----@arg (val: any ) Value to set the coord to
+---@arg (val:  any) Value to set the coord to
 ----
 ---- Sets a value at X and Y to the given value
 ----
@@ -52,8 +52,8 @@ end
 ---@method
 ---@name melon.GridObject.Get
 ----
----@arg (x: number  ) X to get
----@arg (y: number  ) Y to get
+---@arg (x:   number) X to get
+---@arg (y:   number) Y to get
 ---@return (val: any) Value of the coord
 ----
 ---- Gets a value at the given coords

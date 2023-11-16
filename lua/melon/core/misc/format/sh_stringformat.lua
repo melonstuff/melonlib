@@ -87,9 +87,9 @@ end
 ----
 ---@name melon.string.Format
 ----
----@arg    (fmt: string ) String format to use, see [melon.string] for a reference
+---@arg    (fmt:  string) String format to use, see [melon.string] for a reference
 ---@arg    (args: ...any) Any values to be passed to the formatter
----@return (str: string ) Formatted string
+---@return (str:  string) Formatted string
 ----
 ---- Formats a string using the melonlib formatter
 ----
@@ -132,7 +132,7 @@ end
 ----
 ---@name melon.string.print
 ----
----@arg (fmt: string ) String to be formatted, see [melon.string] for reference
+---@arg (fmt:  string) String to be formatted, see [melon.string] for reference
 ---@arg (args: ...any) Arguments to be passed to the formatter
 ----
 ---- Formats and prints the given format, quick function

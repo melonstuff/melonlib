@@ -11,8 +11,8 @@ melon.math = melon.math or {}
 ----
 ---@name melon.math.max
 ----
----@arg    (tbl: table ) Table to get the max of
----@arg    (key: any   ) Check a specific key if valid, otherwise all, seems useless? 
+---@arg    (tbl:  table) Table to get the max of
+---@arg    (key:    any) Check a specific key if valid, otherwise all, seems useless? 
 ---@return (max: number) Max value from the table
 ----
 ---- math.max on all table elements
@@ -30,8 +30,8 @@ end
 ----
 ---@name melon.math.min
 ----
----@arg    (tbl: table ) Table to get the min of
----@arg    (key: any   ) Check a specific key if valid, otherwise all, seems useless? 
+---@arg    (tbl:  table) Table to get the min of
+---@arg    (key:    any) Check a specific key if valid, otherwise all, seems useless? 
 ---@return (max: number) Min value from the table
 ----
 ---- math.min on all table elements

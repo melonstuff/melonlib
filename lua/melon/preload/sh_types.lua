@@ -5,7 +5,7 @@ local isn = isnumber
 ---@name melon.IsColor
 ----
 ---@arg    (color: table) Color to check 
----@return (iscol: bool ) Is the given table a color?
+---@return (iscol:  bool) Is the given table a color?
 ----
 ---- Check if the given value is a color, use istable first.
 ----

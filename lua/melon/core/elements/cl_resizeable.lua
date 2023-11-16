@@ -56,7 +56,7 @@ end
 ---@name melon.elements.Resizable.SetDragSize
 ----
 ---@arg (size: number) Size of the draggable area
----@arg (pad: number ) Padding from the edge of the draggable area
+---@arg (pad:  number) Padding from the edge of the draggable area
 ----
 ---- Sets the draggable corner size and padding
 ----
@@ -70,9 +70,9 @@ end
 ---@internal
 ---@name melon.elements.Resizable.WithinDragRegion
 ----
----@arg    (x: number ) X to check
----@arg    (y: number ) Y to check
----@return (is: bool  ) Is it within the draggable region?
+---@arg    (x:  number) X to check
+---@arg    (y:  number) Y to check
+---@return (is:   bool) Is it within the draggable region?
 ----
 ---- Check if a coord is within the drag region
 ----

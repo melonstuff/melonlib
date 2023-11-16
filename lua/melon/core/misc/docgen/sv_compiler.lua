@@ -115,7 +115,7 @@ end
 ----
 ---@name melon.docgen.CompileTo
 ----
----@args (docs: table   ) Table of docs to compile
+---@args (docs:    table) Table of docs to compile
 ---@args (target: string) Target to compile to, read [melon.docgen.Targets]
 ----
 ---- Compiles the given docs into the target format, outputs to data/melon/docs/{target}/

@@ -57,7 +57,7 @@ local wassettingsopen
 ---@name melon.DebugPanel
 ----
 ---@arg (name: string) Panel name registered with [vgui.Register]
----@arg (fun: func   ) Function thats called with the panel as its only argument
+---@arg (fun:    func) Function thats called with the panel as its only argument
 ----
 ---- Creates a debug panel containing the given function, lay this out in fun()
 ----
@@ -221,7 +221,7 @@ local prot = {}
 ---@deprecated
 ---@name melon.StackOverflowProtection
 ----
----@arg    (id: any  ) Identifier used for tracking
+---@arg    (id:   any) Identifier used for tracking
 ---@return (run: bool) Should the loop stop?
 ----
 ---- Tracks a loop with the given id to prevent stack overflows, nothing fancy.

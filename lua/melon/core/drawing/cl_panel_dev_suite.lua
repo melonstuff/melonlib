@@ -37,7 +37,7 @@ melon.PanelDevSuite.Tabs = {
 ---@name melon.DebugPanel2
 ----
 ---@arg (name: string) Panel name registered with [vgui.Register]
----@arg (fun: func   ) Function thats called with the panel as its only argument
+---@arg (fun:    func) Function thats called with the panel as its only argument
 ----
 ---- Creates a debug panel containing the given function, lay this out in fun(), visual and functional improvement of [melon.DebugPanel]
 ----

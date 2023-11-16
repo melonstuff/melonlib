@@ -3,7 +3,7 @@
 ---@name melon.Map
 ----
 ---@arg    (tbl: table) Table to map
----@arg    (fn: func  ) Function that takes k,v and returns a new k,v
+---@arg    (fn:   func) Function that takes k,v and returns a new k,v
 ---@return (new: table) Table created by the mapper
 ----
 ---- Maps a table to a new table, calling func with every key and value.
@@ -36,10 +36,10 @@ end
 ----
 ---@name melon.SubTable
 ----
----@arg    (tbl: table  ) Table to get the subtable of
+---@arg    (tbl:   table) Table to get the subtable of
 ---@arg    (from: number) Starting index
----@arg    (to: number  ) Ending index
----@return (sub: table  ) Subtable of the given arguments
+---@arg    (to:   number) Ending index
+---@return (sub:   table) Subtable of the given arguments
 ----
 ---- Gets a subtable of the given table from the range of from to to, think string.sub()
 ----

@@ -12,7 +12,7 @@ melon.elements = melon.elements or {}
 ---@panel Melon:Draggable
 ---@name melon.elements.Draggable
 ----
----@accessor (AreaOf: panel ) Panel to drag when dragging this panel, think a topbar of a frame
+---@accessor (AreaOf:  panel) Panel to drag when dragging this panel, think a topbar of a frame
 ---@accessor (Bounded: panel) Panel to limit the draggable area to, you can also pass true for the parent or false to disable
 ----
 ---- Draggable Panel object

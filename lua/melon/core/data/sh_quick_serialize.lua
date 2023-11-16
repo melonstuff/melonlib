@@ -2,7 +2,7 @@
 ----
 ---@name melon.QuickSerialize
 ----
----@arg    (tbl: table ) Table to serialize
+---@arg    (tbl:  table) Table to serialize
 ---@return (str: string) Serialized table
 ----
 ---- Serializes a table very simply, only allows string keys and values
@@ -23,7 +23,7 @@ end
 ---@name melon.DeQuickSerialize
 ----
 ---@arg    (str: string) String to deserialize
----@return (tbl: table ) Deserialized table
+---@return (tbl:  table) Deserialized table
 ----
 ---- Deserialized a table serialized with [melon.QuickSerialize]
 ----
