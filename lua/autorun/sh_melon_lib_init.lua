@@ -18,7 +18,7 @@ melon = melon or {}
 ----
 ---- Version in major.minor.patch format, see [melon.ParseVersion]
 ----
-melon.version = "1.4.0"
+melon.version = "1.4.1"
 melon.__loadhandlers = melon.__loadhandlers or {}
 
 ----
