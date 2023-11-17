@@ -74,3 +74,16 @@ function f.realcolor(col)
 
     return "Color(" .. col.r .. ", " .. col.g .. ", " .. col.b .. ", " .. (col.a or 255) .. ")"
 end
+
+-- Money ops
+function f.money(val)
+    if not isnumber(val) then
+        return err("Invalid number '" .. tostring(val) .. "'")
+    end
+
+    if not DarkRP then
+        return err("Cannot format money outside of DarkRP")
+    end
+
+    return DarkRP.formatMoney(val)
+end
