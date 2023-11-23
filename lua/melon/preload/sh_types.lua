@@ -31,3 +31,5 @@ function melon.ToColor(tbl)
 
     return setmetatable(table.Copy(tbl), _r.Color)
 end
+
+melon.ToColor()

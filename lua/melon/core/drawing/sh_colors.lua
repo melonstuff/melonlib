@@ -105,7 +105,7 @@ function melon.colors.Rainbow(mul, offset)
 end
 
 ----
----@name melon.colors.FromHex
+---@metadata AcceptsHexColor
 ----
 ---@arg    (hex: string) Hex color
 ---@return (col:  Color) New color object

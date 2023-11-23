@@ -1,5 +1,6 @@
 
 ----
+---@member
 ---@name melon.LogTypes
 ----
 ---- List of all log types 

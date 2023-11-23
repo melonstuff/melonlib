@@ -14,6 +14,7 @@ function melon.ScaleBy(by)
 end
 
 ----
+---@silence
 ---@name melon.Scale
 ----
 ---@arg    (numin:  number) Number to scale

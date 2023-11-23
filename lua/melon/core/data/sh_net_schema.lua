@@ -26,6 +26,16 @@ melon.net.Watch("melon", "ProcessSchemas", function(_, ply)
     local data = s:Read()
     if not data then return end
 
+----
+---@hook Melon:NetSchema:Recv
+----
+---@arg    (data: table) The data sent over the net message
+---@arg    (ply: Player) If SERVER, then the player that sent it, otherwise nil
+---@return (skip:  bool) If true, skip calling recv on the schema object
+----
+---- Called when a NetSchema message is sent
+----
+
     if hook.Run("Melon:NetSchema:Recv:" .. identifier, data, ply) then
         return true
     end
@@ -43,8 +53,8 @@ end )
 ----
 ---- Creates a new schema object
 ----
----` 
----` --- Creates and registers the schema
+---`
+---` ---- Creates and registers the schema
 ---` local schema = melon.net.Schema("unique_name")
 ---`     --- Contains a string
 ---`     :Value ("SomeString",  melon.net.TYPE_STRING)
@@ -98,6 +108,10 @@ function melon.net.SchemaFromTable(name, tbl, done)
 
     if done[tbl] then
         return done[tbl]
+    end
+
+    if a then
+        return
     end
 
     local schema = melon.net.Schema(name)
@@ -173,7 +187,7 @@ melon.net.TypeConversions = {
 }
 
 ----
----@class NETSCHEMA
+---@class
 ---@name melon.net.SchemaObj
 ----
 ---@accessor (Identifier: string) String identifier for this message
@@ -199,6 +213,7 @@ melon.net.SchemaObj.ArrayTypes = {
 }
 
 ----
+---@method
 ---@name melon.net.SchemaObj.Recv
 ----
 ---@arg (data:    table) The data recieved
@@ -213,6 +228,7 @@ function melon.net.SchemaObj:Recv(player, obj)
 end
 
 ----
+---@method
 ---@name melon.net.SchemaObj.RecvOn
 ----
 ---@arg    (on: melon.net.RECV_ON_) Where to allow recieving from

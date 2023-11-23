@@ -1,5 +1,6 @@
 
 ----
+---@silence
 ---@internal
 ---@deprecated
 ---@name melon.attr

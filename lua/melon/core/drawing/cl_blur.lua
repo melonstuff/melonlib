@@ -5,11 +5,11 @@ local blurMat = Material("pp/blurscreen")
 ---@name melon.DrawBlur
 ----
 ---@arg (panel: panel) Panel to draw the blur on
----@arg (localX: type) X relative to 0 of the panel
----@arg (localY: type) Y relative to 0 of the panel
----@arg (w:      type) W of the blur
----@arg (h:      type) H of the blur
----@arg (passes: type) How many passes to run, basically the strength of the blur
+---@arg (localX: number) X relative to 0 of the panel
+---@arg (localY: number) Y relative to 0 of the panel
+---@arg (w:      number) W of the blur
+---@arg (h:      number) H of the blur
+---@arg (passes: number) How many passes to run, basically the strength of the blur
 ----
 ---- Draws blur!
 ----

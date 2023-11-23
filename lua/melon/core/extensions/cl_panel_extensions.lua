@@ -2,9 +2,10 @@
 local applied = {}
 
 ----
----@deprecated
 ---@module
 ---@name melon.Extensions
+---@deprecated
+---@alias asdasd
 ---@realm SHARED
 ----
 ---- Extends an object at runtime instead of directly altering its metatable.
@@ -13,6 +14,8 @@ local applied = {}
 melon.Extensions = melon.Extensions or {}
 
 ----
+---@deprecated
+---@member
 ---@name melon.Extensions.PANEL
 ---@realm CLIENT
 ----

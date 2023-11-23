@@ -1,5 +1,5 @@
 ----
----@class builder
+---@class 
 ---@name melon.GradientBuilderObj
 ----
 ---- A multi-stage gradient builder objects
@@ -12,7 +12,7 @@ melon.GradientBuilderObj = gradbuilder
 ----
 ---@internal
 ---@method
----@name gradbuilder.Init
+---@name melon.GradientBuilderObj.Init
 ----
 function gradbuilder:Init(steps)
     self.steps = {}
@@ -30,7 +30,7 @@ end
 
 ----
 ---@method
----@name gradbuilder.Alpha
+---@name melon.GradientBuilderObj.Alpha
 ----
 ---@arg    (tl: number) Top left alpha
 ---@arg    (tr: number) Top right alpha
@@ -55,7 +55,7 @@ end
 
 ----
 ---@method
----@name gradbuilder.ColorMod
+---@name melon.GradientBuilderObj.ColorMod
 ----
 ---@arg    (tl:  Color) Top left color
 ---@arg    (tr:  Color) Top right color
@@ -78,7 +78,7 @@ end
 
 ----
 ---@method
----@name gradbuilder.Step
+---@name melon.GradientBuilderObj.Step
 ----
 ---@arg    (perc:  number) The % of where this step is
 ---@arg    (color:  Color) The color of this step
@@ -103,7 +103,7 @@ end
 
 ----
 ---@method
----@name gradbuilder.Reset
+---@name melon.GradientBuilderObj.Reset
 ----
 ---@return (self: self) The gradbuilder
 ----
@@ -118,7 +118,7 @@ end
 
 ----
 ---@method
----@name gradbuilder.LocalTo
+---@name melon.GradientBuilderObj.LocalTo
 ----
 ---@arg    (panel: Panel) The panel that this gradient is local to
 ---@return (self:   self) The gradbuilder
@@ -134,7 +134,7 @@ end
 
 ----
 ---@method
----@name gradbuilder.Vertical
+---@name melon.GradientBuilderObj.Vertical
 ----
 ---@arg    (vertical: bool) Vertical (true) or horizontal (false)
 ---@return (self:     self) The gradbuilder
@@ -149,7 +149,7 @@ end
 
 ----
 ---@method
----@name gradbuilder.Render
+---@name melon.GradientBuilderObj.Render
 ----
 ---@arg (x: number) X coordinate to render this gradient at
 ---@arg (y: number) Y coordinate to render this gradient at
@@ -195,7 +195,7 @@ local nmat = CreateMaterial("MelonMsGradient_Mat", "UnlitGeneric", {
 
 ----
 ---@method
----@name gradbuilder.Material
+---@name melon.GradientBuilderObj.Material
 ----
 ---@return (mat: IMaterial) The material of the gradient
 ----
@@ -217,7 +217,7 @@ end
 
 ----
 ---@method
----@name gradbuilder.Invalidate
+---@name melon.GradientBuilderObj.Invalidate
 ----
 ---- Invalidates the current mesh, causing it to rebuild
 ----
@@ -230,7 +230,7 @@ end
 ----
 ---@internal
 ---@method
----@name gradbuilder.Build
+---@name melon.GradientBuilderObj.Build
 ----
 ---@arg (x: number) X coordinate to build the mesh to
 ---@arg (y: number) Y coordinate to build the mesh to
@@ -303,7 +303,7 @@ end
 
 ----
 ---@method
----@name gradbuilder.ToCSS
+---@name melon.GradientBuilderObj.ToCSS
 ----
 ---@return (css: string) The css repr
 ----

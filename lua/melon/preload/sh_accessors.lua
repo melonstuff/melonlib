@@ -32,6 +32,7 @@ function melon.AccessorTable(tbl, metatable)
 end
 
 ---- 
+---@silence
 ---@name  melon.AT
 ---@alias melon.AccessorTable
 ---- 

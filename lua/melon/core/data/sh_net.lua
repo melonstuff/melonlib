@@ -13,6 +13,7 @@ end
 melon.net = melon.net or {}
 
 ----
+---@member
 ---@name melon.net.Listeners
 ----
 ---- Table of all network listeners
@@ -72,6 +73,7 @@ function melon.net.Unwatch(msg, name)
 end
 
 ----
+---@silence
 ---@name melon.net.Recv
 ---@alias melon.net.Watch
 ----

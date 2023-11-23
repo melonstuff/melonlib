@@ -1,7 +1,6 @@
 
 ----
----@concommand
----@name melon.cleer
+---@concommand cleer
 ----
 ---- "Clears" the console by spamming it with a bunch of empty space
 ----

@@ -18,6 +18,7 @@
 melon.string = melon.string or {}
 
 ----
+---@member
 ---@name melon.string.filters
 ----
 ---- List of all string filters 

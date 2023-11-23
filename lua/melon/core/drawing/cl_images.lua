@@ -3,8 +3,10 @@ file.CreateDir("melon")
 file.CreateDir("melon/images")
 
 ----
----@deprecated Replaced when [melon.DrawImage] was implemented
+---@silence
+---@member
 ---@name melon.InvalidImage
+---@deprecated
 ----
 ---- Material for loading images, currently the israeli flag
 ----

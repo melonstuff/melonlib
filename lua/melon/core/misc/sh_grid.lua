@@ -3,6 +3,13 @@ local G = {}
 G.__index = G
 
 ----
+---@class
+---@name melon.GridObject
+----
+---- Grid Object Class
+----
+
+----
 ---@method
 ---@name melon.GridObject.SetSize
 ----

@@ -56,6 +56,7 @@ function melon.http.Generator(type)
 end
 
 ----
+---@silence
 ---@type function
 ---@name melon.http.Post
 ----
@@ -69,6 +70,7 @@ end
 melon.http.Post = melon.http.Generator("post")
 
 ----
+---@silence
 ---@type function
 ---@name melon.http.Get
 ----
@@ -82,6 +84,7 @@ melon.http.Post = melon.http.Generator("post")
 melon.http.Get = melon.http.Generator("get")
 
 ----
+---@silence
 ---@type function
 ---@name melon.http.Head
 ----

@@ -14,6 +14,7 @@ end
 melon = melon or {}
 
 ----
+---@member
 ---@name melon.version
 ----
 ---- Version in major.minor.patch format, see [melon.ParseVersion]
@@ -123,8 +124,7 @@ end
 melon.__load()
 
 ----
----@concommand
----@name melon.melon_raw_reload
+---@concommand melon_raw_reload
 ----
 ---- Reloads melonlib
 ----
