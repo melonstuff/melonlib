@@ -62,7 +62,7 @@ function melon.ProcessExtras(tbl)
 
     for k,v in pairs(tbl) do
         if string.StartsWith(v, "postload:") then
-            table.insert(ret.postload, string.gsub(v, "postload:", ""))
+            table.insert(ret.postload, string.Replace(v, "postload:", ""))
             continue
         end
 
@@ -112,6 +112,13 @@ function melon.LoadModule(fold)
         melon.LoadDirectory("melon/modules/" .. fold .. "/src", fold)
         m:_call("loaded")
         melon.Log(3, "Loaded Module '{1}' successfully (recursive)!", fold)
+
+        for k,v in pairs(extras.postload) do
+            melon.LoadDirectory("melon/modules/" .. fold .. "/" .. v, v)
+            m:_call("loaded_" .. v)
+            melon.Log(3, "Loaded module extra postload:'{1}' successfully!", v)
+        end
+
         return
     end
 
