@@ -44,6 +44,35 @@ hook.Add("Melon:Debug", "ReloadHashes", function()
 end )
 
 ----
+---@internal
+---@name melon.ProcessExtras
+----
+---- Processes the `extras` parameter of a Module Manifest
+----
+function melon.ProcessExtras(tbl)
+    if not tbl then return {
+        preload = {},
+        postload = {},
+    } end
+
+    local ret = {
+        preload = {},
+        postload = {}
+    }
+
+    for k,v in pairs(tbl) do
+        if string.StartsWith(v, "postload:") then
+            table.insert(ret.postload, string.gsub(v, "postload:", ""))
+            continue
+        end
+
+        table.insert(ret.preload, v)
+    end
+
+    return ret
+end
+
+----
 ---@name melon.LoadModule
 ----
 ---@arg (folder: string) Module folder name to load
@@ -71,12 +100,12 @@ function melon.LoadModule(fold)
         _G[incs.global] = m
     end
 
-    if incs.extras then
-        for k,v in pairs(incs.extras) do
-            melon.LoadDirectory("melon/modules/" .. fold .. "/" .. v, v)
-            m:_call("loaded_" .. v)
-            melon.Log(3, "Loaded module extra '{1}' successfully!", v)
-        end
+    local extras = melon.ProcessExtras(incs.extras)
+
+    for k,v in pairs(extras.preload) do
+        melon.LoadDirectory("melon/modules/" .. fold .. "/" .. v, v)
+        m:_call("loaded_" .. v)
+        melon.Log(3, "Loaded module extra preload:'{1}' successfully!", v)
     end
 
     if incs.recursive then
@@ -106,6 +135,12 @@ function melon.LoadModule(fold)
     local f = (SERVER and AddCSLuaFile or include)
     for k,v in pairs(incs.client) do
         f("melon/modules/" .. fold .. "/" .. v)
+    end
+
+    for k,v in pairs(extras.postload) do
+        melon.LoadDirectory("melon/modules/" .. fold .. "/" .. v, v)
+        m:_call("loaded_" .. v)
+        melon.Log(3, "Loaded module extra postload:'{1}' successfully!", v)
     end
 
     m:_call("loaded")
