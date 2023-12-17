@@ -19,10 +19,10 @@ local boxes = {}
 ---@arg (y:      number) Y position of the box
 ---@arg (w:      number) W of the box
 ---@arg (h:      number) H of the box
----@arg (bl:number|bool) Should the bottom left be rounded independently, if so how much
----@arg (tl:number|bool) Should the top left be rounded independently, if so how much
----@arg (tr:number|bool) Should the top right be rounded independently, if so how much
----@arg (br:number|bool) Should the bottom right be rounded independently, if so how much
+---@arg (bl:     number) Should the bottom left be rounded independently, if so how much
+---@arg (tl:     number) Should the top left be rounded independently, if so how much
+---@arg (tr:     number) Should the top right be rounded independently, if so how much
+---@arg (br:     number) Should the bottom right be rounded independently, if so how much
 ----
 ---@return (poly: table) Polygon to be drawn with surface.DrawPoly
 ----
