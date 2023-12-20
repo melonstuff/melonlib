@@ -358,3 +358,26 @@ function melon.DebugDeprecated()
     
     melon.Log(2, "Use of deprecated function {1.name} at {2.short_src}:{2.currentline} ", parent, used_at)
 end
+
+local named = {}
+----
+---@name melon.DebugNamed
+----
+---@arg (name: string) Name of the debug test
+---@arg (fn:     func) Function to call
+---@arg (va:   any...) Arguments to pass
+----
+---- Registers or calls (if no fn is provided) a "named debug" test, for convenient reuse
+----
+function melon.DebugNamed(name, fn, ...)
+    if isfunction(fn) then
+        named[name] = fn
+        return melon.Debug(fn, false, ...)
+    end
+
+    if named[name] then
+        return melon.Debug(named[name], false, fn, ...)
+    end
+
+    melon.Log(1, "Failed to find named test '{}'", name)
+end
