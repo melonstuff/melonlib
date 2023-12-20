@@ -659,12 +659,13 @@ melon.Debug(function()
         :Value("InnerInnerTestString",  melon.net.TYPE_STRING)
 
     if CLIENT then
+        print("Waiting for net message...")
         return
     end
 
     --- This timer is important because the net message gets sent before the updated lua file does
     --- Meaning that the original, pre-modified net Recv will be called, instead of the new on the client
-    timer.Simple(0.1, function()
+    timer.Simple(1, function()
         t:Send({
             TestString = "This is a test string",
             TestInteger = 123,
