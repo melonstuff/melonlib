@@ -21,6 +21,7 @@ function PANEL:Init()
         surface.SetDrawColor(melon.PanelDevSuite.Theme.Background)
         surface.DrawRect(0, 0, w, h)
 
+        draw.NoTexture()
         surface.SetDrawColor(255, 255, 255)
         surface.DrawTexturedRectRotated(w / 2, h / 2, xw - xh / 2, xh / 2, 45)
         surface.DrawTexturedRectRotated(w / 2, h / 2, xw - xh / 2, xh / 2, -45)
@@ -115,6 +116,8 @@ function PANEL:Paint(w, h)
     if IsValid(self.tools) then
         self.tools:PaintManual()
     end
+
+    self.close:SetZPos(32766)
 end
 
 function PANEL:OnMousePressed(m)
