@@ -133,7 +133,13 @@ function PANEL:OnRemove()
 end
 
 function PANEL:SuiteReady()
-    local pnl = vgui.Create(self:GetSuitePanelType() or "DPanel", self)
+    local pnl
+    if isstring(self:GetSuitePanelType() or "DPanel") then
+        pnl = vgui.Create(self:GetSuitePanelType() or "DPanel", self)
+    else
+        pnl = vgui.CreateFromTable(self:GetSuitePanelType(), self)
+    end
+
     self:SetSuitePanel(pnl)
 
     pnl:SetSize(500, 500)
