@@ -15,20 +15,21 @@
 ----  The source is the text, or the thing with alpha
 ----
 local masks = {}
+melon.masks = masks
 
-masks.source = {}
-masks.dest   = {}
+melon.masks.source = {}
+melon.masks.dest   = {}
 
-masks.source.rt = GetRenderTargetEx("MelonMasks_Source",      ScrW(), ScrH(), RT_SIZE_NO_CHANGE, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(1, 256), 0, IMAGE_FORMAT_BGRA8888)
-masks.dest.rt   = GetRenderTargetEx("MelonMasks_Destination", ScrW(), ScrH(), RT_SIZE_NO_CHANGE, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(1, 256), 0, IMAGE_FORMAT_BGRA8888)
+melon.masks.source.rt = GetRenderTargetEx("MelonMasks_Source",      ScrW(), ScrH(), RT_SIZE_NO_CHANGE, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(1, 256), 0, IMAGE_FORMAT_BGRA8888)
+melon.masks.dest.rt   = GetRenderTargetEx("MelonMasks_Destination", ScrW(), ScrH(), RT_SIZE_NO_CHANGE, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(1, 256), 0, IMAGE_FORMAT_BGRA8888)
 
-masks.source.mat = CreateMaterial("MelonMasks_Source", "UnlitGeneric", {
+melon.masks.source.mat = CreateMaterial("MelonMasks_Source", "UnlitGeneric", {
     ["$basetexture"] = masks.source.rt:GetName(),
     ["$translucent"] = "1",
     ["$vertexalpha"] = "1",
     ["$vertexcolor"] = "1",
 })
-masks.dest.mat    = CreateMaterial("MelonMasks_Destination", "UnlitGeneric", {
+melon.masks.dest.mat    = CreateMaterial("MelonMasks_Destination", "UnlitGeneric", {
     ["$basetexture"] = masks.dest.rt:GetName(),
     ["$translucent"] = "1",
     ["$vertexalpha"] = "1",
@@ -45,8 +46,8 @@ masks.dest.mat    = CreateMaterial("MelonMasks_Destination", "UnlitGeneric", {
 ----
 ---- Determines the type of mask were rendering
 ----
-masks.KIND_CUT   = {BLEND_ZERO, BLEND_SRC_ALPHA, BLENDFUNC_ADD}
-masks.KIND_STAMP = {BLEND_ZERO, BLEND_ONE_MINUS_SRC_ALPHA, BLENDFUNC_ADD}
+melon.masks.KIND_CUT   = {BLEND_ZERO, BLEND_SRC_ALPHA, BLENDFUNC_ADD}
+melon.masks.KIND_STAMP = {BLEND_ZERO, BLEND_ONE_MINUS_SRC_ALPHA, BLENDFUNC_ADD}
 
 ----
 ---@name masks.Start
@@ -56,7 +57,7 @@ masks.KIND_STAMP = {BLEND_ZERO, BLEND_ONE_MINUS_SRC_ALPHA, BLENDFUNC_ADD}
 ---- Whats between this and the `masks.Source` call is the destination
 ---- See the module declaration for an explaination
 ----
-function masks.Start()
+function melon.masks.Start()
     render.PushRenderTarget(masks.dest.rt)
     render.Clear(0, 0, 0, 0, true, true)
     cam.Start2D()
@@ -69,7 +70,7 @@ end
 ---- Whats between this and the `masks.End` call is the source
 ---- See the module declaration for an explaination
 ----
-function masks.Source()
+function melon.masks.Source()
     cam.End2D()
     render.PopRenderTarget()
 
@@ -88,7 +89,7 @@ end
 ---- This must be called post [masks.Source]
 ---- You still need to call End
 ----
-function masks.And(kind)
+function melon.masks.And(kind)
     cam.End2D()
     render.PopRenderTarget()
 
@@ -112,7 +113,7 @@ end
 ---- Stops the source render and renders everything finally
 ---- See the module declaration for an explaination
 ----
-function masks.End(kind)
+function melon.masks.End(kind)
     kind = kind or masks.KIND_CUT
 
     cam.End2D()
@@ -134,6 +135,3 @@ function masks.End(kind)
     surface.SetMaterial(masks.dest.mat)
     surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
 end
-
-
-melon.masks = masks
