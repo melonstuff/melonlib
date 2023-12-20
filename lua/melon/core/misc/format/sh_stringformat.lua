@@ -51,7 +51,7 @@ end
 ----
 ---- Extremely unsafe for user input
 ----
-function melon.string.QualifyFil(tbl, to)
+function melon.string.QualifyFil(tbl, to, current)
     local t = string.Split(to, "|")
     local val
 
@@ -63,7 +63,7 @@ function melon.string.QualifyFil(tbl, to)
             local args = melon.string.ParseArgs(call, tbl)
             val = melon.string.CallFil(v:sub(1, -#call - 3), val or table.remove(args, 1), args)
         else
-            val = melon.string.Qualify(tbl, v, true)
+            val = melon.string.Qualify(tbl, current or v, true)
         end
     end
 
@@ -100,10 +100,17 @@ function melon.string.Format(fmt, ...)
         varargs = varargs[1]
     end
 
+    local current = 0
     return string.gsub(fmt, "{(.-)}", function(mtch, ...)
         if mtch[1] == "!" then
             return "{" .. mtch:sub(2, -1) .. "}"
         end
+
+        if mtch == "" then
+            current = current + 1
+            return tostring(melon.string.QualifyFil(varargs, mtch, current))
+        end
+
         return tostring(melon.string.QualifyFil(varargs, mtch))
     end)
 end
