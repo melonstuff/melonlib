@@ -45,3 +45,15 @@ function melon.math.min(tbl, key)
 
     return cur
 end
+
+----
+---@name melon.math.distance
+----
+---@arg (x: number) X Coordinate
+---@arg (y: number) Y Coordinate
+----
+---- Gets the distance between x and y
+----
+function melon.math.distance(x, y)
+    return math.abs(x - y)
+end
