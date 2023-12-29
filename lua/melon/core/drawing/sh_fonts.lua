@@ -90,7 +90,8 @@ function melon.UnscaledFont(size, font, weight)
     local name = "melon_lib:unscaled:" .. font .. ":" .. id
     surface.CreateFont(name, {
         font = font,
-        size = size
+        size = size,
+        weight = weight
     })
 
     unscaled[font][id] = name
