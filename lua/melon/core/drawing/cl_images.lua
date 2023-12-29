@@ -30,6 +30,8 @@ function melon.Image(url, callback)
     local sans = melon.SanitizeURL(url)
     local ext = melon.URLExtension(url)
     if file.Exists("melon/images/" .. sans .. "." .. ext , "DATA") then
+        melon.Log(3, "Image load success from filesystem '{1}.{2}'", sans, ext)
+
         images[url] = Material("../data/melon/images/" .. sans .. "." .. ext, "mips smooth noclamp")
         if callback then callback(true, images[url]) end
         return images[url]
