@@ -41,7 +41,7 @@ melon.PanelDevSuite.Tabs = {
 ----
 ---- Creates a debug panel containing the given function, lay this out in fun(), visual and functional improvement of [melon.DebugPanel]
 ----
-function melon.DebugPanel2(name, fn)
+function melon.DebugPanel2(name, fn, nofocus)
     if not GAMEMODE then return end
     if melon.DebugPanel2_PanelInstance then
         melon.DebugPanel2_PanelInstance:Remove()
@@ -53,6 +53,11 @@ function melon.DebugPanel2(name, fn)
     melon.DebugPanel2_PanelInstance:SetSuitePanelType(name)
     melon.DebugPanel2_PanelInstance:SetSuiteFunction(fn)
     melon.DebugPanel2_PanelInstance:SuiteReady()
+    
+    if nofocus then
+        melon.DebugPanel2_PanelInstance:SetMouseInputEnabled(false)
+        melon.DebugPanel2_PanelInstance:SetKeyboardInputEnabled(false)
+    end
 
     hook.Add("HUDShouldDraw", "melon.DebugPanel2", function(n)
         if not IsValid(melon.DebugPanel2_PanelInstance) then
