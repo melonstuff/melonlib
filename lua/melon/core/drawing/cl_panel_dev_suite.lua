@@ -42,7 +42,7 @@ melon.PanelDevSuite.Tabs = {
 ---- Creates a debug panel containing the given function, lay this out in fun(), visual and functional improvement of [melon.DebugPanel]
 ----
 function melon.DebugPanel2(name, fn, nofocus)
-    if not GAMEMODE then return end
+    if not melon.Debug() then return end
     if melon.DebugPanel2_PanelInstance then
         melon.DebugPanel2_PanelInstance:Remove()
     end
@@ -124,6 +124,8 @@ function melon.DebugPanel2_UnHookPaint(pnl)
 end
 
 melon.DebugPanel2__TEST = function()
+    if not melon.Debug() then return end
+
     local PANEL = vgui.Register("DebugPanel2TestPanel", {}, "DPanel")
 
     local r = function(s,w,h)

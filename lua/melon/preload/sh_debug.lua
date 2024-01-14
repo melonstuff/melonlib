@@ -48,7 +48,7 @@ end
 ---- "Clears" the console by spamming newlines, only functions post gamemode loaded
 ----
 function melon.clr()
-    if not GAMEMODE then return end
+    if not melon.Debug() then return end
     print(string.rep("\n\n", 100))
 end
 
@@ -207,10 +207,11 @@ end)
 ---- Reloads melonlib, only functions post gamemode loaded
 ----
 function melon.ReloadAll()
-    if not GAMEMODE then return end
+    if not melon.Debug() then return end
     if melon.reloading then
         return
     end
+
     melon.reloading = true
     melon.__load()
     melon.reloading = false
@@ -382,4 +383,117 @@ function melon.DebugNamed(name, fn, ...)
     end
 
     melon.Log(1, "Failed to find named test '{}'", name)
+end
+
+----
+---@internal
+---@name melon.DebugNewFileDetected
+----
+---@arg (f: string) The file name
+----
+function melon.DebugNewFileDetected(f)
+    if string.StartsWith(string.GetFileFromFilename(f), "sv_") then
+        return
+    end
+
+    if SERVER then
+        SetGlobal2Bool("melon_newfiledetected", true)
+
+        net.Start("melon_new_file")
+        net.WriteString(f)
+        net.Broadcast()
+        
+        return
+    end
+
+    melon.Log(2, "New File Detected! {}", f)
+  
+    if IsValid(melon.NewFilePanel) then
+        melon.NewFilePanel:Remove()
+    end
+
+    melon.NewFilePanel = vgui.Create("Panel")
+    melon.NewFilePanel:SetSize(ScrW(), ScrH())
+    melon.NewFilePanel:MakePopup()
+    melon.NewFilePanel:SetDrawOnTop(true)
+
+    function melon.NewFilePanel:Paint(w, h)
+        if gui.IsGameUIVisible() then
+            return
+        end
+        
+        local lw = 20
+        local spacing = lw * 4
+        local offset = (CurTime() * 20) % spacing
+        local barh = melon.Scale(200)
+
+        surface.SetDrawColor(22, 22, 22)
+        surface.DrawRect(0, 0, w, h)
+
+        melon.masks.Start()
+            surface.SetDrawColor(72, 11, 112)
+            surface.DrawRect(0, 0, w, h)
+
+            surface.SetDrawColor(0, 26, 255, 140)
+            surface.SetMaterial(melon.Material("vgui/gradient-l"))
+            surface.DrawTexturedRectRotated(w / 2, h / 2, w * 3, w * 3, 40)
+        melon.masks.Source()
+            surface.SetDrawColor(255, 255, 255, 140)
+            surface.SetMaterial(melon.Material("vgui/gradient-d"))
+            surface.DrawTexturedRect(0, h / 2 - barh - barh / 2, w, barh)
+
+            surface.SetMaterial(melon.Material("vgui/gradient-u"))
+            surface.DrawTexturedRect(0, h / 2 + barh / 2, w, barh)
+
+            surface.DrawRect(0, h / 2 - barh / 2 - 2, w, barh + 4)
+
+            draw.NoTexture()
+            surface.SetDrawColor(255, 255, 255)
+            for i = -w / 2, w * 2, spacing do
+                surface.DrawTexturedRectRotated(w / 4 + offset, i + offset, w * 3, lw, 45)
+            end
+        melon.masks.And(melon.masks.KIND_CUT)
+            surface.SetDrawColor(255, 255, 255, 255)
+            surface.DrawRect(0, h / 2 - barh / 2, w, barh)
+        melon.masks.End(melon.masks.KIND_STAMP)
+
+        local tw, th = draw.Text({
+            text = "A new file has been added, you will most likely see errors",
+            pos = {w / 2, h / 2},
+            xalign = 1,
+            yalign = 1,
+            font = melon.Font(80),
+        })
+
+        draw.Text({
+            text = "Please retry.",
+            pos = {w / 2 - tw / 2, h / 2 + th / 2},
+            xalign = 0,
+            yalign = 1,
+            font = melon.Font(60),
+            color = {r = 255, g = 255, b = 255, a = 10}
+        })
+    end
+
+    function melon.NewFilePanel:OnMousePressed(m)
+        if m == MOUSE_RIGHT and input.IsControlDown() then
+            self:Remove()
+        end
+    end
+end
+
+do --- NewFileDetected stuff
+    if SERVER then
+        util.AddNetworkString("melon_new_file")
+    
+        hook.Add("Melon:NewFileDetected", "MelonDebug", function(dir)
+            melon.DebugNewFileDetected(dir)
+        end )
+    else
+        net.Receive("melon_new_file", function()
+            melon.DebugNewFileDetected(net.ReadString())
+        end )
+    end
+
+    -- melon.Debug(melon.DebugNewFileDetected, true, "testfilename")
 end
