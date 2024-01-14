@@ -1,5 +1,8 @@
 
 if melon then
+    melon.__reloaded = true
+    melon.FinishedLoading = false
+
     print()
     melon.Log(0, "Reloading")
 end
@@ -21,6 +24,8 @@ melon = melon or {}
 ----
 melon.version = "1.4.1"
 melon.__loadhandlers = melon.__loadhandlers or {}
+melon.__loaded = melon.__loaded or {}
+melon.__reloaded = melon.__reloaded or false 
 
 ----
 ---@internal
@@ -41,7 +46,7 @@ end
 ----
 ---- Loads a directory recursively, for core use 
 ----
-function melon.LoadDirectory(dir, m)
+function melon.LoadDirectory(dir, m, loaded)
     local fil, fol = file.Find(dir .. "/*", "LUA")
 
     for k,v in ipairs(fil) do
@@ -61,6 +66,16 @@ function melon.LoadDirectory(dir, m)
         else
             melon.Log(2, "Invalid File Handler '{1}' found when loading '{2}'", spl[1], dirs)
         end
+
+        if melon.__reloaded then
+            if melon.__loaded[dirs] then
+                continue
+            end
+
+            hook.Run("Melon:NewFileDetected", dirs, h)
+        end
+
+        melon.__loaded[dirs] = true
     end
 
     for k,v in pairs(fol) do
@@ -94,6 +109,8 @@ end )
 ---- Loads everything in the library
 ----
 function melon.__load()
+    melon.FinishedLoading = false
+
     --[[ Preload all needed files ]]
     melon.LoadDirectory("melon/preload")
     hook.Run("Melon:DoneLoading:PreLoad")
@@ -129,8 +146,13 @@ melon.__load()
 ---- Reloads melonlib
 ----
 concommand.Add("melon_raw_reload", function(ply)
-    if IsValid(ply) then return end
-    if CLIENT then return end
+    melon.__reloaded = true
 
+    if CLIENT or IsValid(ply) then
+        melon.Log(1, "Missing permissions")
+        return
+    end
+
+    melon.Log(2, "Reloading")
     melon.__load()
-end)
+end, nil, nil, FCVAR_CHEAT)
