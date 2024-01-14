@@ -127,7 +127,7 @@ melon.DebugNamed("ScrollPanel", function()
         local canvas = vgui.Create("DPanel", p)
 
         p:SetCanvas(canvas)
-        canvas:SetSize(p:GetWide() * 1, p:GetTall() * 5)
+        canvas:SetSize(p:GetWide() * 1, p:GetTall() * 2)
 
         for i = 0, 40 do
             local b = vgui.Create("DButton", canvas)

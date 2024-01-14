@@ -234,10 +234,10 @@ function PANEL:GetDomain()
     if not IsValid(self:GetCanvas()) then return end
 
     if self:GetHorizontal() then
-        return self:GetCanvas():GetWide() - self:GetParent():GetWide()
+        return math.max(self:GetCanvas():GetWide() - self:GetParent():GetWide(), 0)
     end
 
-    return self:GetCanvas():GetTall() - self:GetParent():GetTall()
+    return math.max(self:GetCanvas():GetTall() - self:GetParent():GetTall(), 0)
 end
 
 melon.DebugNamed("ScrollPanel")
