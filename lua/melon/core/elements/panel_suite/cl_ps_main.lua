@@ -118,6 +118,23 @@ function PANEL:Paint(w, h)
     end
 
     self.close:SetZPos(32766)
+
+    if self:IsMouseInputEnabled() then
+        return
+    end
+
+    draw.Text({
+        text = "shift+L to close debugger",
+        pos = {w / 2, self.close:GetTall() / 2},
+        xalign = 1,
+        yalign = 1,
+        font = melon.Font(20),
+        color = {r = 255, g = 255, b = 255, a = 20}
+    })
+
+    if input.IsKeyDown(KEY_L) and input.IsShiftDown() then
+        self:Remove()
+    end
 end
 
 function PANEL:OnMousePressed(m)
