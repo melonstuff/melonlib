@@ -57,3 +57,21 @@ end
 function melon.math.distance(x, y)
     return math.abs(x - y)
 end
+
+----
+---@name melon.math.sum
+----
+---@arg    (table: table) Table to get the sum of
+---@return (sum:  number) Sum of all the tables contents
+----
+---- Gets the sum of an entire table
+----
+function melon.math.sum(t)
+    local s = 0
+
+    for i = 1, #t do
+        s = s + t[i]
+    end
+
+    return s
+end
