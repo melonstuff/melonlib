@@ -160,3 +160,51 @@ function melon.colors.ToHex(color)
 
     return r .. g .. b .. a
 end
+
+----
+---@name melon.colors.Alpha
+----
+---@arg    (color:  Color) The color
+---@arg    (alpha: number) The wanted alpha
+---@return (color:  Color) The new, modified color
+----
+---- Creates a quick copy of the given color with the alpha given
+----
+function melon.colors.Alpha(color, alpha)
+    return {
+        r = color.r,
+        g = color.g,
+        b = color.b,
+        a = alpha
+    }
+end
+
+----
+---@name melon.colors.FastColor
+----
+---@arg    (r:    number) The red component
+---@arg    (g:    number) The red component
+---@arg    (b:    number) The red component
+---@arg    (a:    number) The red component
+---@return (color: table) The new fake color
+----
+---- Creates a color without the color metatable
+----
+function melon.colors.FastColor(r, g, b, a)
+    g = g or r
+    b = b or g
+    a = a or 255
+
+    return {
+        r = r,
+        g = g,
+        b = b,
+        a = a
+    }
+end
+
+----
+---@alias melon.colors.FastColor
+---@name melon.colors.FC
+----
+melon.colors.FC = melon.colors.FastColor
