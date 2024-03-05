@@ -94,7 +94,7 @@ hook.Add("Think", "Melon:NoiseGenerate", function()
     DisableClipping(oc)
 
     if melon.noise.pixels >= 1500000 then
-        melon.Log(2, "Noise Material Finished Generating!")
+        melon.Log(3, "Noise Material Finished Generating!")
         melon.noise.pixels = false
         hook.Remove("Think", "Melon:NoiseGenerate")
     end
