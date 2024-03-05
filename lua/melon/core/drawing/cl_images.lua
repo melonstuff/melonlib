@@ -17,7 +17,7 @@ local images = {}
 ---@name melon.Image
 ----
 ---@arg    (url:    string) URL to the image to download
----@return (callback: func) Function to be called when download finished/image retrieved, called with IMaterial
+---@arg    (callback: func) Function to be called when download finished/image retrieved, called with IMaterial
 ----
 ---- Remote image downloader and cache handler. Discord is unreliable, use imgur.
 ----
@@ -29,10 +29,16 @@ function melon.Image(url, callback)
 
     local sans = melon.SanitizeURL(url)
     local ext = melon.URLExtension(url)
+    local rext = "." .. ext
+
+    if ext == "vtf" then
+        rext = ""
+    end
+
     if file.Exists("melon/images/" .. sans .. "." .. ext , "DATA") then
         melon.Log(3, "Image load success from filesystem '{1}.{2}'", sans, ext)
 
-        images[url] = Material("../data/melon/images/" .. sans .. "." .. ext, "mips smooth noclamp")
+        images[url] = Material("../data/melon/images/" .. sans .. rext, "mips smooth")
         if callback then callback(true, images[url]) end
         return images[url]
     end
@@ -40,7 +46,7 @@ function melon.Image(url, callback)
     melon.Log(3, "Image Fetch made to {1}", "https://external-content.duckduckgo.com/iu/?u=" .. url)
     melon.http.Get("https://external-content.duckduckgo.com/iu/?u=" .. url, function(bod, size, headers, code)
         file.Write("melon/images/" .. sans .. "." .. ext, bod)
-        images[url] = Material("../data/melon/images/" .. sans .. "." .. ext, "mips smooth noclamp")
+        images[url] = Material("../data/melon/images/" .. sans .. rext, "mips smooth")
         melon.Log(3, "Image Download Success: '{1}' ({2})", url, code)
 
         if callback then callback(true, images[url]) end
