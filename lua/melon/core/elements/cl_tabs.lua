@@ -41,9 +41,9 @@ function PANEL:AddTab(name, pnl)
     pnl:SetVisible(false)
     pnl:Dock(FILL)
 
-    if not self:GetActiveTab() then
+    if not self:GetInitialTab() then
         self:SetInitialTab(name)
-        self:SetTab(name)
+        self:SetTabPending(name)
     end
     
     return pnl
@@ -61,9 +61,9 @@ end
 function PANEL:AddFutureTab(name, fn)
     self.tabs[name] = fn
 
-    if not self:GetActiveTab() then
+    if not self:GetInitialTab() then
         self:SetInitialTab(name)
-        self:SetTab(name)
+        self:SetTabPending(name)
     end
 end
 
@@ -76,6 +76,8 @@ end
 ---- Sets the current tab to the given tab, animates!
 ----
 function PANEL:SetTab(name)
+    self.WantedTab = nil
+
     local old = self.tabs[self:GetActiveTab()]
     local new = self.tabs[name]
 
@@ -115,12 +117,28 @@ end
 
 ----
 ---@method
+---@name melon.elements.Tabs.SetTabPending
+----
+---@arg (name: string) Name of the tab to set
+----
+---- Sets the current tab to the given tab on the next tick
+----
+function PANEL:SetTabPending(name)
+    self.WantedTab = name
+end
+
+----
+---@method
 ---@internal
 ---@name melon.elements.Tabs.Think
 ----
 ---- Handles animation progress stuff, dont touch, if you do touch replace it
 ----
 function PANEL:Think()
+    if self.WantedTab then
+        self:SetTab(self.WantedTab)
+    end
+
     if self.anim then
         self.anim.progress = Lerp((CurTime() - self.anim.start) / self:GetAnimTime(), self.anim.progress or 0, 1)
 
