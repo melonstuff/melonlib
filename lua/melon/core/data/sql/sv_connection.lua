@@ -75,7 +75,7 @@ end
 ---@arg    (...values:  any) Varargs of values to be escaped in those queries
 ---@return (passed:    bool) Did the query get validated successfully? 
 ----
----- Sends a query to the connection and returns whatever the query returned
+---- Sends a query to the connection and calls done with whatever the query returned
 ----
 function melon.sql.Connection:Query(done, adapters, ...)
     local failure = false
@@ -107,6 +107,20 @@ function melon.sql.Connection:Query(done, adapters, ...)
             {...}
         )
     )
+end
+
+----
+---@method
+---@name melon.sql.Connection:QueryNoResult
+----
+---@arg    (adapters: table) A table of adapter keys with query values
+---@arg    (...values:  any) Varargs of values to be escaped in those queries
+---@return (passed:    bool) Did the query get validated successfully? 
+----
+---- Sends a query to the connection
+----
+function melon.sql.Connection:QueryNoResult(adapters, ...)
+    return self:Query(function() end, adapters, ...)
 end
 
 melon.Debug(function()
