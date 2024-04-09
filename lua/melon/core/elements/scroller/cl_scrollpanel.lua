@@ -70,7 +70,7 @@ function PANEL:Init()
     self:SetHorizontalScrollEnabled(true)
 end
 
-function PANEL:PerformLayout(w, h)
+function PANEL:ScrollPerf(w, h)
     local size = melon.Scale(self:GetScrollbarSize())
     local pad = melon.Scale(self:GetScrollbarPad())
 
@@ -79,6 +79,10 @@ function PANEL:PerformLayout(w, h)
 
     self.HScroll:SetSize(w - ((self:GetVerticalScrollEnabled() and self.VScroll:GetDomain() != 0) and (size + (pad * 3)) or (pad * 2)), size)
     self.HScroll:SetPos(pad, h - size - pad)
+end
+
+function PANEL:PerformLayout(w, h)
+    self:ScrollPerf(w, h)
 end
 
 function PANEL:OnMouseWheeled(d)
