@@ -22,7 +22,6 @@ function melon.AddLogHandler(lvl, func)
     logtypes[lvl] = func
 end
 
-
 ----
 ---@name melon.AddDynamicLogHandler
 ----
@@ -148,3 +147,19 @@ end)
 melon.AddLogHandler(0, function(msg)
     MsgC(colors.green, "[MelonLib (", msg.fmt_time , ")][Important] ", colors.white, msg.message, "\n")
 end )
+
+----
+---@enumeration
+---@name melon.LOG
+----
+---@enum (IMPORTANT) Important, green text
+---@enum (ERROR) Error, red text or an actual error on the client
+---@enum (WARNING) A warning
+---@enum (MESSAGE) A verbose message
+----
+---- Log types
+----
+melon.LOG_IMPORTANT = 0
+melon.LOG_ERROR     = 1
+melon.LOG_WARNING   = 2
+melon.LOG_MESSAGE   = 3
