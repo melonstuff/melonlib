@@ -85,6 +85,8 @@ end
 ---- - Restricts to a TYPE_ enum instead of a FORCE_
 ----
 function melon.AccessorFunc(tbl, name, def, type)
+    tbl.__melon_accessors[name] = true
+    
     tbl["Set" .. name] = function(s, value)
         if type and (TypeID(value) != type) then
             return
