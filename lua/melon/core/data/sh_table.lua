@@ -69,3 +69,32 @@ function melon.SubTable(tbl, from, to)
 
     return new
 end
+  
+----
+---@name melon.Pack
+----
+---@arg    (args: varargs)  The varargs to pack.
+---@return (length: number) The length of the varargs.
+---@return (args: table)    A table containing the passed varargs.
+----
+---- Takes a variable length of arguments and packs them into a table while also returning the length.
+----
+function melon.Pack(...)
+    return select("#", ...), { ... }
+end
+
+----
+---@name melon.XPack
+----
+---@arg    (success: bool)  The success value to forward.
+---@arg    (args: varargs)  The varargs to pack.
+---@return (length: number) The length of the varargs.
+---@return (args: table)    A table containing the passed varargs.
+----
+---- Takes a variable length of arguments and packs them into a table while also returning the length.
+----
+---- This function also forwards an initial `success` value separately of the rest of the varargs.
+----
+function melon.XPack(success, ...)
+    return success, select("#", ...), { ... }
+end
