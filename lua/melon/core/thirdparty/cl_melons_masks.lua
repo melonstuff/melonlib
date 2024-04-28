@@ -108,11 +108,15 @@ end
 ---@name melon.masks.End
 ----
 ---@arg (kind: melon.masks.KIND_) The kind of mask this is, remember this is not a number enum
+---@arg (x:         number) The x coordinate to render the rectangle at, defaults to 0
+---@arg (y:         number) The y coordinate to render the rectangle at, defaults to 0
+---@arg (w:         number) The width of the rectangle to render
+---@arg (h:         number) The height of the rectangle to render
 ----
 ---- Stops the source render and renders everything finally
 ---- See the module declaration for an explaination
 ----
-function melon.masks.End(kind)
+function melon.masks.End(kind, x, y, w, h)
     kind = kind or melon.masks.KIND_CUT
 
     cam.End2D()
@@ -132,7 +136,7 @@ function melon.masks.End(kind)
 
     surface.SetDrawColor(255, 255, 255)
     surface.SetMaterial(melon.masks.dest.mat)
-    surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+    surface.DrawTexturedRect(x or 0, y or 0, w or ScrW(), h or ScrH())
 end
 
 ----
