@@ -2,35 +2,52 @@
 ----
 ---@name melon.Map
 ----
----@arg    (tbl: table) Table to map
----@arg    (fn:   func) Function that takes k,v and returns a new k,v
----@return (new: table) Table created by the mapper
+---@arg    (iter: generator) The iterator to map. Expected to be an iterator which returns a key and a value.
+---@arg    (fn: func)        The mapping function. The function is passed the value then the key, and is expected to return a new value.
+---@return (new: table)      A table with the mapped elements. 
 ----
----- Maps a table to a new table, calling func with every key and value.
+---- Maps an iterator to a new table, calling `fn` with every key/value pair.
 ----
-function melon.Map(tbl, func)
+function melon.Map(iter, fn)
     local new = {}
-
-    for k,v in pairs(tbl) do
-        local nk, nv = func(k, v)
-        new[nk] = nv
+    for key, value in iter do
+        new[key] = fn(value, key)
     end
-
     return new
+end
+
+----
+---@name melon.Reduce
+----
+---@arg    (iter: generator)    The iterator to map. Expected to be an iterator which returns a key and a value.
+---@arg    (fn: func)           The reducer function. The function is passed the current value, the value, the key, and returns the next value.
+---@arg    (initial_value: any) The initial value passed to `fn`.
+---@return (new: any)           The reduced value.
+----
+---- Performs a reduction on the given `iter` with the given `fn`.
+----
+function melon.Reduce(iter, fn, initial_value)
+    local current_value = initial_value
+    for key, value in iter do
+        current_value = fn(current_value, value, key)
+    end
+    return current_value
 end
 
 ----
 ---@name melon.KV2VK
 ----
----@arg    (tbl: table) Table to convert
----@return (new: table) Converted table
+---@arg    (iter: generator) Iterator to convert.
+---@return (new: table)      Converted table.
 ----
 ---- Inverts a tables keys and values ([k] = v) into ([v] = k) for every pair in the given table.
 ----
-function melon.KV2VK(tbl)
-    return melon.Map(tbl, function(k, v)
-        return v, k
-    end )
+function melon.KV2VK(iter)
+    local o = {}
+    for key, value in iter do
+        o[value] = key
+    end
+    return o
 end
 
 ----
