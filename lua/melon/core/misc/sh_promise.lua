@@ -299,7 +299,7 @@ do
         return melon.PromiseWithTraceback(debug.traceback("", 2), executor)
     end
 
-    function melon.All(promises)
+    function melon.RunAllPromises(promises)
         local results = {}
         local pending = #promises
         local method = "resolve"
