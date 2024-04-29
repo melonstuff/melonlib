@@ -58,6 +58,48 @@ function melon.Reduce(iter, t, fn, initial_value)
 end
 
 ----
+---@name melon.Find
+----
+---@arg    (iter: func)         The iterator function to use.
+---@arg    (t: table)           The table to search in.
+---@arg    (fn: func)           The reducer function. The function is passed the value, the key, and returns a boolean.
+---@return (new: any)           The found value, or nil.
+----
+---- Loops through `t` using `iter` and tests each element with `fn`. The first to return true 
+----
+function melon.Find(iter, t, fn)
+    local current_value = initial_value
+    for key, value in iter(t) do
+        current_value = fn(current_value, value, key)
+    end
+    return current_value
+end
+
+----
+---@name melon.GroupBy
+----
+---@arg    (iter: func)         The iterator function to use.
+---@arg    (t: table)           The table to group.
+---@arg    (fn: func)           The reducer function. The function is passed the value, the key, and returns a boolean.
+---@return (new: any)           A table of tables, containing the groups.
+----
+---- Loops through `t` using `iter`. `fn` is expected to return a value for each iteration which will be used to group
+---- the elements of the `iter`. The returned value is a table whose keys are those returned values from `fn`.
+----
+function melon.GroupBy(iter, t, fn)
+    local o = {}
+    for key, value in iter(t) do
+        local g = fn(value, key)
+        if not o[g] then
+            o[g] = {}
+        end
+
+        table.insert(o[g], value)
+    end
+    return o
+end
+
+----
 ---@name melon.KV2VK
 ----
 ---@arg    (tbl: table) Table to convert
