@@ -28,7 +28,7 @@ do
     end
 
     function PromiseError:__tostring()
-        return self.error
+        return self.error .. "\n" .. self.trace
     end
     
     function melon.IsPromiseError(other)
