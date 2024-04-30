@@ -28,7 +28,7 @@ do
     end
 
     function PromiseError:__tostring()
-        return self.error .. "\n" .. self.trace
+        return "PromiseError: " .. self.error .. " @ " .. self.created_trace
     end
     
     function melon.IsPromiseError(other)
@@ -297,6 +297,10 @@ do
 
     function melon.Promise(executor)
         return melon.PromiseWithTraceback(debug.traceback("", 2), executor)
+    end
+
+    function melon.ResolvedPromise()
+        return melon.Promise(function(resolve) resolve() end)
     end
 
     function melon.RunAllPromises(promises)
