@@ -1,37 +1,3 @@
----------------------------------------------------------------------------------------
--- Copyright 2012 Rackspace (original), 2013-2021 Thijs Schreijer (modifications)
---
--- Licensed under the Apache License, Version 2.0 (the "License");
--- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
---
---     http://www.apache.org/licenses/LICENSE-2.0
---
--- Unless required by applicable law or agreed to in writing, software
--- distributed under the License is distributed on an "AS-IS" BASIS,
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--- See the License for the specific language governing permissions and
--- limitations under the License.
---
--- see http://www.ietf.org/rfc/rfc4122.txt
---
--- Note that this is not a true version 4 (random) UUID.  Since `os.time()` precision is only 1 second, it would be hard
--- to guarantee spacial uniqueness when two hosts generate a uuid after being seeded during the same second.  This
--- is solved by using the node field from a version 1 UUID.  It represents the mac address.
---
--- 28-apr-2013 modified by Thijs Schreijer from the original [Rackspace code](https://github.com/kans/zirgo/blob/807250b1af6725bad4776c931c89a784c1e34db2/util/uuid.lua) as a generic Lua module.
--- Regarding the above mention on `os.time()`; the modifications use the `socket.gettime()` function from LuaSocket
--- if available and hence reduce that problem (provided LuaSocket has been loaded before uuid).
---
--- **Important:** the random seed is a global piece of data. Hence setting it is
--- an application level responsibility, libraries should never set it!
---
--- See this issue; [https://github.com/Kong/kong/issues/478](https://github.com/Kong/kong/issues/478)
--- It demonstrates the problem of using time as a random seed. Specifically when used from multiple processes.
--- So make sure to seed only once, application wide. And to not have multiple processes do that
--- simultaneously.
-
-
 local M = {}
 
 local bitsize = 32  -- bitsize assumed for Lua VM. See randomseed function below.
