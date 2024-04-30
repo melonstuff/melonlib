@@ -99,6 +99,27 @@ function melon.GroupBy(iter, t, fn)
     return o
 end
 
+
+----
+---@name melon.Join
+----
+---@arg    (iter: func)  The iterator function to use.
+---@arg    (t: table)    The table to join.
+---@arg    (sep: string) The reducer function. The function is passed the value, the key, and returns a boolean.
+---@return (new: string) The joined value.
+---
+----
+---- Loops through `t` using `iter` and concats each element into a string separated by `sep`.
+----
+function melon.Join(iter, t, sep)
+    local o = ""
+    for _, value in iter(t) do
+        o = o .. value .. sep
+    end
+    o = o:sub(1, #o - #sep)
+    return o
+end
+
 ----
 ---@name melon.KV2VK
 ----
