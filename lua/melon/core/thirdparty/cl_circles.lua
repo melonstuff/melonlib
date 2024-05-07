@@ -56,7 +56,7 @@ local RotateVertices do
 		assert(isnumber(oy), string.format(err_number, 3, type(oy)))
 		assert(isnumber(rotation), string.format(err_number, 4, type(rotation)))
 
-		local rotation = math.rad(rotation)
+		rotation = math.rad(rotation)
 		local c = math.cos(rotation)
 		local s = math.sin(rotation)
 
@@ -148,12 +148,11 @@ function CIRCLE:Copy()
 end
 
 function CIRCLE:IsValid()
-	return (
+	return 
 		not self.m_Dirty and
 		self.m_Vertices.Count >= 3 and
 		self.m_Radius >= 1 and
 		self.m_Distance >= 1
-	)
 end
 
 function CIRCLE:Calculate()
