@@ -2,6 +2,13 @@
 ---- An A* Promise implementation written by jackkdev (https://github.com/jackkdev) for use in MelonLib.
 ----
 
+----
+---@class
+---@name melon.PromiseErrorObj
+---@internal
+----
+---- Describes an error returned from a promise
+----
 local PromiseError
 do
     PromiseError = {}
@@ -31,10 +38,28 @@ do
         return "PromiseError: " .. self.error .. " @ " .. self.created_trace
     end
     
+    ----
+    ---@internal
+    ---@name melon.IsPromiseError
+    ----
+    ---@arg    (obj:    any) Object ot test
+    ---@return (iserr: bool) Is this object a [melon.PromiseErrorObj]
+    ----
+    ---- Tests if an object is a promise error
+    ----
     function melon.IsPromiseError(other)
         return type(other) == "table" and getmetatable(other) == PromiseError
     end
 
+    ----
+    ---@internal
+    ---@name melon.PromiseError
+    ----
+    ---@arg    (options: table) Object ot test
+    ---@return (obj: melon.PromiseErrorObj) The promise error
+    ----
+    ---- Creates a [melon.PromiseErrorObj]
+    ----
     function melon.PromiseError(options)
         local o = {}
         setmetatable(o, PromiseError)
@@ -43,6 +68,11 @@ do
     end
 end
 
+----
+---@class melon.PromiseObj
+----
+---- A promise object
+----
 local Promise
 do
     Promise = {}
@@ -84,7 +114,12 @@ do
         end
     end
 
-    --- @brief Marks the Promise as cancelled, and cancels all consuming Promises.
+    ----
+    ---@method
+    ---@name melon.PromiseObj:Cancel
+    ----
+    ---- Marks the Promise as cancelled, and cancels all consuming Promises.
+    ----
     function Promise:Cancel()
         if self._status ~= Promise.Status.STARTED then
             return
@@ -107,7 +142,16 @@ do
         self:_Finalize()
     end
 
-    --- @brief Attaches a success/and or failure handler.
+    ----
+    ---@method
+    ---@name melon.PromiseObj:Next
+    ----
+    ---@arg    (success: fn) Function to call on success
+    ---@arg    (failure: fn) Function to call on failure
+    ---@return (self) The PromiseObj
+    ----
+    ---- Attaches a success/and or failure handler.
+    ----
     function Promise:Next(success_handler, failure_handler)
         return self:_Next(debug.traceback("", 2), success_handler, failure_handler)
     end
@@ -116,13 +160,13 @@ do
     do
         function Promise:_Resolve(...)
             if self._status ~= Promise.Status.STARTED then
-                if melon.IsPromise((...)) then
+                if melon.IsPromise(...) then
                     (...):_ConsumerCancelled(self)
                 end
                 return
             end
 
-            if melon.IsPromise((...)) then
+            if melon.IsPromise(...) then
                 local chained = ...
 
                 local promise = chained:Next(function(...)
@@ -239,10 +283,29 @@ do
         end
     end
 
+    ----
+    ---@name melon.IsPromise
+    ----
+    ---@arg    (obj: any) The object to test
+    ---@return (ispromise: bool) Is this object a [melon.PromiseObj]
+    ----
+    ---- Is the given object a promise?
+    ----
     function melon.IsPromise(other)
         return type(other) == "table" and getmetatable(other) == Promise
     end
 
+    ----
+    ---@internal
+    ---@name melon.PromiseWithTraceback
+    ----
+    ---@arg    (traceback:         string) Traceback that this promise is at
+    ---@arg    (executor:              fn) The promise executor function
+    ---@arg    (parent: melon.PromiseObj?) The parent promise
+    ---@return (promise: melon.PromiseObj) The created promise
+    ----
+    ---- Creates a promise with a user defined traceback
+    ----
     function melon.PromiseWithTraceback(traceback, executor, parent)
         local o = {
             _source = traceback,
@@ -295,14 +358,37 @@ do
         return o
     end
 
+    ----
+    ---@name melon.Promise
+    ----
+    ---@arg    (executor: fn) The promise executor function
+    ---@return (promise: melon.PromiseObj) The created promise
+    ----
+    ---- Creates a promise
+    ----
     function melon.Promise(executor)
         return melon.PromiseWithTraceback(debug.traceback("", 2), executor)
     end
 
+    ----
+    ---@internal
+    ---@name melon.ResolvedPromise
+    ----
+    ---@return (promise: melon.PromiseObj) The resolved promise
+    ----
+    ---- Creates a resolved promise
+    ----
     function melon.ResolvedPromise()
         return melon.Promise(function(resolve) resolve() end)
     end
 
+    ----
+    ---@name melon.RunAllPromises
+    ----
+    ---@arg (promises: table) The table of promises
+    ----
+    ---- Runs a table of [melon.PromiseObj]es
+    ----
     function melon.RunAllPromises(promises)
         local results = {}
         local pending = #promises
