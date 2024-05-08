@@ -85,12 +85,10 @@ function PANEL:PerformLayout(w, h)
     local sw, sh = self:GetParent():GetSize()
     local cw, ch = cvs:GetSize()
 
-    self.Grip:SetSize(w, h)
-
     if self:GetHorizontal() then
-        self.Grip:SetWide(w * (sw / cw))
+        self.Grip:SetSize(w * (sw / cw), h)
     else
-        self.Grip:SetTall(h * (sh / ch))
+        self.Grip:SetSize(w, h * (sh / ch))
     end
 end
 
@@ -105,10 +103,17 @@ function PANEL:GrabThink()
             self:SetiGrabbed(nil)
         end
 
-        local pos = self:GetHorizontal() and (self.Grip:GetX() - grab.x) or (self.Grip:GetY() - grab.y)
         local nx, ny = self:LocalCursorPos()
-
-        self:SetScrollAmount(math.Clamp((self:GetHorizontal() and nx or ny) + pos, -self:GetParent():GetScrollbarMaxOverflow(), self:GetDomain() + self:GetParent():GetScrollbarMaxOverflow()))
+        local pos = self:GetHorizontal() and (nx - grab.x) or (ny - grab.y)
+        local dom = self:GetHorizontal() and (self:GetWide() - self.Grip:GetWide()) or (self:GetTall() - self.Grip:GetTall())
+        
+        self:SetScrollAmount(
+            math.Clamp(
+                (pos / dom) * self:GetDomain(),
+                -self:GetParent():GetScrollbarMaxOverflow(),
+                self:GetDomain() + self:GetParent():GetScrollbarMaxOverflow()
+            )
+        )
     end
 end
 
@@ -218,7 +223,9 @@ function PANEL:Grab()
     local x, y = self.Grip:LocalCursorPos()
     self:SetiGrabbed({
         x = x,
-        y = y
+        y = y,
+        xpos = self.Grip:GetX(),
+        ypos = self.Grip:GetY(),
     })
 end
 
