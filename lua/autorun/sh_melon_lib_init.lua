@@ -22,7 +22,7 @@ melon = melon or {}
 ----
 ---- Version in major.minor.patch format, see [melon.ParseVersion]
 ----
-melon.version = "1.5.0"
+melon.version = "1.6.0"
 melon.__loadhandlers = melon.__loadhandlers or {}
 melon.__loaded = melon.__loaded or {}
 melon.__reloaded = melon.__reloaded or false 
