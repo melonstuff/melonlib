@@ -497,3 +497,55 @@ do --- NewFileDetected stuff
 
     -- melon.Debug(melon.DebugNewFileDetected, true, "testfilename")
 end
+
+----
+---@name melon.DebugSlider
+----
+---@arg (fn:  function) Function to call when the slider changes
+---@arg (speed: number) Play speed, defaults to 2
+----
+---- Creates a slider panel to debug animations
+----
+function melon.DebugSlider(fn)
+    if not melon.Debug() then return end
+
+    if melon.__Debug__SliderPanel then
+        melon.__Debug__SliderPanel:Remove()
+    end
+
+    local p = vgui.Create("DFrame")
+    p:SetTitle("Melon: DebugSlider")
+    p:MakePopup()
+    p:SetSize(melon.ScaleN(400, 60))
+    p:CenterVertical()
+    p:CenterHorizontal(0.25)
+
+    p.slider = vgui.Create("DNumSlider", p)
+    p.slider:Dock(FILL)
+    p.slider:SetMin(0)
+    p.slider:SetMax(1)
+
+    p.play = vgui.Create("DButton", p)
+    p.play:Dock(RIGHT)
+    p.play:SetText("")
+    p.play:SetIcon("icon16/control_play.png")
+    p.play:SetWide(melon.Scale(26))
+
+    function p.play:DoClick()
+        self.playing = not self.playing
+    end
+
+    function p.play:Think()
+        if self.playing then
+            p.slider:SetValue(math.abs(math.sin(CurTime() * (speed or 2))))
+        end
+    end
+
+    function p.slider:OnValueChanged(v)
+        fn(v)
+    end
+
+    melon.__Debug__SliderPanel = p
+end
+
+melon.DebugSlider(cprint)
