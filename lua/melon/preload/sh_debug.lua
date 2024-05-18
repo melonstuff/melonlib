@@ -69,7 +69,7 @@ function melon.DebugPanel(name, func)
         melon.__Debug__TestPanel:Remove()
     end
 
-    melon.__Debug__TestPanel = vgui.Create("Panel")
+    melon.__Debug__TestPanel = vgui.Create("EditablePanel")
     melon.__Debug__TestPanel:SetSize(ScrW(), ScrH())
     melon.__Debug__TestPanel:MakePopup()
     melon.__Debug__TestPanel.PerformLayout = function(s,w,h)

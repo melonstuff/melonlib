@@ -1,7 +1,7 @@
 
 ---- This is all internal, so im not gonna bother documenting it
 local last = false
-local PANEL = vgui.Register("Melon:PanelSuite:Main", {}, "Panel")
+local PANEL = vgui.Register("Melon:PanelSuite:Main", {}, "EditablePanel")
 AccessorFunc(PANEL, "SuitePanelType", "SuitePanelType")
 AccessorFunc(PANEL, "SuiteFunction", "SuiteFunction")
 AccessorFunc(PANEL, "SuitePanel", "SuitePanel")
