@@ -9,10 +9,11 @@
     This doesnt stop you from doing stupid stuff, so dont be stupid
 ]]--
 
-local boxes = {}
+melon.thirdparty = melon.thirdparty or {}
+melon.thirdparty.RoundedBoxes = {}
 
 ----
----@name boxes.RoundedBox
+---@name melon.thirdparty.RoundedBoxes.RoundedBox
 ----
 ---@arg (radius: number) Radius of the rounded box
 ---@arg (x:      number) X position of the box
@@ -34,7 +35,7 @@ local boxes = {}
 ---` local PANEL = vgui.Register("RoundedGradient", {}, "Panel")
 ---`
 ---` function PANEL:PerformLayout(w, h)
----`     self.background = boxes.RoundedBox(w / 4, 0, 0, w, h)
+---`     self.background = melon.thirdparty.RoundedBoxes.RoundedBox(w / 4, 0, 0, w, h)
 ---` end
 ---`
 ---` function PANEL:Paint(w, h)
@@ -47,7 +48,7 @@ local boxes = {}
 ---`     surface.DrawPoly(self.background)
 ---` end
 ---`
-function boxes.RoundedBox(radius, x, y, w, h, bl, tl, tr, br, detail)
+function melon.thirdparty.RoundedBoxes.RoundedBox(radius, x, y, w, h, bl, tl, tr, br, detail)
     local unround = {
         {
             x = x,
@@ -79,11 +80,11 @@ function boxes.RoundedBox(radius, x, y, w, h, bl, tl, tr, br, detail)
         },
     }
 
-    return boxes.RoundedPolygonUV(unround, radius, x, y, w, h, detail)
+    return melon.thirdparty.RoundedBoxes.RoundedPolygonUV(unround, radius, x, y, w, h, detail)
 end
 
-function boxes.RoundedPolygonUV(poly, default_radius, x,y,w,h, detail)
-    poly = boxes.RoundedPolygon(poly, default_radius, detail)
+function melon.thirdparty.RoundedBoxes.RoundedPolygonUV(poly, default_radius, x,y,w,h, detail)
+    poly = melon.thirdparty.RoundedBoxes.RoundedPolygon(poly, default_radius, detail)
 
     for k,v in pairs(poly) do
         v.u = (v.x-x) / w
@@ -93,7 +94,7 @@ function boxes.RoundedPolygonUV(poly, default_radius, x,y,w,h, detail)
     return poly
 end
 
-function boxes.RoundedPolygon(poly, default_radius, detail)
+function melon.thirdparty.RoundedBoxes.RoundedPolygon(poly, default_radius, detail)
     local points = {}
 
     for k,v in pairs(poly) do
@@ -135,6 +136,3 @@ function boxes.RoundedPolygon(poly, default_radius, detail)
 
     return points
 end
-
-melon.thirdparty = melon.thirdparty or {}
-melon.thirdparty.RoundedBoxes = boxes
