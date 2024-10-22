@@ -19,12 +19,34 @@ function melon.Debug(f, clr, ...)
     hook.Run("Melon:Debug", os.time())
     if f then
         xpcall(f, function(err)
-            melon.Log(1, "Error recovered from Debug:\n\t{1}\n", err)
+            local msg = "Error recovered from Debug: "
+            local trace = {}
+
+            for i = 2, 256 do
+                local d = debug.getinfo(i)
+                if not d then break end
+
+                table.insert(trace, d)
+            end
+
+            err = string.Split(err, ":")
+            msg = msg .. err[#err]:Trim() .. "\n"
+
+            for k, v in pairs(trace) do
+                msg = msg .. "-(" .. k .. ")] " .. v.short_src .. ":" .. v.currentline .. "\n"
+            end
+
+            melon.Log(1, msg)
         end, ... )
     end
 
     return true
 end
+
+melon.Debug(function()
+    print({} .. 
+    {})
+end, true )
 
 ----
 ---@name melon.DebugWrap
@@ -507,6 +529,7 @@ end
 ---- Creates a slider panel to debug animations
 ----
 function melon.DebugSlider(fn)
+    if not CLIENT then return end
     if not melon.Debug() then return end
 
     if melon.__Debug__SliderPanel then
@@ -547,5 +570,3 @@ function melon.DebugSlider(fn)
 
     melon.__Debug__SliderPanel = p
 end
-
-melon.DebugSlider(cprint)
