@@ -43,11 +43,6 @@ function melon.Debug(f, clr, ...)
     return true
 end
 
-melon.Debug(function()
-    print({} .. 
-    {})
-end, true )
-
 ----
 ---@name melon.DebugWrap
 ----
@@ -448,17 +443,19 @@ function melon.DebugNewFileDetected(f)
         local spacing = lw * 4
         local offset = (CurTime() * 20) % spacing
         local barh = melon.Scale(200)
+        local gradh = (ScrH() / 2) * 0.5
 
         surface.SetDrawColor(22, 22, 22)
         surface.DrawRect(0, 0, w, h)
 
         melon.masks.Start()
-            surface.SetDrawColor(72, 11, 112)
+            surface.SetDrawColor(255, 116, 2)
             surface.DrawRect(0, 0, w, h)
 
-            surface.SetDrawColor(0, 26, 255, 140)
+            surface.SetDrawColor(255, 50, 50, 100)
             surface.SetMaterial(melon.Material("vgui/gradient-l"))
-            surface.DrawTexturedRectRotated(w / 2, h / 2, w * 3, w * 3, 40)
+            surface.DrawTexturedRectRotated(w / 2, h / 2, w * 2, w * 2, 40)
+            surface.DrawTexturedRectRotated(w / 2, h / 2, w * 2, w * 2, 40)
         melon.masks.Source()
             surface.SetDrawColor(255, 255, 255, 140)
             surface.SetMaterial(melon.Material("vgui/gradient-d"))
@@ -477,6 +474,12 @@ function melon.DebugNewFileDetected(f)
         melon.masks.And(melon.masks.KIND_CUT)
             surface.SetDrawColor(255, 255, 255, 255)
             surface.DrawRect(0, h / 2 - barh / 2, w, barh)
+
+            surface.SetMaterial(melon.Material("vgui/gradient-u"))
+            surface.DrawTexturedRect(0, 0, w, gradh)
+
+            surface.SetMaterial(melon.Material("vgui/gradient-d"))
+            surface.DrawTexturedRect(0, h - gradh, w, gradh)
         melon.masks.End(melon.masks.KIND_STAMP)
 
         local tw, th = draw.Text({
