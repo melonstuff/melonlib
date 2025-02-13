@@ -86,15 +86,3 @@ function melon.GenerateSuperellipseMesh(n, x, y, w, h, resolution)
     m:BuildFromTriangles(b)
     return m
 end
-
-melon.DebugPanel("DPanel", function(p)
-    function p:Paint(w, h)
-        draw.NoTexture()
-        surface.SetDrawColor(255, 255, 255)
-        surface.DrawPoly(rnd)
-
-        surface.SetMaterial(melon.Material("vgui/gradient-u"))
-        surface.SetDrawColor(255, 0, 0)
-        surface.DrawPoly(rnd)
-    end
-end )
