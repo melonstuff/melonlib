@@ -388,8 +388,6 @@ local named = {}
 ---- Registers or calls (if no fn is provided) a "named debug" test, for convenient reuse
 ----
 function melon.DebugNamed(name, fn, ...)
-    if not melon.Debug() then return end
-
     if isfunction(fn) then
         named[name] = fn
         return melon.Debug(fn, false, ...)
