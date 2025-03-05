@@ -397,6 +397,7 @@ function melon.DebugNamed(name, fn, ...)
         return melon.Debug(named[name], false, fn, ...)
     end
 
+    if not melon.Debug() then return end
     melon.Log(1, "Failed to find named test '{}'", name)
 end
 
