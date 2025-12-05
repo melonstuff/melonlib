@@ -54,10 +54,10 @@ function melon.NumToWords(num)
 
     if tens > 0 and high_words[tens] then right = right .. high_words[tens] .. " " end
     if tens > 0 and not high_words[tens] then return left .. "and " .. low_words[tonumber(tens .. ones)] end
-
+    
     if ones == 0 and left != "" and right != "" then return left .. mid .. right end
 
-    right = right .. low_words[ones]
+    right = right .. (ones == 0 and left == "" and right == "" or "") or low_words[ones]
 
     return left .. (right == "" and "" or (mid .. right))
 end
@@ -68,5 +68,5 @@ melon.Debug(function()
     --     print(r, melon.NumToWords(r))
     -- end
 
-    print(melon.NumToWords(110))
+    print(melon.NumToWords(30))
 end, true)
