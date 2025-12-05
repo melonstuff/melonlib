@@ -20,7 +20,7 @@ local high_words = {
     [2] = "twenty",
 }
 
-function melon.NumToWords(num)
+local function n2w(num)
     if num > 9999 then return num end
     if low_words[num] then return low_words[num] end
 
@@ -60,6 +60,10 @@ function melon.NumToWords(num)
     right = right .. (ones == 0 and left == "" and right == "" or "") or low_words[ones]
 
     return left .. (right == "" and "" or (mid .. right))
+end
+
+function melon.NumToWords(num)
+    return string.Trim(n2w(num))
 end
 
 melon.Debug(function()
