@@ -38,28 +38,35 @@ function melon.NumToWords(num)
     num = (num - hunds) / 10
     local thous = num % 10
 
+    if thous > 0 and hunds + tens + ones == 0 then
+        return low_words[thous] .. " thousand "
+    end
     if thous > 0 then
         left = left .. low_words[thous] .. " thousand "
         mid = "and "
     end
 
-    if hunds > 0 then
-        left = left .. low_words[hunds] .. " hundred "
+    if hunds > 0 and tens + ones == 0 then
+        mid = ""
+        return left .. mid .. low_words[hunds] .. " hundred"
     end
+    if hunds > 0 then left = left .. low_words[hunds] .. " hundred " end
 
-    if tens > 0 and high_words[tens] then
-        right = right .. high_words[tens] .. " "
-    end
+    if tens > 0 and high_words[tens] then right = right .. high_words[tens] .. " " end
+    if tens > 0 and not high_words[tens] then return left .. "and " .. low_words[tonumber(tens .. ones)] end
 
-    if tens > 0 and not high_words[tens] then
-        return left .. "and " .. low_words[tonumber(tens .. ones)]
-    end
-
-    if ones == 0 and left != "" and right != "" then
-        return left .. mid .. right
-    end
+    if ones == 0 and left != "" and right != "" then return left .. mid .. right end
 
     right = right .. low_words[ones]
 
     return left .. (right == "" and "" or (mid .. right))
 end
+
+melon.Debug(function()
+    -- for i = 0, 10 do
+    --     local r = math.floor(math.random(0, 10000))
+    --     print(r, melon.NumToWords(r))
+    -- end
+
+    print(melon.NumToWords(110))
+end, true)
