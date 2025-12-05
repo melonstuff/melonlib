@@ -8,7 +8,7 @@ melon.elements = melon.elements or {}
 ---- Generic unstyled button
 ----
 local PANEL = vgui.Register("Melon:Button", {}, "Panel")
-PANEL.DoubleClickTime = 0.18
+PANEL.DoubleClickTime = 0
 
 melon.elements.Button = PANEL
 
@@ -37,7 +37,7 @@ function PANEL:ButtonThink()
     for k,v in pairs(self.pressing) do
         if ct < v then continue end
 
-        if not input.IsMouseDown(k) then
+        if not input.IsMouseDown(k) or (self.DoubleClickTime == 0) then
             self.pressing[k] = nil
             self:Click(k, false)
             self.pressing_count = self.pressing_count - 1
