@@ -1,6 +1,8 @@
 
 if SERVER then
     resource.AddWorkshop("2631771632")
+    resource.AddFile("resource/inter_melon_lib.ttf")
+    resource.AddFile("resource/poppins_melon_lib.ttf")
     return
 end
 
@@ -17,7 +19,7 @@ end
 ----
 local fonts = {}
 function melon.Font(size, font, weight)
-    font = font or "Poppins"
+    font = font or "Poppins SemiBold"
     fonts[font] = fonts[font] or {}
 
     local id = size .. (weight or "normal")
@@ -25,7 +27,7 @@ function melon.Font(size, font, weight)
         return fonts[font][id]
     end
 
-    font = font or "Poppins"
+    font = font or "Poppins SemiBold"
     local name = "melon_lib:" .. font .. ":" .. id
     surface.CreateFont(name, {
         font = font,
@@ -78,7 +80,7 @@ end
 ----
 local unscaled = {}
 function melon.UnscaledFont(size, font, weight)
-    font = font or "Poppins"
+    font = font or "Poppins SemiBold"
     unscaled[font] = unscaled[font] or {}
 
     local id = size .. (weight or "normal")
@@ -86,7 +88,7 @@ function melon.UnscaledFont(size, font, weight)
         return unscaled[font][id]
     end
 
-    font = font or "Poppins"
+    font = font or "Poppins SemiBold"
     local name = "melon_lib:unscaled:" .. font .. ":" .. id
     surface.CreateFont(name, {
         font = font,
