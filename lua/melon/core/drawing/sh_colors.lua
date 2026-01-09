@@ -208,3 +208,21 @@ end
 ---@name melon.colors.FC
 ----
 melon.colors.FC = melon.colors.FastColor
+
+----
+---@name melon.colors.Lighten
+----
+---@arg    (color: Color) The color to lighten
+---@arg    (amt: number) How much to lighten the color
+---@return (color: Color) The new, lightened color
+----
+---- Lightens a color linearly and returns a new color
+----
+function melon.colors.Lighten(color, amt)
+    return {
+        r = color.r + amt,
+        g = color.g + amt,
+        b = color.b + amt,
+        a = color.a,
+    }
+end
