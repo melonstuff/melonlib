@@ -1,10 +1,18 @@
 
 local tooltip
 
-function melon.Tooltip(text, panel, placement, paint, font)
+function melon.Tooltip(text, panel, placement, identifier, paint, font)
     if not IsValid(panel) then return end
 
+    if not text then return end
+    if not panel then return end
+    if tooltip and tooltip.identifier and tooltip.identifier == identifier then
+        return
+    end
+
     tooltip = {
+        identifier = identifier,
+
         start = CurTime(),
         open = true,
 
