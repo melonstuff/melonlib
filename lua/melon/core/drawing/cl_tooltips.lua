@@ -1,7 +1,7 @@
 
 local tooltip
 
-function melon.Tooltip(text, panel, placement, identifier, paint, font)
+function melon.Tooltip(text, panel, placement, identifier, paint, font, delay)
     if not IsValid(panel) then return end
 
     if not text then return end
@@ -13,7 +13,7 @@ function melon.Tooltip(text, panel, placement, identifier, paint, font)
     tooltip = {
         identifier = identifier,
 
-        start = CurTime(),
+        start = CurTime() + ((delay or 0.2) - 0.2),
         open = true,
 
         text = text,
@@ -21,10 +21,15 @@ function melon.Tooltip(text, panel, placement, identifier, paint, font)
         placement = placement,
         paint = paint or melon.TooltipPaint,
         font = font or melon.Font(18),
+        seen = false,
 
         x = false,
         y = false,
     }
+end
+
+function melon.TooltipX(t)
+    melon.Tooltip(t.text, t.panel, t.placement, t.identifier, t.paint, t.font, t.delay)
 end
 
 function melon.KillTooltip()
@@ -62,7 +67,11 @@ hook.Add("DrawOverlay", "Melon:DrawTooltips", function()
     if not tooltip then return end
     
     local t = math.min((CurTime() - tooltip.start) / 0.2, 1)
-    t = tooltip.open and t or (1 - t)
+    t = tooltip.open and t or (not tooltip.seen and 0) or (1 - t)
+
+    if tooltip.open then
+        tooltip.seen = t > 0
+    end
 
     surface.SetFont(tooltip.font)
     local tw, th = surface.GetTextSize(tooltip.text)
@@ -98,7 +107,12 @@ melon.DebugPanel("DPanel", function(p)
         b:SetTall(melon.Scale(30))
 
         b.DoClick = function()
-            melon.Tooltip("Some Tooltip", b, enum)
+            melon.TooltipX({
+                text = "Some Tooltip",
+                panel = b,
+                placement = enum,
+                delay = 1
+            })
         end
     end
 
