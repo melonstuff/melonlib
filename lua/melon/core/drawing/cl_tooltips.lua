@@ -26,6 +26,8 @@ function melon.Tooltip(text, panel, placement, identifier, paint, font, delay)
         x = false,
         y = false,
     }
+
+    tooltip.wrap = melon.text.Wrap(tooltip.text, tooltip.font, melon.Scale(300), 0, false)
 end
 
 function melon.TooltipX(t)
@@ -52,13 +54,28 @@ function melon.TooltipPaint(x, y, w, h, alpha, tip)
 
     draw.RoundedBox(6, x, y, w, h, melon.colors.FC(44, 44, 44))
 
-    draw.Text({
-        text = tip.text,
-        pos = {x + w / 2, y + h / 2},
-        xalign = 1,
-        yalign = 1,
-        font = tip.font
-    })
+    if #tooltip.wrap == 1 then
+        draw.Text({
+            text = tip.text,
+            pos = {x + w / 2, y + h / 2},
+            xalign = 1,
+            yalign = 1,
+            font = tip.font
+        })
+        return
+    end
+
+    for k, v in pairs(tooltip.wrap) do
+        local _, th = draw.Text({
+            text = v,
+            pos = {x + w / 2, y + pad / 2},
+            xalign = 1,
+            yalign = 3,
+            font = tip.font
+        })
+
+        y = y + th
+    end
 
     surface.SetAlphaMultiplier(oa)
 end
@@ -74,11 +91,17 @@ hook.Add("DrawOverlay", "Melon:DrawTooltips", function()
     end
 
     surface.SetFont(tooltip.font)
-    local tw, th = surface.GetTextSize(tooltip.text)
+    local tw, th = 0, 0
     local px, py = 0, 0
     local pw, ph = 0, 0
     local pad = melon.Scale(10)
 
+    for k, v in pairs(tooltip.wrap) do
+        local ttw, tth = surface.GetTextSize(v)
+        tw = math.max(tw, ttw)
+        th = th + tth
+    end
+    
     if not IsValid(tooltip.panel) or not tooltip.panel:IsHovered() then
         melon.KillTooltip()
     else
@@ -108,10 +131,10 @@ melon.DebugPanel("DPanel", function(p)
 
         b.DoClick = function()
             melon.TooltipX({
-                text = "Some Tooltip",
+                text = string.rep("Some really long tooltip ", 6),
                 panel = b,
                 placement = enum,
-                delay = 1
+                delay = 0
             })
         end
     end
