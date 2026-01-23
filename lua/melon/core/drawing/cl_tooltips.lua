@@ -90,6 +90,11 @@ hook.Add("DrawOverlay", "Melon:DrawTooltips", function()
         tooltip.seen = t > 0
     end
 
+    if (not tooltip.open) and t == 0 then
+        tooltip = nil
+        return
+    end
+
     surface.SetFont(tooltip.font)
     local tw, th = 0, 0
     local px, py = 0, 0
