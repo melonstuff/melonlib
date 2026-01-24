@@ -31,10 +31,23 @@ end
 
 function f.round(num, places)
     local t = tonumber(num)
-
     if not t then return err("Attempted to round non-number '" .. tostring(num) ..  "'") end
 
     return math.Round(num, places)
+end
+
+function f.floor(num)
+    local t = tonumber(num)
+    if not t then return err("Attempted to floor non-number '" .. tostring(num) ..  "'") end
+
+    return math.floor(num)
+end
+
+function f.ceil(num)
+    local t = tonumber(num)
+    if not t then return err("Attempted to ceil non-number '" .. tostring(num) ..  "'") end
+
+    return math.ceil(num)
 end
 
 function f.comma(num)
