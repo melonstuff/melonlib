@@ -57,6 +57,7 @@ function melon.tool.New(class, t)
             {name = "reload", stage = 0}
         },
         LeftClick = function()
+            if CLIENT then chat.AddText("melonlib - default") end
             return true
         end
     }
@@ -81,10 +82,12 @@ end
 ---@name melon.tool.Register
 ---- Internally registers a TOOL
 function melon.tool.Register(class, t)
-    local TOOL = melon.tool.ToolObj:Create()
+    local TOOL = setmetatable({}, {
+        __index = function(s, k)
+            return t[k] or melon.tool.ToolObj[k]
+        end
+    }):Create()
     TOOL.Mode = class
-
-    table.Merge(TOOL, t, true)
 
     TOOL:CreateConVars()
     melon.tool.SWEP.Tool[class] = TOOL
@@ -99,6 +102,7 @@ end
 function melon.tool.OnReload()
     local plys = CLIENT and {LocalPlayer()} or player.GetAll()
 
+    melon.Log(melon.LOG_IMPORTANT, "[Tools] Reloading tools")
     for k, v in pairs(plys) do
         if not IsValid(v) then continue end
         local swep = v:GetWeapon("gmod_tool")
@@ -107,13 +111,12 @@ function melon.tool.OnReload()
 
         swep.Tool = table.Copy(melon.tool.SWEP.Tool)
         swep:InitializeTools()
+        melon.Log(melon.LOG_IMPORTANT, "[Tools] Reloaded " .. v:Nick() .. "'s tools")
     end
 
-    melon.Log(melon.LOG_IMPORTANT, "[Tools] Reloaded tools")
     if SERVER then return end
     RunConsoleCommand("spawnmenu_reload") 
 end
-
 
 hook.Add("PostGamemodeLoaded", "Melon:HotTools", function()
     if not melon.tool.LoadToolObj() then
@@ -123,6 +126,7 @@ hook.Add("PostGamemodeLoaded", "Melon:HotTools", function()
 
     melon.Log(melon.LOG_MESSAGE, "[Tools] Hot-tools loaded successfully!")
 end )
+
 melon.Debug(function()
     melon.tool.New("test")
     melon.tool.LoadToolObj()
