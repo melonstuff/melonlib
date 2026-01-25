@@ -62,7 +62,7 @@ function melon.tool.New(class, t)
     }
 
     if CLIENT then
-        language.Add("tool." .. class .. ".name", "Toolaaasd")
+        language.Add("tool." .. class .. ".name", "Melonlib - Unnamed Tool")
         language.Add("tool." .. class .. ".desc", "A toolgun description.")
     end
 
@@ -89,7 +89,7 @@ function melon.tool.Register(class, t)
     TOOL:CreateConVars()
     melon.tool.SWEP.Tool[class] = TOOL
 
-    melon.tool.OnReload()
+    timer.Simple(0, melon.tool.OnReload)
 end
 
 ----
@@ -109,6 +109,7 @@ function melon.tool.OnReload()
         swep:InitializeTools()
     end
 
+    melon.Log(melon.LOG_IMPORTANT, "[Tools] Reloaded tools")
     if SERVER then return end
     RunConsoleCommand("spawnmenu_reload") 
 end
