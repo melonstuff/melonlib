@@ -35,7 +35,7 @@ function melon.AdviseX(t)
 
     t.dist = t.dist or melon.Scale(400)
 
-    t.font = t.font or melon.Scale(20)
+    t.font = t.font or melon.Font(20)
     t.color = t.color or color_white
 
     t.render = t.render or false
