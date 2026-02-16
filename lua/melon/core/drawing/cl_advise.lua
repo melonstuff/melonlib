@@ -1,20 +1,14 @@
 
 local advisories = {}
 
-function melon.Advise(text, length, color, font, x, y, xmul, ymul, dist)
-    return melon.AdviseX({
-        text = text,
-        length = length,
-        color = color,
-        font = font,
-        x = x,
-        y = y,
-        xmul = xmul,
-        ymul = ymul,
-        dist = dist
-    })
-end
-
+----
+---@name melon.AdviseX
+----
+---@arg    (advise: melon.AdviseInfo) The advisory info
+---@return (id: number) The ID of the advisory created
+----
+---- Creates a new "advisory", quick UI feedback
+----
 function melon.AdviseX(t)
     t = t or {}
 
@@ -43,6 +37,43 @@ function melon.AdviseX(t)
     return table.insert(advisories, t)
 end
 
+----
+---@name melon.Advise
+----
+---@arg (text:   string) The text to display
+---@arg (length: number) The length it should live
+---@arg (color:   Color) The color of the text
+---@arg (font:   string) The font of the text
+---@arg (x:      number) Where to place it, X
+---@arg (y:      number) Where to place it, Y
+---@arg (xmul:   number) How far it should move horizontally every tick, relative to how much it wants to
+---@arg (ymul:   number) How far it should move vertically every tick, relative to how much it wants to
+---@arg (dist:   number) How far it should move total
+---@return (id: number) The ID of the advice created
+----
+---- Quickly creates a new "advisory", quick UI feedback
+----
+function melon.Advise(text, length, color, font, x, y, xmul, ymul, dist)
+    return melon.AdviseX({
+        text = text,
+        length = length,
+        color = color,
+        font = font,
+        x = x,
+        y = y,
+        xmul = xmul,
+        ymul = ymul,
+        dist = dist
+    })
+end
+
+----
+---@name melon.KillAdvise
+----
+---@arg (id: number) The advisory ID to kill
+----
+---- Removes the given advisory immediately
+----
 function melon.KillAdvise(k)
     if not k then return end
     if not advisories[k] then return end
