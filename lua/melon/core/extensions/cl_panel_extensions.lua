@@ -5,7 +5,6 @@ local applied = {}
 ---@module
 ---@name melon.Extensions
 ---@deprecated
----@alias asdasd
 ---@realm SHARED
 ----
 ---- Extends an object at runtime instead of directly altering its metatable.
