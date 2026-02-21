@@ -220,9 +220,9 @@ melon.colors.FC = melon.colors.FastColor
 ----
 function melon.colors.Lighten(color, amt)
     return {
-        r = color.r + amt,
-        g = color.g + amt,
-        b = color.b + amt,
+        r = math.Clamp(color.r + amt, 0, 255),
+        g = math.Clamp(color.g + amt, 0, 255),
+        b = math.Clamp(color.b + amt, 0, 255),
         a = color.a,
     }
 end
