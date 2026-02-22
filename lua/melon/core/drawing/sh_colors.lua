@@ -226,3 +226,27 @@ function melon.colors.Lighten(color, amt)
         a = color.a,
     }
 end
+
+----
+---@name melon.colors.IsColor
+----
+---@arg    (any) Value to check
+---@return (bool) Is this a color?
+----
+---- Checks if the given object qualifies as an engine-readable color
+----
+function melon.colors.IsColor(v)
+    if not istable(v) then return false end
+
+    return
+        isnumber(v.r) and
+        isnumber(v.g) and
+        isnumber(v.b) and
+        isnumber(v.a)
+end
+
+----
+---@alias
+---@name melon.colors.Is
+----
+melon.colors.Is = melon.colors.IsColor
