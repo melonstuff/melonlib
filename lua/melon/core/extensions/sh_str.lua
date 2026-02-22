@@ -103,7 +103,31 @@ function melon.str.SplitOnceX(s, delim)
     return split[2], split[1]
 end
 
+----
+---@name melon.str.SplitN
+----
+---@arg    (string) String to split
+---@arg    (number) How many chars per sub-string
+---@return (split: table) Output strings
+----
+---- Splits the input string so N chars are in every sub-string
+----
+function melon.str.SplitN(s, n)
+    local out = {}
+
+    for ch in melon.str.Chars(s) do
+        if #(out[#out] or "") == n then
+            table.insert(out, "")
+        end
+
+        out[#out] = (out[#out] or "") .. ch
+    end
+
+    return out
+end
+
 melon.Debug(function()
-    _p(melon.str.Split("a|c|d|e|fghijk", "|", 3))
+    -- _p(melon.str.Split("a|c|d|e|fghijk", "|", 3))
+    _p(melon.str.SplitN("1234123412341234", 4))
 end, true)
 
