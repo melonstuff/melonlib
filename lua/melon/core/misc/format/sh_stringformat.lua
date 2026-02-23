@@ -148,3 +148,9 @@ end
 function melon.string.print(fmt, ...)
     print(({melon.string.Format(fmt, ...)})[1])
 end
+
+----
+---@alias
+---@name melon.Format
+----
+melon.Format = melon.string.Format
