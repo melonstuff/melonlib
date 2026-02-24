@@ -48,6 +48,10 @@ function melon.ProcessExtras(tbl)
             continue
         end
 
+        if string.StartsWith(v, "preload:") then
+            v = string.Replace(v, "preload:", "")
+        end
+
         table.insert(ret.preload, v)
     end
 
