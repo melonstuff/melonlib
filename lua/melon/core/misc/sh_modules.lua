@@ -113,6 +113,7 @@ function melon.LoadModule(fold)
 
     -- Shared
     for k,v in pairs(incs.shared) do
+        AddCSLuaFile("melon/modules/" .. fold .. "/" .. v)
         include("melon/modules/" .. fold .. "/" .. v)
     end
 
