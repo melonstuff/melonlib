@@ -25,24 +25,6 @@ function M:_call(name, ...)
     end
 end
 
-function M:CommitHash()
-    if SERVER then
-        file.AsyncRead("addons/" .. self.ident .. "/.git/refs/heads/main", "GAME", function(_, _, _, data)
-            if data then
-                SetGlobal2String("melon_commit_hash:" .. self.ident, data:Trim())
-            end
-        end)
-    end
-
-    return GetGlobal2String("melon_commit_hash:" .. self.ident) or ""
-end
-
-hook.Add("Melon:Debug", "ReloadHashes", function()
-    for k,v in pairs(melon.Modules) do
-        v:CommitHash()
-    end
-end )
-
 ----
 ---@internal
 ---@name melon.ProcessExtras
@@ -88,7 +70,6 @@ function melon.LoadModule(fold)
     local m = setmetatable({}, M)
     m:SetID(fold)
     m:SetName(fold)
-    m:CommitHash()
     melon.Modules[fold] = m
 
     AddCSLuaFile("melon/modules/" .. fold .. "/__init__.lua")
@@ -109,7 +90,7 @@ function melon.LoadModule(fold)
     end
 
     if incs.recursive then
-        melon.LoadDirectory("melon/modules/" .. fold .. "/src", fold)
+        melon.LoadDirectory("melon/modules/" .. fold .. "/" .. (incs.src or "src"), fold)
         m:_call("loaded")
         melon.Log(3, "Loaded Module '{1}' successfully (recursive)!", fold)
 
