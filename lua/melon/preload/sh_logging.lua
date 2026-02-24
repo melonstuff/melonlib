@@ -79,11 +79,12 @@ end
 ----
 ---@name melon.Assert
 ----
----@arg (expr:   bool) Did this expression pass? Must be true to pass
----@arg (fmt:  string) Format string error if we failed
----@arg (args: ...any) Arguments for the formatted
+---@arg    (expr:   bool) Did this expression pass? Must be true to pass
+---@arg    (fmt:  string) Format string error if we failed
+---@arg    (...any) Arguments to pass to the formatter
+---@return (bool) Did assertion fail?
 ----
----- Asserts the expression, returns true if you should return
+---- Asserts that the expression is explicitly true, truey is not accepted.
 ----
 function melon.Assert(expr, fmt, ...)
     if expr == true then -- dont accept truey expressions as valid
@@ -92,6 +93,22 @@ function melon.Assert(expr, fmt, ...)
 
     melon.Log(1, fmt, ...)
     return true
+end
+
+----
+---@name melon.AssertEq
+----
+---@arg    (lhs: any) Left hand side value to compare
+---@arg    (rhs: any) Right hand side value to compare
+---@arg    (fmt?: string) Format string error if we failed
+---@arg    (...any) Additional arguments to pass to the formatter
+---@return (bool) Did the assertion fail?
+----
+---- Asserts that `lhs == rhs`, otherwise we [melon.Log] an error
+---- Note that the first two arguments to the formatter are `lhs` and `rhs`
+----
+function melon.AssertEq(lhs, rhs, fmt, ...)
+    return melon.Assert(lhs == rhs, fmt or "AssertEq Failed: Expected {}, got {}", lhs, rhs, ...)
 end
 
 concommand.Add("melon_dump_logs", function()
