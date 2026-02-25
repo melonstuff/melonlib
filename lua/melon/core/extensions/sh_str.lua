@@ -23,6 +23,12 @@ melon.str.Chars = melon.iter.NewIter(function(index, str)
 end )
 
 ----
+---@alias
+---@name functionname
+----
+melon.str.Iter = melon.str.Chars
+
+----
 ---@name melon.str.CompareSub
 ----
 ---@arg    (input: string) The string to compare with
