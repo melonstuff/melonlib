@@ -1,5 +1,6 @@
 
 ----
+---@deprecated melon.ParseURL
 ---@internal
 ---@name melon.URLExtension
 ----
@@ -15,6 +16,7 @@ function melon.URLExtension(url)
 end
 
 ----
+---@deprecated melon.ParseURL
 ---@name melon.SanitizeURL
 ----
 ---@arg    (url: string) URL to sanitize
