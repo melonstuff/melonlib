@@ -60,6 +60,24 @@ function melon.DebugWrap(fn)
 end
 
 ----
+---@name melon.DebugOnce
+----
+---@arg    (f:   func) Function to call on hot refresh
+---@arg    (clr: bool) Clear the console before executing?
+---@arg    (args: ...) Arguments to pass to the given function
+---@return (did: bool) Are debug functions allowed to be ran?
+----
+---- Identical to [melon.Debug] except its on a slight delay to stop double refreshing
+----
+local t = 0
+function melon.DebugOnce(...)
+    if (CurTime() - t) < 0.2 then return false end
+    t = CurTime()
+
+    return melon.Debug(...)
+end
+
+----
 ---@name melon.clr
 ----
 ---- "Clears" the console by spamming newlines, only functions post gamemode loaded
