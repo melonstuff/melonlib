@@ -149,6 +149,18 @@ melon.char.IsKeyboardSymbol = melon.char.Set(
 )
 
 ----
+---@name melon.char.IsWhitespace
+----
+---@arg    (char) The character to check
+---@return (bool) Is this character in the given set
+----
+---- Is the given character a whitespace character
+----
+melon.char.IsWhitespace = melon.char.Set(
+    " ", "\0", "\r", "\n", "\t"
+)
+
+----
 ---@name melon.char.IsHex
 ----
 ---@arg    (char) The character to check
@@ -202,4 +214,5 @@ melon.Debug(function()
 
     teststr("IsKeyboardSymbol", around("09", 6))
     teststr("IsHex", around("aA09fF", 6))
+    -- teststr("IsWhitespace", around("aA09fF", 6))
 end, true)
