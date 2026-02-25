@@ -5,7 +5,8 @@
 ---- Contains functions relating to custom iterators
 ----
 melon.iter = melon.iter or {}
-melon.iter.CurrentIterState = false
+melon.iter.StateStack = {}
+melon.iter.OverflowProtect = 1000
 
 ----
 ---@name melon.iter.NewIter
@@ -20,16 +21,26 @@ melon.iter.CurrentIterState = false
 function melon.iter.NewIter(fn, state)
     return function(...)
         state = table.Copy(state or {})
+        state.id = #melon.iter.StateStack + 1
         state.index = 0
-        melon.iter.CurrentIterState = state
+        state.iterations = 0
+        table.insert(melon.iter.StateStack, state)
 
         local args = {...}
         return function()
+            local state = melon.iter.Top()
             state.index = state.index + 1
+            state.iterations = state.iterations + 1
+
+            if state.iterations >= melon.iter.OverflowProtect then
+                melon.Log(1, "Iterator overflowed!")
+                return error()
+            end
 
             local ret = {fn(state.index, unpack(args))}
             if ret[1] == nil then
-                melon.iter.CurrentIterState = false
+                melon.table.Pop(melon.iter.StateStack)
+                
                 state.index = 0
                 return nil
             end
@@ -40,35 +51,81 @@ function melon.iter.NewIter(fn, state)
 end
 
 ----
+---@name melon.iter.SetOverflowProtect
+----
+---@arg (number) How many iterations before [melon.iter.NewIter] iterators error out
+----
+---- Sets the number of iterations before all iterators cancel
+----
+function melon.iter.SetOverflowProtect(i)
+    melon.iter.OverflowProtect = i
+end
+
+----
+---@name melon.iter.Top
+----
+---@return (table) Stack state
+----
+---- Returns the top of the current iterator stack
+----
+function melon.iter.Top()
+    return melon.table.Top(melon.iter.StateStack)
+end
+
+----
+---@name melon.iter.GetState
+----
+---@arg    (lvl: number) How many levels down from the top should we go
+---@return (table?) The state from the stack if it was found
+----
+---- Gets a stack state from the given level, providing 0 gives you the Top 
+----
+function melon.iter.GetState(i)
+    return melon.iter.StateStack[#melon.iter.StateStack - i]
+end
+
+----
 ---@name melon.iter.Skip
 ----
 ---@arg (i: number) How many indices to skip
+---@arg (lvl: number) How many levels down in the stack should be run this on
 ----
 ---- Skips the given number of indices into the future of the iterator
 ---- Only to be called inside a [melon.iter.NewIter] wrapped iterator 
 ----
-function melon.iter.Skip(i)
-    if not melon.iter.CurrentIterState then
-        return melon.Log(melon.LOG_ERROR, "Attempting to melon.iter.Skip outside of a melonlib iterator!")
+function melon.iter.Skip(i, lvl)
+    if not melon.iter.Top() then
+        return melon.Log(1, "Attempting to melon.iter.Skip outside of a melonlib iterator!")
     end
 
-    melon.iter.CurrentIterState.index = melon.iter.CurrentIterState.index + i
+    local state = melon.iter.GetState(lvl or 0)
+    if not state then
+        return melon.Log(1, "Attempting to melon.iter.Skip on an invalid stack level (provided {}, max {})", lvl, #melon.iter.StateStack)
+    end
+
+    state.index = state.index + i
 end
 
 ----
 ---@name melon.iter.Goto
 ----
 ---@arg (i: number) The index to jump to
+---@arg (lvl: number) How many levels down in the stack should be run this on
 ----
 ---- Jumps to the given index in the active iterator
 ---- Only to be called inside a [melon.iter.NewIter] wrapped iterator 
 ----
-function melon.iter.Goto(i)
-    if not melon.iter.CurrentIterState then
-        return melon.Log(melon.LOG_ERROR, "Attempting to melon.iter.Goto outside of a melonlib iterator!")
+function melon.iter.Goto(i, lvl)
+    if not melon.iter.Top() then
+        return melon.Log(1, "Attempting to melon.iter.Goto outside of a melonlib iterator!")
     end
 
-    melon.iter.CurrentIterState.index = i
+    local state = melon.iter.GetState(lvl or 0)
+    if not state then
+        return melon.Log(1, "Attempting to melon.iter.Goto on an invalid stack level (provided {}, max {})", lvl, #melon.iter.StateStack)
+    end
+
+    state.index = i
 end
 
 ----
@@ -91,14 +148,12 @@ melon.Debug(function()
     end)
 
     for ch, i in iter("abcdef") do
-        if ch == "c" then
-            melon.iter.Skip(1)
+        for ch2 in iter("12345") do
+            print(ch, ch2)
         end
-
-        print(i, ch)
     end
 
-    melon.clr()
+    -- melon.clr()
 
-    print(melon.iter.ReverseArgs(1, 2, 3, 4))
+    -- print(melon.iter.ReverseArgs(1, 2, 3, 4))
 end, true)
