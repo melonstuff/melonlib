@@ -24,13 +24,9 @@ function melon.iter.NewIter(fn, state)
         melon.iter.CurrentIterState = state
 
         local args = {...}
-        local overflow = 0
         return function()
             state.index = state.index + 1
 
-            overflow = overflow + 1
-            if overflow >= 100 then return error("overflowed") end
-            
             local ret = {fn(state.index, unpack(args))}
             if ret[1] == nil then
                 melon.iter.CurrentIterState = false
