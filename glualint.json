@@ -4,6 +4,7 @@
     "lint_gotos": false,
     "lint_goto_identifier": false,
     "lint_doubleNegations": false,
+    "lint_shadowing": false,
 
     "lint_profanity": false
 }
