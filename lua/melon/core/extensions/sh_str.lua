@@ -59,6 +59,7 @@ function melon.str.Split(s, delim, cnt)
     for char, i in melon.str.Chars(s) do
         if cnt == 0 then
             out[#out] = string.sub(s, i, #s)
+            melon.iter.Break()
             break
         end
 

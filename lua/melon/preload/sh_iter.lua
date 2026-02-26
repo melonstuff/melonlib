@@ -7,6 +7,8 @@
 melon.iter = melon.iter or {}
 melon.iter.StateStack = {}
 melon.iter.OverflowProtect = 1000
+melon.iter.MaxStackSize = 1024
+melon.iter.CurrentStackSize = 0
 
 ----
 ---@name melon.iter.NewIter
@@ -20,6 +22,8 @@ melon.iter.OverflowProtect = 1000
 ----
 function melon.iter.NewIter(fn, state)
     return function(...)
+        melon.iter.CurrentStackSize = melon.iter.CurrentStackSize + 1
+
         state = table.Copy(state or {})
         state.id = #melon.iter.StateStack + 1
         state.index = 0
@@ -34,14 +38,17 @@ function melon.iter.NewIter(fn, state)
 
             if state.iterations >= melon.iter.OverflowProtect then
                 melon.Log(1, "Iterator overflowed!")
-                return error()
+                return error("see above error")
+            end
+
+            if melon.iter.CurrentStackSize >= melon.iter.MaxStackSize then
+                melon.Log(1, "Iterator MaxStackSize overflowed!")
+                return error("see above error")
             end
 
             local ret = {fn(state.index, unpack(args))}
             if ret[1] == nil then
-                melon.table.Pop(melon.iter.StateStack)
-                
-                state.index = 0
+                melon.iter.Break()
                 return nil
             end
             
@@ -126,6 +133,18 @@ function melon.iter.Goto(i, lvl)
     end
 
     state.index = i
+end
+
+----
+---@name melon.iter.Break
+----
+---- Breaks the current iter
+---- Only to be called inside a [melon.iter.NewIter] wrapped iterator 
+----
+function melon.iter.Break()
+    melon.iter.CurrentStackSize = melon.iter.CurrentStackSize - 1
+    local top = melon.table.Pop(melon.iter.StateStack)
+    top.index = 0
 end
 
 ----
