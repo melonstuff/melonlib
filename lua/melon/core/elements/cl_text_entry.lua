@@ -1,12 +1,15 @@
 
+melon.elements = melon.elements or {}
 local REGISTRY = {}
 
 ----
+---@name melon.elements.TextEntry
 ---@panel Melon:TextEntry
 ----
 ---- Wrapper Panel to allow use of raw TextEntry's without painful manual
 ----
 local PANEL = vgui.Register("Melon:TextEntry", {}, "TextEntry")
+melon.elements.TextEntry = PANEL
 
 function PANEL:Init()
     REGISTRY[self] = true
