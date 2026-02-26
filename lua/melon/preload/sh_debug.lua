@@ -1,14 +1,5 @@
 
 ----
----@hook Melon:Debug
----@name melon.debug_hook
-----
----@arg (time: number) When the hook was ran, from `os.time`.
-----
----- Called when [melon.Debug] is called and should run
-----
-
-----
 ---@name melon.Debug
 ----
 ---@arg    (f:   func) Function to call on hot refresh
@@ -25,6 +16,15 @@ function melon.Debug(f, clr, ...)
         melon.clr()
     end
 
+
+    ----
+    ---@hook Melon:Debug
+    ---@name melon.debug_hook
+    ----
+    ---@arg (time: number) When the hook was ran, from `os.time`.
+    ----
+    ---- Called when [melon.Debug] is called and should run
+    ----
     hook.Run("Melon:Debug", os.time())
     if f then
         xpcall(f, function(err)

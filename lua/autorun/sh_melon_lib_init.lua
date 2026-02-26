@@ -72,6 +72,11 @@ function melon.LoadDirectory(dir, m, loaded)
                 continue
             end
 
+            ----
+            ---@internal
+            ---@hook Melon:NewFileDetected
+            ---@name melon.newfiledetected
+            ----
             hook.Run("Melon:NewFileDetected", dirs, h)
         end
 
@@ -111,27 +116,62 @@ end )
 function melon.__load()
     melon.FinishedLoading = false
 
-    --[[ Preload all needed files ]]
+    ----
+    ---@hook Melon:DoneLoading:PreLoad
+    ---@name melon.dl_preload
+    ----
+    ---- Called before the core any modules are loaded 
+    ----
     melon.LoadDirectory("melon/preload")
     hook.Run("Melon:DoneLoading:PreLoad")
     melon.Log(0, "Started Initialization of MelonLib v{1}", melon.version)
 
-    --[[ Load all core files ]]
+    ----
+    ---@hook Melon:DoneLoading:Core
+    ---@name melon.dl_core
+    ----
+    ---- Called after the core is loaded but before any modules are loaded
+    ----
     melon.LoadDirectory("melon/core")
     hook.Run("Melon:DoneLoading:Core")
     melon.Log(0, "Loaded Core")
 
-    --[[ Load all modules ]]
     local _,fol = file.Find("melon/modules/*", "LUA")
 
     for k,v in pairs(fol) do
         melon.LoadModule(v)
     end
 
+    ----
+    ---@hook Melon:DoneLoading:Modules
+    ---@name melon.dl_modules
+    ----
+    ---- Called after all modules are done loading
+    ----
     hook.Run("Melon:DoneLoading:Modules")
     melon.Log(0, "Loaded Modules")
 
-    --[[ All done! ]]
+    ----
+    ---@hook Melon:DoneLoading
+    ---@name melon.dl
+    ----
+    ---- Called after MelonLib is done loading entirely
+    ----
+    ---` -- For using melonlib utilities from outside a module
+    ---` 
+    ---` local function load()
+    ---`     AddCSLuaFile("some_cl_file.lua")
+    ---`     
+    ---`     if CLIENT then
+    ---`         include("some_cl_file.lua")
+    ---`     end
+    ---` end
+    ---` 
+    ---` hook.Add("Melon:DoneLoading", load)
+    ---` 
+    ---` if melon then
+    ---`     load()
+    ---` end
     hook.Run("Melon:DoneLoading")
     melon.Log(0, "Finished Initialization")
 
@@ -156,52 +196,3 @@ concommand.Add("melon_raw_reload", function(ply)
     melon.Log(2, "Reloading")
     melon.__load()
 end, nil, nil, FCVAR_CHEAT)
-
-----
----@internal
----@hook Melon:NewFileDetected
----@name melon.newfiledetected
-----
-
-----
----@hook Melon:DoneLoading:PreLoad
----@name melon.dl_preload
-----
----- Called before the core any modules are loaded 
-----
-
-----
----@hook Melon:DoneLoading:Core
----@name melon.dl_core
-----
----- Called after the core is loaded but before any modules are loaded
-----
-
-----
----@hook Melon:DoneLoading:Modules
----@name melon.dl_modules
-----
----- Called after all modules are done loading
-----
-
-----
----@hook Melon:DoneLoading
----@name melon.dl
-----
----- Called after MelonLib is done loading entirely
-----
----` -- For using melonlib utilities from outside a module
----` 
----` local function load()
----`     AddCSLuaFile("some_cl_file.lua")
----`     
----`     if CLIENT then
----`         include("some_cl_file.lua")
----`     end
----` end
----` 
----` hook.Add("Melon:DoneLoading", load)
----` 
----` if melon then
----`     load()
----` end
