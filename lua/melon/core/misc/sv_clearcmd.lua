@@ -1,6 +1,6 @@
 
 ----
----@concommand cleer
+---@concommand melon.cleer
 ----
 ---- "Clears" the console by spamming it with a bunch of empty space
 ----

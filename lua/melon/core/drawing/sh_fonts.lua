@@ -175,7 +175,7 @@ end
 
 ----
 ---@internal 
----@concommand melon_reload_fonts
+---@concommand melon.melon_reload_fonts
 ---@realm CLIENT
 ----
 ---- Resets all fonts forcefully
