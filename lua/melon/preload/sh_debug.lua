@@ -1,5 +1,14 @@
 
 ----
+---@hook Melon:Debug
+---@name melon.debug_hook
+----
+---@arg (time: number) When the hook was ran, from `os.time`.
+----
+---- Called when [melon.Debug] is called and should run
+----
+
+----
 ---@name melon.Debug
 ----
 ---@arg    (f:   func) Function to call on hot refresh

@@ -70,10 +70,10 @@ function melon.Log(lvl, fmt, ...)
         handler = logtypes[lvl],
         fmt_time = fmt_time
     }
-    table.insert(logs, l)
+    if hook.Run("Melon:Log", l) == true then return end
 
+    table.insert(logs, l)
     logtypes[lvl](l)
-    hook.Run("Melon:Log", l)
 end
 
 ----
@@ -167,7 +167,7 @@ end )
 
 ----
 ---@enumeration
----@name melon.LOG
+---@name melon.LOG_
 ----
 ---@enum (IMPORTANT) Important, green text
 ---@enum (ERROR) Error, red text or an actual error on the client
@@ -180,3 +180,29 @@ melon.LOG_IMPORTANT = 0
 melon.LOG_ERROR     = 1
 melon.LOG_WARNING   = 2
 melon.LOG_MESSAGE   = 3
+
+----
+---@todo dataclasses!!!!
+---@class
+---@name melon.LOGINFO
+----
+---@accessor (message: string) Message passed to the logger, post format
+---@accessor (trace: string) Traceback from the caller
+---@accessor (time: number) Time from `os.time` from when the log was created
+---@accessor (level: melon.LOG_) Logging level
+---@accessor (handler: fn) The handler function
+---@accessor (fmt_time: string) The formatted time of when the logging took place
+----
+---- Information passed to and from the logger
+----
+
+----
+---@hook Melon:Log
+---@name melon.log_hook
+----
+---@arg    (melon.LOGINFO) The logging information
+---@return (bool) Should this log be cancelled?
+----
+---- Called when [melon.Log] is called with its information
+---- Returning `true` from this function cancels the printing
+----

@@ -28,6 +28,7 @@ melon.net.Watch("melon", "ProcessSchemas", function(_, ply)
 
 ----
 ---@hook Melon:NetSchema:Recv
+---@name melon.net
 ----
 ---@arg    (data: table) The data sent over the net message
 ---@arg    (ply: Player) If SERVER, then the player that sent it, otherwise nil
