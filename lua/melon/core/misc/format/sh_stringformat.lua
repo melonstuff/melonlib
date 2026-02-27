@@ -150,7 +150,7 @@ function melon.string.print(fmt, ...)
 end
 
 ----
----@alias
+---@alias melon.string.Format
 ---@name melon.Format
 ----
 melon.Format = melon.string.Format

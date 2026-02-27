@@ -26,17 +26,16 @@ melon.net.Watch("melon", "ProcessSchemas", function(_, ply)
     local data = s:Read()
     if not data then return end
 
-----
----@hook Melon:NetSchema:Recv
----@name melon.net
-----
----@arg    (data: table) The data sent over the net message
----@arg    (ply: Player) If SERVER, then the player that sent it, otherwise nil
----@return (skip:  bool) If true, skip calling recv on the schema object
-----
----- Called when a NetSchema message is sent
-----
-
+    ----
+    ---@hook Melon:NetSchema:Recv
+    ---@name melon.netrecv
+    ----
+    ---@arg    (data: table) The data sent over the net message
+    ---@arg    (ply: Player) If SERVER, then the player that sent it, otherwise nil
+    ---@return (skip:  bool) If true, skip calling recv on the schema object
+    ----
+    ---- Called when a NetSchema message is sent
+    ----
     if hook.Run("Melon:NetSchema:Recv:" .. identifier, data, ply) then
         return true
     end

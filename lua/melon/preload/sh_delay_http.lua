@@ -11,7 +11,7 @@ local requests = {}
 ----
 ---@name melon.HTTP
 ----
----@arg    (data: table) [HTTPRequest] data to execute with
+---@arg (data: HTTPRequest) Data to execute with
 ----
 ---- Queues an HTTP request to run whenever available
 ----
@@ -28,7 +28,7 @@ end
 ---@name melon.http.Generator
 ----
 ---@arg    (type: string) Type of HTTP request, POST, HEAD, GET, ect
----@return (func:   func) Function that calls the given request using [melon.HTTP]
+---@return (fn) Function that calls the given request using [melon.HTTP]
 ----
 ---- Generates a new function to create a request of the given type
 ----
@@ -56,42 +56,36 @@ function melon.http.Generator(type)
 end
 
 ----
----@silence
----@type function
 ---@name melon.http.Post
 ----
----@arg    (url:     string) URL to make the request to
----@arg    (onsuccess: func) Callback to run on success, gets same as http.Post
----@arg    (onfailure: func) Callback to run on failure, gets same as http.Post
----@arg    (headers:  table) URL to make the request to
+---@arg (url:    string) URL to make the request to
+---@arg (onsuccess:  fn) Callback to run on success, gets same as http.Post
+---@arg (onfailure:  fn) Callback to run on failure, gets same as http.Post
+---@arg (headers: table) URL to make the request to
 ----
 ---- Make a POST request with melon.HTTP
 ----
 melon.http.Post = melon.http.Generator("post")
 
 ----
----@silence
----@type function
 ---@name melon.http.Get
 ----
----@arg    (url:     string) URL to make the request to
----@arg    (onsuccess: func) Callback to run on success, gets same as http.Post
----@arg    (onfailure: func) Callback to run on failure, gets same as http.Post
----@arg    (headers:  table) URL to make the request to
+---@arg (url:    string) URL to make the request to
+---@arg (onsuccess:  fn) Callback to run on success, gets same as http.Post
+---@arg (onfailure:  fn) Callback to run on failure, gets same as http.Post
+---@arg (headers: table) URL to make the request to
 ----
 ---- Make a GET request with melon.HTTP
 ----
 melon.http.Get = melon.http.Generator("get")
 
 ----
----@silence
----@type function
 ---@name melon.http.Head
 ----
----@arg    (url:     string) URL to make the request to
----@arg    (onsuccess: func) Callback to run on success, gets same as http.Post
----@arg    (onfailure: func) Callback to run on failure, gets same as http.Post
----@arg    (headers:  table) URL to make the request to
+---@arg (url:    string) URL to make the request to
+---@arg (onsuccess:  fn) Callback to run on success, gets same as http.Post
+---@arg (onfailure:  fn) Callback to run on failure, gets same as http.Post
+---@arg (headers: table) URL to make the request to
 ----
 ---- Make a HEAD request with melon.HTTP
 ----

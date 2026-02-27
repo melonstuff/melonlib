@@ -19,7 +19,8 @@ function melon.sql.NewConnection()
 end
 
 ----
----@class melon.sql.Connection
+---@class
+---@name melon.sql.Connection
 ----
 ---@accessor (SupportedAdapters: table) A table of adapters each query is required to support
 ---@accessor (Adapter:  string) The connections adapter, what kind of sql variant its using

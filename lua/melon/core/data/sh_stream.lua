@@ -1,6 +1,7 @@
 
 ----
----@class melon.STREAM
+---@class
+---@name melon.STREAM
 ----
 ---- Simple way to pass around a mutable string builder
 ----
@@ -33,7 +34,7 @@ end
 ---@name melon.STREAM:WriteFmt
 ----
 ---@arg    (fmt:  string) String format to use, see [melon.string] for a reference
----@arg    (args: ...any) Any values to be passed to the formatter
+---@arg    (...any) Any values to be passed to the formatter
 ---@return (self)
 ----
 ---- Appends a [melon.string.Format] formatted string to the end of the buffer

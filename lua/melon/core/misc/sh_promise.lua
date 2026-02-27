@@ -69,7 +69,8 @@ do
 end
 
 ----
----@class melon.PromiseObj
+---@class
+---@name melon.PromiseObj
 ----
 ---- A promise object
 ----

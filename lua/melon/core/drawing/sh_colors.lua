@@ -246,7 +246,7 @@ function melon.colors.IsColor(v)
 end
 
 ----
----@alias
+---@alias melon.colors.IsColor
 ---@name melon.colors.Is
 ----
 melon.colors.Is = melon.colors.IsColor
