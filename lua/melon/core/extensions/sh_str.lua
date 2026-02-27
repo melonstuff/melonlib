@@ -93,7 +93,7 @@ function melon.str.SplitOnce(s, delim)
 end
 
 ----
----@name melon.str.SplitOnce
+---@name melon.str.SplitOnceX
 ----
 ---@arg    (string) String to split
 ---@arg    (delim: string) Delimiter to split by
