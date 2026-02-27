@@ -29,6 +29,41 @@ end )
 melon.str.Iter = melon.str.Chars
 
 ----
+---@iterator
+---@name melon.str.Lines
+----
+---@arg    (string) Input string to iterate over
+---@return (string) The current line
+---@return (number) The current index
+----
+---- Iterates over a strings lines
+----
+melon.str.Lines = melon.iter.NewIter(function(index, str)
+    local state = melon.iter.Top()
+    local function nextline(last)
+        local ch = str[state.index]
+        if not ch or ch == "" then return last end
+        last = last or ""
+
+        if ch == "" then
+            print("END ")
+            melon.iter.Skip()
+            return last
+        end
+
+        if ch != "\n" then
+            melon.iter.Skip()
+            return nextline(last .. ch)
+        end
+
+        return last
+    end
+
+    -- if str[index] == "" then return end
+    return nextline(), index
+end )
+
+----
 ---@name melon.str.CompareSub
 ----
 ---@arg    (input: string) The string to compare with
@@ -134,7 +169,18 @@ function melon.str.SplitN(s, n)
 end
 
 melon.Debug(function()
-    -- _p(melon.str.Split("a|c|d|e|fghijk", "|", 3))
-    _p(melon.str.SplitN("1234123412341234", 4))
+    local s = [[anal
+    sex
+roolz
+]]
+
+    for line, i in melon.str.Lines(s) do
+        print(i, '"' .. line .. '"')
+    end
 end, true)
+
+-- melon.Debug(function()
+--     -- _p(melon.str.Split("a|c|d|e|fghijk", "|", 3))
+--     _p(melon.str.SplitN("1234123412341234", 4))
+-- end, true)
 
