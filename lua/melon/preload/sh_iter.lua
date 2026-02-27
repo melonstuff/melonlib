@@ -95,7 +95,7 @@ end
 ----
 ---@name melon.iter.Skip
 ----
----@arg (i: number) How many indices to skip
+---@arg (i?: number) How many indices to skip
 ---@arg (lvl: number) How many levels down in the stack should be run this on
 ----
 ---- Skips the given number of indices into the future of the iterator
@@ -111,7 +111,7 @@ function melon.iter.Skip(i, lvl)
         return melon.Log(1, "Attempting to melon.iter.Skip on an invalid stack level (provided {}, max {})", lvl, #melon.iter.StateStack)
     end
 
-    state.index = state.index + i
+    state.index = state.index + (i or 1)
 end
 
 ----
