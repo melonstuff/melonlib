@@ -14,23 +14,24 @@ melon.iter.CurrentStackSize = 0
 ---@name melon.iter.NewIter
 ----
 ---@arg    (input: fn) The iterator function
----@arg    (state?: table) The input state, copied
 ---@return (fn) The wrapped iterator function
 ----
 ---- Wraps the input iterator function to allow for [melon.iter].* functions to work
 ---- This is only designed for non state-altering iterators that are number indexed
 ----
-function melon.iter.NewIter(fn, state)
+function melon.iter.NewIter(fn)
     return function(...)
         melon.iter.CurrentStackSize = melon.iter.CurrentStackSize + 1
 
-        state = table.Copy(state or {})
+        local state = {}
         state.id = #melon.iter.StateStack + 1
         state.index = 0
         state.iterations = 0
+        state.func = fn
+        state.args = {...}
+
         table.insert(melon.iter.StateStack, state)
 
-        local args = {...}
         return function()
             local state = melon.iter.Top()
             state.index = state.index + 1
@@ -46,7 +47,7 @@ function melon.iter.NewIter(fn, state)
                 return error("see above error")
             end
 
-            local ret = {fn(state.index, unpack(args))}
+            local ret = {state.func(state.index, unpack(state.args))}
             if ret[1] == nil then
                 melon.iter.Break()
                 return nil
@@ -142,9 +143,31 @@ end
 ---- Only to be called inside a [melon.iter.NewIter] wrapped iterator 
 ----
 function melon.iter.Break()
-    melon.iter.CurrentStackSize = melon.iter.CurrentStackSize - 1
+    if not melon.iter.Top() then
+        return melon.Log(1, "Attempting to melon.iter.Break outside of a melonlib iterator!")
+    end
+
     local top = melon.table.Pop(melon.iter.StateStack)
     top.index = 0
+
+    melon.iter.CurrentStackSize = melon.iter.CurrentStackSize - 1
+end
+
+----
+---@name melon.iter.Next
+----
+---@arg    (offset: number?) The amount to add to the current index
+---@return (any?) The next value in the iterator
+----
+---- Returns the next value in the iterator
+----
+function melon.iter.Next(n)
+    local state = melon.iter.Top()
+    if not state then
+        return melon.Log(1, "Attempting to melon.iter.Next outside of a melonlib iterator!")
+    end
+
+    return state.func(state.index + (n or 1), unpack(state.args))
 end
 
 ----
@@ -167,12 +190,9 @@ melon.Debug(function()
     end)
 
     for ch, i in iter("abcdef") do
-        for ch2 in iter("12345") do
-            print(ch, ch2)
-        end
+        print(ch, melon.iter.Next())
     end
 
     -- melon.clr()
-
     -- print(melon.iter.ReverseArgs(1, 2, 3, 4))
 end, true)
