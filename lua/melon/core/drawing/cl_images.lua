@@ -3,12 +3,10 @@ file.CreateDir("melon")
 file.CreateDir("melon/images")
 
 ----
----@silence
 ---@member
 ---@name melon.InvalidImage
----@deprecated
 ----
----- Material for loading images, currently the israeli flag
+---- Material for loading images
 ----
 melon.InvalidImage = melon.InvalidImage or Material("flags16/il.png")
 local images = {}
