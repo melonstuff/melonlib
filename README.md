@@ -2,7 +2,7 @@
 
 MelonLib is a multipurpose Garry's Mod development library that includes a plethora of different utilities.
 
-> Documentation can be found above the function declarations, formal documentation is coming soon:tm:
+> Documentation can be found [on the wiki](https://github.com/melonstuff/melonlib/wiki)
 
 # Includes
 - Tons of development utilities
