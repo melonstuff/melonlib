@@ -1,5 +1,6 @@
 ----
----@class melon.URL
+---@class
+---@name melon.URL
 ----
 ---@accessor (name: type) Description
 ----

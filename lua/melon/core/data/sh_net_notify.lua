@@ -5,6 +5,18 @@ end
 
 melon.net.Awaiting = melon.net.Awaiting or {}
 
+----
+---@enumeration
+---@name melon.net.NOTIFY_
+----
+---@enum (OTHER) Custom notification
+---@enum (SUCCESS) Successful response
+---@enum (WARNING) Warning response
+---@enum (FAILURE) Failure response
+---@enum (INSUFFICIENT_PERMISSIONS) Insufficient permissions, duh
+----
+---- Describes the type of notification for [melon.net.Notify]
+----
 melon.net.NOTIFY_OTHER   = 0
 melon.net.NOTIFY_SUCCESS = 1
 melon.net.NOTIFY_WARNING = 2

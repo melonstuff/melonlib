@@ -2,9 +2,36 @@
 local advisories = {}
 
 ----
+---@dataclass
+---@name melon.ADVISEINFO
+----
+---@value (time:   number) Time to start at, `CurTime`
+---@value (text:   string) Text to display
+---@value (length: number) Time in seconds to run
+---@value (dist: number) How far to move total
+----
+---@value (pos: table<number>) Table `(x, y)` to unpack into the position
+---@value (x:          number) X coordinate to display at
+---@value (y:          number) Y coordinate to display at
+----
+---@value (xmul: number) How far to move horizontally every frame
+---@value (ymul: number) How far to move vertically every frame
+----
+---@value (sinmul: number) How strong should a sine wave for movement be
+---@value (xsin:   number) How strong should the sine wave be horizontally
+---@value (ysin:   number) How strong should the sine wave be vertically
+----
+---@value (font:   string) Font name of the text
+---@value (color:   Color) Color of the text
+----
+---- Information for advisories
+---- All values are optional, (see [melon.AdviseX])
+----
+
+----
 ---@name melon.AdviseX
 ----
----@arg    (advise: melon.AdviseInfo) The advisory info
+---@arg    (advise: melon.ADVISEINFO) The advisory info
 ---@return (id: number) The ID of the advisory created
 ----
 ---- Creates a new "advisory", quick UI feedback
@@ -49,6 +76,7 @@ end
 ---@arg (xmul:   number) How far it should move horizontally every tick, relative to how much it wants to
 ---@arg (ymul:   number) How far it should move vertically every tick, relative to how much it wants to
 ---@arg (dist:   number) How far it should move total
+----
 ---@return (id: number) The ID of the advice created
 ----
 ---- Quickly creates a new "advisory", quick UI feedback

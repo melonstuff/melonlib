@@ -2,6 +2,7 @@
 ----
 ---@deprecated
 ---@module
+---@realm SHARED
 ---@name melon.math
 ----
 ---- Misc math functions

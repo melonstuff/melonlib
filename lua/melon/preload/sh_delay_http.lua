@@ -1,6 +1,7 @@
 
 ----
 ---@module
+---@realm SHARED
 ---@name melon.http
 ----
 ---- HTTP wrapper that runs http requests when available

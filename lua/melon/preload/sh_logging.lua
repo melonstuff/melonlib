@@ -182,16 +182,15 @@ melon.LOG_WARNING   = 2
 melon.LOG_MESSAGE   = 3
 
 ----
----@todo dataclasses!!!!
----@class
+---@dataclass
 ---@name melon.LOGINFO
 ----
----@accessor (message: string) Message passed to the logger, post format
----@accessor (trace: string) Traceback from the caller
----@accessor (time: number) Time from `os.time` from when the log was created
----@accessor (level: melon.LOG_) Logging level
----@accessor (handler: fn) The handler function
----@accessor (fmt_time: string) The formatted time of when the logging took place
+---@value (message: string) Message passed to the logger, post format
+---@value (trace: string) Traceback from the caller
+---@value (time: number) Time from `os.time` from when the log was created
+---@value (level: melon.LOG_) Logging level
+---@value (handler: fn) The handler function
+---@value (fmt_time: string) The formatted time of when the logging took place
 ----
 ---- Information passed to and from the logger
 ----

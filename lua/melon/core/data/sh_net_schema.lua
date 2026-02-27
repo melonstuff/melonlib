@@ -139,7 +139,7 @@ end
 
 ----
 ---@enumeration
----@name melon.net.RECV_ON
+---@name melon.net.RECV_ON_
 ----
 ---@enum (CLIENT) Recieve on the client
 ---@enum (SERVER) Recieve on the server
@@ -151,7 +151,7 @@ melon.net.RECV_ON_SHARED = 3
 
 ----
 ---@enumeration
----@name melon.net.TYPE
+---@name melon.net.TYPE_
 ----
 ---@enum (STRING)  String
 ---@enum (INTEGER) I32
@@ -218,7 +218,7 @@ melon.net.SchemaObj.ArrayTypes = {
 ----
 ---@arg (data:    table) The data recieved
 ---@arg (sender: Player) If on the server then this is the player that sent the message
----@arg (obj: SchemaObj) The SchemaObj
+---@arg (obj: melon.net.SchemaObj) The SchemaObj
 ----
 ---- Function to call when recieving data
 ---- You should treat this like a method even though it isnt really one, as seen in the example
@@ -443,7 +443,7 @@ end
 ---@name melon.net.SchemaObj.Send
 ----
 ---@arg    (tbl:       table) Table to write 
----@arg    (to: Player|table) A table of players or a player, accepts what net.Send does, doesn't matter on the client since it uses net.SendToServer.
+---@arg    (to: table<Player>) A table of players or a player, accepts what net.Send does, doesn't matter on the client since it uses net.SendToServer.
 ---@return (success:    bool) Was the write successful?
 ----
 ---- Starts the `melon` net message and sends the schema

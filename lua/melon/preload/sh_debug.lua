@@ -2,10 +2,10 @@
 ----
 ---@name melon.Debug
 ----
----@arg    (f:   func) Function to call on hot refresh
----@arg    (clr: bool) Clear the console before executing?
----@arg    (args: ...) Arguments to pass to the given function
----@return (did: bool) Are debug functions allowed to be ran?
+---@arg    (f:      func) Function to call on hot refresh
+---@arg    (clr:    bool) Clear the console before executing?
+---@arg    (args: ...any) Arguments to pass to the given function
+---@return (did:    bool) Are debug functions allowed to be ran?
 ----
 ---- Executes a function only after the gamemodes loaded, used for hot refreshing and stuff
 ----
@@ -71,10 +71,10 @@ end
 ----
 ---@name melon.DebugOnce
 ----
----@arg    (f:   func) Function to call on hot refresh
----@arg    (clr: bool) Clear the console before executing?
----@arg    (args: ...) Arguments to pass to the given function
----@return (did: bool) Are debug functions allowed to be ran?
+---@arg    (f:      func) Function to call on hot refresh
+---@arg    (clr:    bool) Clear the console before executing?
+---@arg    (args: ...any) Arguments to pass to the given function
+---@return (did:    bool) Are debug functions allowed to be ran?
 ----
 ---- Identical to [melon.Debug] except its on a slight delay to stop double refreshing
 ----

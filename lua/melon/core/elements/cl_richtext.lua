@@ -3,9 +3,8 @@ melon.elements = melon.elements or {}
 
 ----
 ---@panel Melon:RichText
+---@name melon.elements.RichText
 ----
----@accessor (name: type) Description
-
 ---@accessor (Color: Color) Color of the tetx
 ---@accessor (Font: string) Font of the text
 ---@accessor (Underline: number) Should the text be underlined? If so, how far should it be from the text baseline, scaled.
@@ -13,7 +12,7 @@ melon.elements = melon.elements or {}
 ---@accessor (Interactable: fn) Function to run on text click
 ---@accessor (Custom: fn) Function to run instead of rendering the text
 ----
----- A richtext renderer and layout system
+---- A RichText renderer and layout system
 ----
 local PANEL = vgui.Register("Melon:RichText", {}, "Melon:Button")
 

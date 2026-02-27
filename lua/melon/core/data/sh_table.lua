@@ -107,7 +107,6 @@ end
 ---@arg    (t: table)    The table to join.
 ---@arg    (sep: string) The reducer function. The function is passed the value, the key, and returns a boolean.
 ---@return (new: string) The joined value.
----
 ----
 ---- Loops through `t` using `iter` and concats each element into a string separated by `sep`.
 ----
@@ -157,7 +156,7 @@ end
 ----
 ---@name melon.Pack
 ----
----@arg    (args: varargs)  The varargs to pack.
+---@arg    (args: ...)  The varargs to pack.
 ---@return (length: number) The length of the varargs.
 ---@return (args: table)    A table containing the passed varargs.
 ----
@@ -171,7 +170,7 @@ end
 ---@name melon.XPack
 ----
 ---@arg    (success: bool)  The success value to forward.
----@arg    (args: varargs)  The varargs to pack.
+---@arg    (args: ...)  The varargs to pack.
 ---@return (length: number) The length of the varargs.
 ---@return (args: table)    A table containing the passed varargs.
 ----

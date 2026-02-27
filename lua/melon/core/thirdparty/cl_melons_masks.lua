@@ -38,7 +38,7 @@ melon.masks.dest.mat    = CreateMaterial("MelonMasks_Destination", "UnlitGeneric
 
 ----
 ---@enumeration
----@name melon.masks.KIND
+---@name melon.masks.KIND_
 ----
 ---@enum (CUT)   Cuts the source out of the destination
 ---@enum (STAMP) Cuts the destination out of the source

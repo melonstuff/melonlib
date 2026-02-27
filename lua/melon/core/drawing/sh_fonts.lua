@@ -7,7 +7,6 @@ if SERVER then
 end
 
 ----
----@silence
 ---@name melon.Font
 ----
 ---@arg    (size:   number) Font size to be scaled
@@ -41,11 +40,10 @@ function melon.Font(size, font, weight)
 end
 
 ----
----@silence
 ---@name melon.SpecialFont
 ----
 ---@arg    (size: number) Font size
----@arg    (opts:  table) Options to give the font
+---@arg    (FontData) Options to give the font
 ---@return (name: string) Font identifier
 ----
 ---- Same as [melon.Font] except creates it with a [FontData] table instead of a font name.
@@ -69,7 +67,6 @@ end
 
 
 ----
----@silence
 ---@name melon.UnscaledFont
 ----
 ---@arg    (size: number) Font size raw
@@ -129,7 +126,7 @@ end
 
 ----
 ---@method
----@name melon.FontGeneratorObject.Font
+---@name melon.FontGeneratorObject:Font
 ----
 ---@arg    (size:   number) Font size to be scaled
 ---@arg    (weight: number) Font weight
@@ -143,7 +140,7 @@ end
 
 ----
 ---@method
----@name melon.FontGeneratorObject.Unscaled
+---@name melon.FontGeneratorObject:Unscaled
 ----
 ---@arg    (size:   number) Font size
 ---@arg    (weight: number) Font weight
@@ -157,7 +154,7 @@ end
 
 ----
 ---@method
----@name melon.FontGeneratorObject.Preprocess
+---@name melon.FontGeneratorObject:Preprocess
 ----
 ---@arg    (size:   number) Size of the wanted font
 ---@arg    (font:   string) Font of the wanted font
@@ -175,7 +172,8 @@ end
 
 ----
 ---@internal 
----@concommand melon.melon_reload_fonts
+---@concommand
+---@name melon.melon_reload_fonts
 ---@realm CLIENT
 ----
 ---- Resets all fonts forcefully

@@ -1,23 +1,38 @@
 
+----
+---@member
+---@name melon.Modules
+----
+---- Table of all [melon.MODULEOBJ]'s loaded
+----
 melon.Modules = melon.Modules or {}
 
 ----
 ---@name melon.MODULE
 ----
 ---@arg    (name: string) Module to get the object of
----@return (mod: melon.ModuleObject) Module object of the name
+---@return (mod: melon.MODULEOBJ) Module object of the name
 ----
----- Get the [melon.ModuleObject] of the given name if it exists.
+---- Get the [melon.MODULEOBJ] of the given name if it exists.
 ----
 function melon.MODULE(name)
     return melon.Modules[name]
 end
 
+----
+---@class
+---@name melon.MODULEOBJ
+----
+---@accessor (Name: string) Name of the module
+---@accessor (ID: string) Folder of the module
+----
+---- Defines a melonlib module
+----
 local M = {}
 M.__index = M
-AccessorFunc(M, "name", "Name", FORCE_STRING)
-AccessorFunc(M, "desc", "Description", FORCE_STRING)
-AccessorFunc(M, "ident", "ID", FORCE_STRING)
+melon.AccessorFunc(M, "Name")
+-- melon.AccessorFunc(M, "Description")
+melon.AccessorFunc(M, "ID")
 
 function M:_call(name, ...)
     if self[name] then

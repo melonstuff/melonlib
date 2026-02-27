@@ -106,6 +106,7 @@ end
 
 ----
 ---@metadata AcceptsHexColor
+---@name melon.colors.FromHex
 ----
 ---@arg    (hex: string) Hex color
 ---@return (col:  Color) New color object

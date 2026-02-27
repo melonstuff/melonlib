@@ -36,7 +36,7 @@ end
 ---@arg    (tr: number) Top right alpha
 ---@arg    (bl: number) Bottom left alpha
 ---@arg    (br: number) Bottom right alpha
----@return (self: self) The gradbuilder
+---@return (self) The gradbuilder
 ----
 ---- Determines the alpha of the different quadrants
 ---- Due to how vertexalpha works, this is useless at the moment
@@ -61,7 +61,7 @@ end
 ---@arg    (tr:  Color) Top right color
 ---@arg    (bl:  Color) Bottom left color
 ---@arg    (br:  Color) Bottom right color
----@return (self: self) The gradbuilder
+---@return (self) The gradbuilder
 ----
 ---- Modifies the color of a certain quadrant of the gradient
 ----
@@ -82,7 +82,7 @@ end
 ----
 ---@arg    (perc:  number) The % of where this step is
 ---@arg    (color:  Color) The color of this step
----@return (self:    self) The gradbuilder
+---@return (self) The gradbuilder
 ----
 ---- Adds a step to the gradient with the given %
 ----
@@ -105,7 +105,7 @@ end
 ---@method
 ---@name melon.GradientBuilderObj.Reset
 ----
----@return (self: self) The gradbuilder
+---@return (self) The gradbuilder
 ----
 ---- Resets all steps, if you dont do this and you add steps every frame you will cause a crash
 ----
@@ -121,7 +121,7 @@ end
 ---@name melon.GradientBuilderObj.LocalTo
 ----
 ---@arg    (panel: Panel) The panel that this gradient is local to
----@return (self:   self) The gradbuilder
+---@return (self) The gradbuilder
 ----
 ---- Tells the gradient to render at a position local to this panel
 ---- Instead of 0,0 being -x,-y, it will be x,y, where x,y is the LocalToScreen pos of the panel
@@ -137,7 +137,7 @@ end
 ---@name melon.GradientBuilderObj.Vertical
 ----
 ---@arg    (vertical: bool) Vertical (true) or horizontal (false)
----@return (self:     self) The gradbuilder
+---@return (self) The gradbuilder
 ----
 ---- Should this gradient be top to bottom instead of left to right?
 ----
@@ -155,7 +155,7 @@ end
 ---@arg (y: number) Y coordinate to render this gradient at
 ---@arg (w: number) Width of the gradient
 ---@arg (h: number) Height of the gradient
----@arg (ign: bool) Ignore the offset of [gradbuilder.LocalTo]?
+---@arg (ign: bool) Ignore the offset of [melon.GradientBuilderObj:LocalTo]?
 ----
 ---- Renders the gradient to the screen at the given position
 ----
@@ -326,9 +326,9 @@ local gradients = {}
 ----
 ---@arg    (id:              any) The identifier for the builder
 ---@arg    (colors:        table) A sequential table of {step:number, color:Color}, optional
----@return (builder: gradbuilder) The gradient builder object
+---@return (builder: melon.GradientBuilderObj) The gradient builder object
 ----
----- Creates a [gradbuilder] object
+---- Creates a [melon.GradientBuilderObj] object
 ---- The following example creates an image that looks like:   
 ---- ![img](https://i.imgur.com/Nno9xEz.png)
 ----
@@ -367,7 +367,7 @@ melon.GradientTestColors = {
 ----
 ---@name melon.TestGradient
 ----
----@return (builder: gradbuilder) The test gradient
+---@return (builder: melon.GradientBuilderObj) The test gradient
 ----
 ---- Creates a standardized test gradient
 ----
