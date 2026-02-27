@@ -9,6 +9,15 @@
 
 melon.panels = melon.panels or {}
 
+----
+---@name melon.panels.DebugPaint
+----
+---@arg (Panel) Panel to render on
+---@arg (w: number) Width of the panel
+---@arg (h: number) Height of the panel
+----
+---- Render a panel with some useful information about it
+----
 function melon.panels.DebugPaint(pnl, w, h)
     surface.SetDrawColor(22, 22, 22)
     surface.DrawOutlinedRect(0, 0, w, h, 3)
@@ -45,7 +54,7 @@ end
 
 local lines
 ----
----@name melon.DebugLine
+---@name melon.panels.DebugLine
 ----
 ---@arg (x:   number) X Coord to put the line at
 ---@arg (y:   number) Y Coord to put the line at
@@ -54,7 +63,7 @@ local lines
 ----
 ---- Creates a line rendered on screen until the next melon.Debug call
 ----
-function melon.DebugLine(x, y, panel, id)
+function melon.panels.DebugLine(x, y, panel, id)
     id = id or string.char(string.byte('a') + (#(lines or {})))
 
     if not lines then
