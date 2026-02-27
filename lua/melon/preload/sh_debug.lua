@@ -267,20 +267,25 @@ local prot = {}
 ---@name melon.StackOverflowProtection
 ----
 ---@arg    (id:   any) Identifier used for tracking
+---@arg    (number?) How many iterations should be allowed
 ---@return (run: bool) Should the loop stop?
 ----
 ---- Tracks a loop with the given id to prevent stack overflows, nothing fancy.
 ----
-function melon.StackOverflowProtection(id)
+function melon.StackOverflowProtection(id, n)
     prot[id] = (prot[id] or 0) + 1
 
-    if prot[id] >= 1000 then
+    if prot[id] >= (n or 1000) then
         prot[id] = 0
         return true
     end
 
     return false
 end
+
+hook.Add("Melon:Debug", "melon.StackOverflowProtection", function()
+    prot = {}
+end )
 
 ----
 ---@name melon.DebugHook
