@@ -181,7 +181,8 @@ end
 melon.__load()
 
 ----
----@concommand melon.melon_raw_reload
+---@concommand
+---@name melon.melon_raw_reload
 ----
 ---- Reloads melonlib
 ----

@@ -53,8 +53,8 @@ end
 ---@method
 ---@name melon.elements.Tabs.AddFutureTab
 ----
----@arg (name:             any) Identifier for the tab
----@arg (fn: func(self) -> tab) Function to run to generate the tab
+---@arg (name:         any) Identifier for the tab
+---@arg (fn(self) -> Panel) Function to run to generate the tab
 ----
 ---- Adds a tab that will be generated when the tab gets switched to
 ----
