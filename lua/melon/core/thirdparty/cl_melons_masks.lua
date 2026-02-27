@@ -6,7 +6,7 @@
 
 ----
 ---@module
----@name masks
+---@name melon.masks
 ---@realm CLIENT
 ----
 ---- An alternative to stencils that samples a texture
