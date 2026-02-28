@@ -2,7 +2,7 @@
 ----
 ---@name melon.Debug
 ----
----@arg    (f:      func) Function to call on hot refresh
+---@arg    (function    ) Function to call on hot refresh
 ---@arg    (clr:    bool) Clear the console before executing?
 ---@arg    (args: ...any) Arguments to pass to the given function
 ---@return (did:    bool) Are debug functions allowed to be ran?
@@ -55,8 +55,8 @@ end
 ----
 ---@name melon.DebugWrap
 ----
----@arg    (fn: func) Function to wrap Debug around
----@return (fn: func) Wrapped function
+---@arg    (fn) Function to wrap Debug around
+---@return (fn) Wrapped function
 ----
 ---- Wraps a function in Debug, equal to doing:
 ---`
@@ -71,7 +71,7 @@ end
 ----
 ---@name melon.DebugOnce
 ----
----@arg    (f:      func) Function to call on hot refresh
+---@arg    (fn) Function to call on hot refresh
 ---@arg    (clr:    bool) Clear the console before executing?
 ---@arg    (args: ...any) Arguments to pass to the given function
 ---@return (did:    bool) Are debug functions allowed to be ran?
@@ -101,7 +101,7 @@ local wassettingsopen
 ---@name melon.DebugPanel
 ----
 ---@arg (name: string) Panel name registered with [vgui.Register]
----@arg (fun:    func) Function thats called with the panel as its only argument
+---@arg (fn) Function thats called with the panel as its only argument
 ----
 ---- Creates a debug panel containing the given function, lay this out in fun()
 ----
@@ -292,7 +292,7 @@ end )
 ----
 ---@arg (enabled: bool) Is this enabled?
 ---@arg (hook: string) Hook to hook onto
----@arg (fn: function) Function to set the hook to
+---@arg (fn) Function to set the hook to
 ----
 ---- Sets a debug hook
 ----
@@ -414,7 +414,7 @@ local named = {}
 ---@name melon.DebugNamed
 ----
 ---@arg (name: string) Name of the debug test
----@arg (fn:     func) Function to call
+---@arg (fn) Function to call
 ---@arg (va:   any...) Arguments to pass
 ----
 ---- Registers or calls (if no fn is provided) a "named debug" test, for convenient reuse
@@ -437,7 +437,7 @@ end
 ---@internal
 ---@name melon.DebugNewFileDetected
 ----
----@arg (f: string) The file name
+---@arg (string) The file name
 ----
 function melon.DebugNewFileDetected(f)
     if string.StartsWith(string.GetFileFromFilename(f), "sv_") then
@@ -557,7 +557,7 @@ end
 ----
 ---@name melon.DebugSlider
 ----
----@arg (fn:  function) Function to call when the slider changes
+---@arg (fn(number)) Function to call when the slider changes
 ---@arg (speed: number) Play speed, defaults to 2
 ----
 ---- Creates a slider panel to debug animations
