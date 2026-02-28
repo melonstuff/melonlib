@@ -217,7 +217,6 @@ melon.lua.KindPrinters[melon.lua.NodeKinds.Break] = function(stream, stmt, prett
 melon.lua.KindPrinters[melon.lua.NodeKinds.Goto]  = function(stream, stmt, pretty, indent) stream:Write("goto "):Write(stmt.data) end 
 melon.lua.KindPrinters[melon.lua.NodeKinds.Label] = function(stream, stmt, pretty, indent) stream:WriteFmt("::{}::", stmt.data) end 
 
-
 melon.lua.KindPrinters[melon.lua.NodeKinds.Lambda] = function(stream, expr, pretty, indent)
     stream:Write("function(")
     
@@ -294,6 +293,15 @@ melon.lua.KindPrinters[melon.lua.NodeKinds.UnaryOp] = function(stream, expr, pre
     stream:Append(melon.lua.PrintNodeToStream(expr.data.expr, pretty, 0))
 end
 
+----
+---@name melon.lua.PrintNode
+----
+---@arg (node: melon.lua.CHUNK | melon.lua.EXPR) Node to print
+---@arg (pretty: bool) Should the code be pretty-printed?
+---@return (melon.STREAM) The output stream
+----
+---- Prints any node type to the console
+----
 function melon.lua.PrintNodeToStream(node, pretty, indent)
     indent = indent or 0
 
@@ -319,6 +327,13 @@ function melon.lua.PrintNodeToStream(node, pretty, indent)
     return stream
 end
 
+----
+---@name melon.lua.PrintNode
+----
+---@arg (node: melon.lua.CHUNK | melon.lua.EXPR) Node to print
+----
+---- Prints any node type to the console
+----
 function melon.lua.PrintNode(node, pretty, indent)
     return MsgN(melon.lua.PrintNodeToStream(node, pretty, indent):Consume())
 end

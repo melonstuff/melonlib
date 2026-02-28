@@ -1,10 +1,4 @@
 
-----
----@realm SHARED
----@name melon.lua
-----
----- Contains utilities relating to meta-lua things, such as a parser.
-----
 melon.lua = melon.lua or {}
 
 ----
@@ -98,33 +92,12 @@ do --- Token Kinds
     melon.lua.TokenKinds.RightParen  = "RightParen"  -- )
 end
 
-function melon.lua.IsWhitespace(ch)
-    return ch == " " or ch == "\t"
-end
-
-function melon.lua.IsNumeric(ch)
-    ch = string.byte(ch)
-
-    return ch >= 48 and ch <= 57
-end
-
-function melon.lua.IsHex(ch)
-    return melon.lua.IsNumeric(ch) or ({a = true, b = true, c = true, d = true, e = true, f = true})[ch:lower()] -- lenny trollface emoji troll discord under the bridge haha
-end
-
---#todo make this more extensive/accurate to luajit
-function melon.lua.IsAlpha(ch)
-    ch = string.byte(ch)
-
-    return (ch >= 97 and ch <= 122) or (ch >= 65 and ch <= 90)
-end
-
 function melon.lua.IsValidNameCharacter(ch)
-    return melon.lua.IsNumeric(ch) or melon.lua.IsAlpha(ch) or (ch == "_")
+    return melon.char.IsNum(ch) or melon.char.IsAlphaNumeric(ch) or (ch == "_")
 end
 
 function melon.lua.IsValidName(name)
-    if not melon.lua.IsAlpha(name[1]) and name[1] != "_" then return false end
+    if not melon.char.IsAlphaNumeric(name[1]) and name[1] != "_" then return false end
 
     for i = 2, #name do
         if not melon.lua.IsValidNameCharacter(name[i]) then
@@ -152,7 +125,7 @@ function melon.lua.Tokenize(str)
         
         local ch = str[pos.index]
 
-        if melon.lua.IsWhitespace(ch) then
+        if melon.char.IsWhitespace(ch) then
             whitespace = whitespace .. ch
         end
 
@@ -287,7 +260,7 @@ function melon.lua.Tokenize(str)
         if ch == "" then push_token(melon.lua.TokenKinds.Eof) break end
 
 
-        if melon.lua.IsWhitespace(ch) then
+        if melon.char.IsWhitespace(ch) then
             whitespace = whitespace .. ch
             consume()
             continue
@@ -585,7 +558,7 @@ function melon.lua.Tokenize(str)
         --- Number handling
         --- <hex/int>[.<int>][<e/p><int>]
         ---
-        if melon.lua.IsNumeric(ch) then
+        if melon.char.IsNum(ch) then
             local errored = false
             local is_hex = false
             local number = consume()
@@ -599,7 +572,7 @@ function melon.lua.Tokenize(str)
                 while pos.index <= #str do
                     local n_ch = peek()
 
-                    if melon.lua.IsHex(n_ch) then
+                    if melon.char.IsHex(n_ch) then
                         number = number .. consume()
                         continue
                     end
@@ -620,7 +593,7 @@ function melon.lua.Tokenize(str)
                 while pos.index <= #str do
                     local n_ch = peek()
 
-                    if melon.lua.IsNumeric(n_ch) then
+                    if melon.char.IsNum(n_ch) then
                         number = number .. consume()
                         continue
                     end
@@ -645,7 +618,7 @@ function melon.lua.Tokenize(str)
                 while pos.index <= #str do
                     local n_ch = peek()
 
-                    if melon.lua.IsNumeric(n_ch) then
+                    if melon.char.IsNum(n_ch) then
                         float = float .. consume()
                         continue
                     end
@@ -675,7 +648,7 @@ function melon.lua.Tokenize(str)
                 while pos.index <= #str do
                     local n_ch = peek()
 
-                    if melon.lua.IsNumeric(n_ch) then
+                    if melon.char.IsNum(n_ch) then
                         exponent = exponent .. consume()
                         continue
                     end
@@ -730,7 +703,7 @@ function melon.lua.Tokenize(str)
 end
 
 -- local text = file.Read(debug.getinfo(1).short_src:sub(21, -1), "LUA")
-local text = ""
+local text = "local function a() end"
 
 melon.Debug(function()
     local tokens, errors = melon.lua.Tokenize(text)

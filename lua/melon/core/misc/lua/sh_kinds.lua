@@ -1,4 +1,10 @@
 
+----
+---@realm SHARED
+---@name melon.lua
+----
+---- Contains utilities for handling lua code
+----
 melon.lua = melon.lua or {}
 
 ----
@@ -44,6 +50,12 @@ melon.lua.NodeKinds.Table         = "Table"
 melon.lua.NodeKinds.BinaryOp      = "BinaryOp"
 melon.lua.NodeKinds.UnaryOp       = "UnaryOp"
 
+----
+---@member
+---@name melon.lua.StatementKinds
+----
+---- Table of [melon.lua.NodeKinds] that qualify as "statements"
+----
 melon.lua.StatementKinds = {
     [melon.lua.NodeKinds.GlobalAssign]      = melon.lua.NodeKinds.GlobalAssign,
     [melon.lua.NodeKinds.LocalAssign]       = melon.lua.NodeKinds.LocalAssign,
@@ -62,6 +74,12 @@ melon.lua.StatementKinds = {
     [melon.lua.NodeKinds.Label]             = melon.lua.NodeKinds.Label,
 }
 
+----
+---@member
+---@name melon.lua.StatementKinds
+----
+---- Table of [melon.lua.NodeKinds] that qualify as "expressions"
+----
 melon.lua.ExpressionKinds = {
     [melon.lua.NodeKinds.Nil]           = melon.lua.NodeKinds.Nil,
     [melon.lua.NodeKinds.False]         = melon.lua.NodeKinds.False,
@@ -90,6 +108,12 @@ melon.lua.LeftSideExpressions = {
     [melon.lua.NodeKinds.MethodCall]    = melon.lua.NodeKinds.MethodCall,
 }
 
+----
+---@member
+---@name melon.lua.BinOpKinds
+----
+---- Table of binary operations
+----
 melon.lua.BinOpKinds = {}
 melon.lua.BinOpKinds.Add      = "+"
 melon.lua.BinOpKinds.Subtract = "-"
@@ -112,6 +136,12 @@ melon.lua.BinOpKinds.Or           = "or"
 melon.lua.BinOpKinds.OrGmod       = "||"
 melon.lua.BinOpKinds.Concat       = ".."
 
+----
+---@member
+---@name melon.lua.UnOpKinds
+----
+---- Table of unary (prefix) operations
+----
 melon.lua.UnOpKinds = {}
 melon.lua.UnOpKinds.Not     = "not"
 melon.lua.UnOpKinds.NotGmod = "!"
