@@ -120,7 +120,7 @@ function melon.__load()
     ---@hook Melon:DoneLoading:PreLoad
     ---@name melon.dl_preload
     ----
-    ---- Called before the core any modules are loaded 
+    ---- Called before the core any modules are loaded, but after preload is 
     ----
     melon.LoadDirectory("melon/preload")
     hook.Run("Melon:DoneLoading:PreLoad")
