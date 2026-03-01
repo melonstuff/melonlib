@@ -56,6 +56,23 @@ end
 ---@method
 ---@name melon.DATASTREAM:Length
 ----
+---@arg    (number) Index consumed
+---@return (any) Value consumed
+----
+---- Called whenever a value is consumed from the stream
+---- This is useful for tokenizers where you wanna track characters sent through
+----
+---- Note that this is intended to be overriden
+----
+function DS:OnConsume(k, v)
+    if isstring(self:GetData()) then return end
+    self:Set(k, nil)
+end
+
+----
+---@method
+---@name melon.DATASTREAM:Length
+----
 ---@return (number) Length of the data
 ----
 ---- Gets the length of the data inside the datastream
@@ -69,7 +86,7 @@ end
 ---@method
 ---@name melon.DATASTREAM:Set
 ----
----@arg    (any) Any key for the data
+---@arg    (number) Index to set the value at
 ---@arg    (any) Any data to set
 ---@return (self)
 ----
@@ -80,7 +97,6 @@ function melon.DATASTREAM:Set(k, v)
     self:GetData()[k] = v
     return self
 end
-
 
 ----
 ---@method
@@ -93,7 +109,11 @@ end
 ---- Note that this is intended to be overriden for other datatypes
 ----
 function melon.DATASTREAM:Get(i)
-    return self:GetData()[i]
+    local v = self:GetData()[i]
+    
+    --- We enjoy lua strings here
+    if isstring(v) and v == "" then return nil end 
+    return v
 end
 
 ----
@@ -120,7 +140,7 @@ end
 ---- Note that this uses `__newindex`, will error on strings due to them being immutable
 ----
 function melon.DATASTREAM:Push(v)
-    self:GetData()[self:Length() + 1] = v
+    self:Set(self:Length() + 1, v)
     return self
 end
 
@@ -131,20 +151,92 @@ end
 ---@return (any) Any data we consumed
 ----
 ---- Consumes the current value and returns it
+---- This increments the index we are currently on and calls [melon.DATASTREAM:OnConsume]
 ----
-function DS:Consume()
+function melon.DATASTREAM:Consume()
     local k = self:GetIndex()
     local v = self:Get(k)
+
     self:SetIndex(k + 1)
-    self:Set(k, nil)
+    self:OnConsume(k, v)
 
     return v
 end
 
-melon.Debug(function()
-    local ds = melon.NewDataStream({1, 2, 3})
-    ds:Push(4)
-    ds:Consume()
+----
+---@method
+---@name melon.DATASTREAM:ConsumeN
+----
+---@arg    (number) Number of values to consume
+---@return (table<any>) Any data we consumed
+----
+---- Consumes the given number of values
+----
+function melon.DATASTREAM:ConsumeN(n)
+    local data = {}
 
-    print(ds:Peek())
+    for i = 1, n do
+        table.insert(data, self:Consume())
+    end
+
+    return data
+end
+
+----
+---@method
+---@name melon.DATASTREAM:PeekUntil
+----
+---@arg    (fn(any, number) -> bool) Function that determines if we should stop
+---@arg    (number?) Index to start at relative to the current index
+---@return (table<number, any>) Data that we got
+---@return (bool) Did we hit the end of the stream?
+----
+---- Peeks at the datastream until the given `function` returns `true`
+---- The returned data does not include the final piece of data!
+---- If the function hits the end of the stream before the function can return true, we return true as the second return
+----
+function DS:PeekUntil(fn, n)
+    n = n or 0
+
+    local data = {}
+
+    while self:Peek(n) do
+        local v = self:Peek(n)
+
+        if fn(v, i) then
+            return data, false
+        end
+
+        table.insert(data, v)
+        n = n + 1
+    end
+
+    return data, true
+end
+
+----
+---@method
+---@name melon.DATASTREAM:ConsumeUntil
+----
+---@arg    (fn(any, number) -> bool) Function that determines if we should stop
+---@arg    (number?) Index to start at relative to the current index
+---@return (table<number, any>) Data that we got
+---@return (bool) Did we hit the end of the stream?
+----
+---- Consumes data from the stream until the given `function` returns `true`
+---- If the function hits the end of the stream before the function can return true, we return true as the second return
+----
+function DS:ConsumeUntil(fn, n)
+    local val, hit = self:PeekUntil(fn, n)
+    self:ConsumeN(#val)
+
+    return val, hit
+end
+
+
+melon.Debug(function()
+    local ds = melon.NewDataStream("abcdefghijklmnopqrstuvwxyz")
+
+    _p(ds:ConsumeUntil(function(ch) return ch == "f" end))
+    _p(ds:Peek())
 end, true)
