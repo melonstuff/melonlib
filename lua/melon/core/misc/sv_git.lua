@@ -16,9 +16,12 @@ melon.git = melon.git or {}
 ---- Gets the head of a repository relative to `addons/`
 ----
 function melon.git.HEAD(repo)
-    return file.Read("addons/" .. repo .. "/.git/FETCH_HEAD", "GAME")
+    local head = file.Read("addons/" .. repo .. "/.git/FETCH_HEAD", "GAME")
+    if not head then return end
+
+    return melon.str.Split(head, "\t")[1]
 end
 
 melon.Debug(function()
-    print(melon.git.HEAD("melonlib"))
+    _p(melon.git.HEAD("melonlib"))
 end, true)
