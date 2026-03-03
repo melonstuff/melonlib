@@ -106,7 +106,5 @@ function melon.AccessorFunc(tbl, name, def, type)
         return s[name]
     end
 
-    if def then
-        tbl[name] = def
-    end
+    tbl[name] = (istable(def) and table.Copy(def)) or def
 end
