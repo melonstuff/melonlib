@@ -168,15 +168,54 @@ function melon.str.SplitN(s, n)
     return out
 end
 
-melon.Debug(function()
-    local s = [[anal
-    sex
-roolz
-]]
-
-    for line, i in melon.str.Lines(s) do
-        print(i, '"' .. line .. '"')
+----
+---@name melon.str.StripChar
+----
+---@arg    (string) String to strip characters from
+---@arg    (char | fn(char) -> bool) Character or function to determine if a char should be stripped
+---@return (string) The stripped string
+----
+---- Strips all characters from a string that qualify from the given function or are the given char
+---- If the given function returns true, we strip
+---- Intended for use with [melon.char] functions
+----
+---`
+---` print(melon.str.StripChar("abcdef", "d")) -- abcef
+---` print(melon.str.StripChar("a1b2c3", melon.char.IsNum)) -- abc
+---`
+function melon.str.StripChar(str, strip)
+    if isstring(strip) then
+        local stchar = strip
+        strip = function(ch)
+            return ch == stchar
+        end
     end
+
+    local out = ""
+
+    for ch in melon.str.Chars(str) do
+        out = out .. (strip(ch) and "" or ch)
+    end
+
+    return out
+end
+
+----
+---@name melon.str.Strip
+----
+---@arg    (string) String to get stripped
+---@arg    (strip: string) String to strip from this
+---@return (string) The stripped string
+----
+---- Strips a string of all instances of the given string
+----
+function melon.str.Strip(str, strip)
+    return table.concat(melon.str.Split(str, strip), "")
+end
+
+melon.Debug(function()
+    print(melon.str.StripChar([[a213afdaf4123zfdaf590]], melon.char.IsNum))
+    print(melon.str.Strip([[abcdef_Gabcd_G_Gef_G_g_Ga]], "_G"))
 end, true)
 
 -- melon.Debug(function()
