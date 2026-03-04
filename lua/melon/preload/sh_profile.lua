@@ -1,20 +1,20 @@
 
 ----
----@deprecated
 ---@name melon.Profile
 ----
----- Unsure how functional this actually is.
+---@arg (number) How many times to call this function
+---@arg (fn) Function to call
+---@arg (...any) Any arguments to pass to the function call
+---@return (number) How many seconds this operation took
 ----
-function melon.Profile(func, name, stop_profile)
-    if stop_profile then
-        return func
+---- Profiles a function, outputs how long it took
+----
+function melon.Profile(iters, fn, ...)
+    local start = SysTime()
+
+    for i = 0, iters do
+        fn(...)
     end
 
-    return function(...)
-        local start = SysTime()
-        local ret = func(...)
-        local endd = SysTime()
-        melon.Log(0, "Finished Profiling Function '{1}', ran in {2}s", name or "unknown", endd - start)
-        return ret
-    end
+    return SysTime() - start
 end
