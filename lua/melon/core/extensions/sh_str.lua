@@ -213,9 +213,28 @@ function melon.str.Strip(str, strip)
     return table.concat(melon.str.Split(str, strip), "")
 end
 
+----
+---@name melon.str.Replace
+----
+---@arg    (string) Haystack string to operate on
+---@arg    (replace: string) String to get replaced
+---@arg    (with: string) String to be put in place of
+---@return (string) The string
+----
+---- Replaces all instances of a string within another string
+----
+function melon.str.Replace(str, replace, with)
+    return table.concat(melon.str.Split(str, replace), with)
+end
+
+
 melon.Debug(function()
     print(melon.str.StripChar([[a213afdaf4123zfdaf590]], melon.char.IsNum))
     print(melon.str.Strip([[abcdef_Gabcd_G_Gef_G_g_Ga]], "_G"))
+    print(melon.str.Replace([[A
+    b
+    c
+    d]], "\n", "\\n"))
 end, true)
 
 -- melon.Debug(function()
