@@ -46,6 +46,11 @@ function melon.DebugPanel2(name, fn, nofocus)
     if melon.DebugPanel2_PanelInstance then
         melon.DebugPanel2_PanelInstance:Remove()
     end
+    
+    if isfunction(name) then
+        fn = name
+        name = "DPanel"
+    end
 
     melon.DebugPanel2_PanelInstance = vgui.Create("Melon:PanelSuite:Main")
     melon.DebugPanel2_PanelInstance:SetSize(ScrW(), ScrH())
@@ -158,6 +163,8 @@ melon.DebugPanel2__TEST = function()
     end )
 end
 
-melon.DebugPanel2__TEST()
+-- melon.DebugPanel2__TEST()
 
 melon.DebugPanel = melon.DebugPanel2
+
+melon.DebugPanel(function() end)
