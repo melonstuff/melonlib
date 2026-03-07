@@ -15,10 +15,11 @@ melon.panels = melon.panels or {}
 ---@arg (Panel) Panel to render on
 ---@arg (w: number) Width of the panel
 ---@arg (h: number) Height of the panel
+---@arg (name: string) Optional string name
 ----
 ---- Render a panel with some useful information about it
 ----
-function melon.panels.DebugPaint(pnl, w, h)
+function melon.panels.DebugPaint(pnl, w, h, name)
     surface.SetDrawColor(22, 22, 22)
     surface.DrawOutlinedRect(0, 0, w, h, 3)
 
@@ -29,7 +30,7 @@ function melon.panels.DebugPaint(pnl, w, h)
     surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
 
     draw.Text({
-        text = pnl.ClassName or "anonPanel",
+        text = name or (pnl.ClassName or "anonPanel"),
         pos = {w / 2 + 2, h / 2 + 2},
         xalign = 1,
         yalign = 1,
@@ -38,7 +39,7 @@ function melon.panels.DebugPaint(pnl, w, h)
     })
 
     draw.Text({
-        text = pnl.ClassName or "anonPanel",
+        text = name or (pnl.ClassName or "anonPanel"),
         pos = {w / 2, h / 2},
         xalign = 1,
         yalign = 1,
