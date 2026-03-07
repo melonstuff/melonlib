@@ -15,14 +15,14 @@
 ---- Scrollbar for ScrollPanels, handles the actual scrolling logic
 ----
 local PANEL = vgui.Register("Melon:ScrollBar", {}, "Panel")
-AccessorFunc(PANEL, "ScrollAmount", "ScrollAmount")
-AccessorFunc(PANEL, "Canvas", "Canvas")
-AccessorFunc(PANEL, "Horizontal", "Horizontal")
-AccessorFunc(PANEL, "OverflowAmount", "OverflowAmount")
-AccessorFunc(PANEL, "iRealScrollAmount", "iRealScrollAmount")
-AccessorFunc(PANEL, "iGrabbed", "iGrabbed")
-AccessorFunc(PANEL, "iGripColor", "iGripColor")
-AccessorFunc(PANEL, "iPanning", "iPanning")
+melon.AccessorFunc(PANEL, "ScrollAmount")
+melon.AccessorFunc(PANEL, "Canvas")
+melon.AccessorFunc(PANEL, "Horizontal")
+melon.AccessorFunc(PANEL, "OverflowAmount")
+melon.AccessorFunc(PANEL, "iRealScrollAmount")
+melon.AccessorFunc(PANEL, "iGrabbed")
+melon.AccessorFunc(PANEL, "iGripColor")
+melon.AccessorFunc(PANEL, "iPanning")
 
 function PANEL:Init()
     self.Grip = vgui.Create("Panel", self)

@@ -13,7 +13,7 @@ melon.elements = melon.elements or {}
 ---@name melon.elements.Draggable
 ----
 ---@accessor (AreaOf:  panel) Panel to drag when dragging this panel, think a topbar of a frame
----@accessor (Bounded: panel) Panel to limit the draggable area to, you can also pass true for the parent or false to disable
+---@accessor (Bounded: panel | bool) Panel to limit the draggable area to, you can also pass true for the parent or false to disable
 ----
 ---- Draggable Panel object
 ----
@@ -29,8 +29,8 @@ melon.elements = melon.elements or {}
 ---` p.drag:SetAreaOf(p)
 ---`
 local PANEL = vgui.Register("Melon:Draggable", {}, "Panel")
-AccessorFunc(PANEL, "area", "AreaOf") -- takes Panel
-AccessorFunc(PANEL, "bbp", "Bounded") -- takes Panel or true for parent
+melon.AccessorFunc(PANEL, "AreaOf") -- takes Panel
+melon.AccessorFunc(PANEL, "Bounded") -- takes Panel or true for parent
 
 melon.elements.Draggable = PANEL
 
@@ -118,7 +118,20 @@ melon.DebugPanel("DPanel", function(p)
     p:Center()
 
     p.drag = vgui.Create("Melon:Draggable", p)
-    p.drag:SetSize(200, 200)
+    p.drag:SetSize(200, 100)
     p.drag:Center()
     p.drag:SetAreaOf(p)
+
+    function p.drag:Paint(w, h)
+        surface.SetDrawColor(100, 100, 100)
+        surface.DrawRect(0, 0, w, h)
+
+        draw.Text({
+            text = "drag",
+            pos = {w / 2, h / 2},
+            xalign = 1,
+            yalign = 1,
+            font = melon.Font(30)
+        })
+    end
 end )

@@ -17,14 +17,14 @@ melon.elements = melon.elements or {}
 ---- A general purpose unstyled scrollpanel rewrite containing over-content scrollbars, smooth scrolling and canvas based scrolling.
 ----
 local PANEL = vgui.Register("Melon:ScrollPanel", {}, "Panel")
-AccessorFunc(PANEL, "ScrollPerDelta", "ScrollPerDelta")
-AccessorFunc(PANEL, "ScrollbarSize", "ScrollbarSize")
-AccessorFunc(PANEL, "ScrollbarPad", "ScrollbarPad")
-AccessorFunc(PANEL, "ScrollbarMaxOverflow", "ScrollbarMaxOverflow")
-AccessorFunc(PANEL, "PanningEnabled", "PanningEnabled")
-AccessorFunc(PANEL, "Canvas", "Canvas")
-AccessorFunc(PANEL, "VerticalScrollEnabled", "VerticalScrollEnabled")
-AccessorFunc(PANEL, "HorizontalScrollEnabled", "HorizontalScrollEnabled")
+melon.AccessorFunc(PANEL, "ScrollPerDelta")
+melon.AccessorFunc(PANEL, "ScrollbarSize")
+melon.AccessorFunc(PANEL, "ScrollbarPad")
+melon.AccessorFunc(PANEL, "ScrollbarMaxOverflow")
+melon.AccessorFunc(PANEL, "PanningEnabled")
+melon.AccessorFunc(PANEL, "Canvas")
+melon.AccessorFunc(PANEL, "VerticalScrollEnabled")
+melon.AccessorFunc(PANEL, "HorizontalScrollEnabled")
 
 melon.elements.ScrollPanel = PANEL
 

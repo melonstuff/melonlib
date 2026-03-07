@@ -12,9 +12,9 @@ melon.elements = melon.elements or {}
 ---- Handles multiple tabs, think DPropertySheet without the visuals and builtin handling
 ----
 local PANEL = vgui.Register("Melon:Tabs", {}, "EditablePanel")
-AccessorFunc(PANEL, "ActiveTab", "ActiveTab")
-AccessorFunc(PANEL, "AnimTime", "AnimTime", FORCE_NUMBER)
-AccessorFunc(PANEL, "InitialTab", "InitialTab")
+melon.AccessorFunc(PANEL, "ActiveTab")
+melon.AccessorFunc(PANEL, "AnimTime")
+melon.AccessorFunc(PANEL, "InitialTab")
 
 melon.elements.Tabs = PANEL
 
