@@ -27,7 +27,12 @@ function melon.AccessorFunc(tbl, name, def, type)
             s:OnAccessorChange(name, s[name], value)
         end
 
+        local old = s[name]
         s[name] = value
+
+        if s["OnSet" .. name] then
+            s["OnSet" .. name](value, old)
+        end
 
         return s
     end
