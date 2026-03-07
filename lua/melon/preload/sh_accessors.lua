@@ -31,7 +31,7 @@ function melon.AccessorFunc(tbl, name, def, type)
         s[name] = value
 
         if s["OnSet" .. name] then
-            s["OnSet" .. name](tbl, value, old)
+            s["OnSet" .. name](s, value, old)
         end
 
         return s
