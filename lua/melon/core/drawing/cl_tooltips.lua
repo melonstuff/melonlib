@@ -1,6 +1,19 @@
 
 local tooltip
 
+----
+---@name melon.Tooltip
+----
+---@arg (text:    string) Text to display on the tooltip
+---@arg (panel:    Panel) Panel this is attached to
+---@arg (placement: DOCK) Where to place it relative to the panel
+---@arg (identifier: any) Any identifier for checking against it later
+---@arg (paint?:      fn) Function to call when paiting this tooltip
+---@arg (font?:   string) Font on the text
+---@arg (delay?:  number) Delay before opening
+----
+---- Creates a "tooltip" at the given panels bounds
+----
 function melon.Tooltip(text, panel, placement, identifier, paint, font, delay)
     if not IsValid(panel) then return end
 
@@ -30,10 +43,37 @@ function melon.Tooltip(text, panel, placement, identifier, paint, font, delay)
     tooltip.wrap = melon.text.Wrap(tooltip.text, tooltip.font, melon.Scale(300), 0, false)
 end
 
+----
+---@dataclass
+---@name melon.TOOLTIPDATA
+----
+---@value (text:    string) Text to display on the tooltip
+---@value (panel:    Panel) Panel this is attached to
+---@value (placement: DOCK) Where to place it relative to the panel
+---@value (identifier: any) Any identifier for checking against it later
+---@value (paint?:      fn) Function to call when paiting this tooltip
+---@value (font?:   string) Font on the text
+---@value (delay?:  number) Delay before opening
+----
+---- Data to be passed to [melon.TooltipX]
+----
+
+----
+---@name melon.TooltipX
+----
+---@arg (melon.TOOLTIPDATA) Description
+----
+---- Identical to [melon.Tooltip] except it takes a table of arguments instead
+----
 function melon.TooltipX(t)
     melon.Tooltip(t.text, t.panel, t.placement, t.identifier, t.paint, t.font, t.delay)
 end
 
+----
+---@name melon.KillTooltip
+----
+---- Kills the currently active tooltip if there is one
+----
 function melon.KillTooltip()
     if not tooltip then return end
     if not tooltip.open then return end
@@ -42,6 +82,10 @@ function melon.KillTooltip()
     tooltip.open = false
 end
 
+----
+---@internal
+---@name melon.TooltipPaint
+---- Default painting function for tooltips
 function melon.TooltipPaint(x, y, w, h, alpha, tip)
     local pad = melon.Scale(4)
     x = x - (pad * 2)
