@@ -23,7 +23,8 @@ function melon.fn.detour(f, det)
     end
 end
 
-local infocache = {}
+local weakmeta = { __mode = "k" }
+local infocache = setmetatable({}, weakmeta)
 ----
 ---@name melon.fn.info
 ----
@@ -36,6 +37,7 @@ local infocache = {}
 function melon.fn.info(fn)
     if infocache[fn] then return infocache[fn] end
     local info = debug.getinfo(fn)
+    info.func = nil --- Remove strong reference to the function
 
     infocache[fn] = info
     return infocache[fn]
@@ -64,7 +66,7 @@ end
 ---- Return from [melon.fn.jitinfo] and [jit.util.funcinfo]
 ----
 
-local jitinfocache = {}
+local jitinfocache = setmetatable({}, weakmeta)
 ----
 ---@name melon.fn.jitinfo
 ----
