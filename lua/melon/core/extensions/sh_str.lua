@@ -46,7 +46,6 @@ melon.str.Lines = melon.iter.NewIter(function(index, str)
         last = last or ""
 
         if ch == "" then
-            print("END ")
             melon.iter.Skip()
             return last
         end
